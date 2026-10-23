@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grace Church &amp; Ministries - Welcome</title>
+  <meta name="description" content="Grace Church and Ministry Organization. Growing in faith, sharing God's love, and studying the Holy Scriptures.">
+  <link rel="stylesheet" href="/bible/bible-styles.css">
+  <style>
+    .church-hero {
+      max-width: 1000px;
+      margin: 2rem auto;
+      text-align: center;
+      padding: 3rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(14px);
+    }
+    .hero-cross {
+      font-size: 3.5rem;
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+      display: inline-block;
+      filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.45));
+    }
+    .church-hero h1 {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.85rem;
+    }
+    .church-hero p.lead {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto 2rem auto;
+      line-height: 1.7;
+    }
+    .featured-bible-portal {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border: 2px solid var(--border-highlight);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin: 2rem auto 0 auto;
+      max-width: 720px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .portal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .portal-tag {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .portal-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    .portal-features-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+      list-style: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .portal-features-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-portal-launch {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+      align-self: flex-start;
+    }
+    .btn-portal-launch:hover {
+      background: var(--accent-gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+    }
+    .services-card {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      text-align: left;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .service-box {
+      background: var(--bg-input);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent-gold);
+    }
+    .service-box h4 {
+      margin-bottom: 0.35rem;
+      color: var(--text-primary);
+    }
+    .service-box p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Church Header -->
+  <header class="bible-header">
+    <div class="header-inner">
+      <div class="brand-section">
+        <a href="/" class="brand-link">
+          <span class="brand-cross-icon">✝</span>
+          <div class="brand-titles">
+            <h1>Grace Church &amp; Ministries</h1>
+            <span class="brand-tagline">Faith • Fellowship • Word of God</span>
+          </div>
+        </a>
+      </div>
+      <nav style="display: flex; gap: 1rem; align-items: center;">
+        <a href="/bible/" style="color: var(--accent-gold); font-weight: 700; text-decoration: none; padding: 0.4rem 0.8rem; background: var(--accent-gold-glow); border-radius: var(--radius-full); border: 1px solid var(--border-highlight);">
+          📖 Online Bible
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="max-width: 1200px; margin: 0 auto; padding: 1.5rem; flex: 1;">
+    <div class="church-hero">
+      <span class="hero-cross">✝</span>
+      <h1>Welcome to Grace Church</h1>
+      <p class="lead">
+        A community centered on the teachings of Jesus Christ and the power of the living Word. Explore Scripture in English and Telugu anytime, online and offline.
+      </p>
+
+      <!-- Featured Bible Feature Portal -->
+      <div class="featured-bible-portal">
+        <div class="portal-header">
+          <h2 class="portal-title">Online Bible • పరిశుద్ధ గ్రంథము</h2>
+          <span class="portal-tag">Active Feature</span>
+        </div>
+        <p style="color: var(--text-secondary); line-height: 1.6;">
+          Read, navigate, and study all 66 books of the Old and New Testaments in English King James Version (KJV) and standard Telugu (పరిశుద్ధ గ్రంథము).
+        </p>
+
+        <ul class="portal-features-list">
+          <li>✨ King James Version (KJV)</li>
+          <li>✨ తెలుగు పరిశుద్ధ గ్రంథము</li>
+          <li>⚖️ Parallel Bilingual Reading</li>
+          <li>🔍 Scripture Keyword Search</li>
+          <li>🔖 Account-Free Bookmarks</li>
+          <li>📥 Full Offline Capability</li>
+        </ul>
+
+        <a href="/bible/" class="btn-portal-launch" id="btn-launch-bible">
+          <span>Open Online Bible</span>
+          <span>➔</span>
+        </a>
+      </div>
+
+      <!-- Service Timings Overview (Feature #4 in specs) -->
+      <div class="services-card">
+        <h3>Worship Service Timings</h3>
+        <div class="services-grid">
+          <div class="service-box">
+            <h4>Sunday Morning Worship</h4>
+            <p>09:30 AM – 11:30 AM (English &amp; Telugu)</p>
+          </div>
+          <div class="service-box">
+            <h4>Wednesday Midweek Prayer</h4>
+            <p>06:30 PM – 07:30 PM (Online &amp; Sanctuary)</p>
+          </div>
+          <div class="service-box">
+            <h4>Friday Youth Fellowship</h4>
+            <p>07:00 PM – 08:30 PM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bible-footer">
+    <p>Grace Church &amp; Ministries • All Scripture text from verified public domain sources (MIT License Arul John).</p>
+    <p><a href="/BIBLE_SOURCES_AND_LICENSING.md">Data Sources &amp; Licensing Documentation</a></p>
+  </footer>
+
+</body>
+</html>
