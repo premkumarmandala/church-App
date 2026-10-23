@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Bible - King James Version & Telugu పరిశుద్ధ గ్రంథము | Grace Church</title>
+  <meta name="description" content="Read, search, bookmark, and study the Holy Bible online in English King James Version (KJV) and Telugu (పరిశుద్ధ గ్రంథము). Supports offline reading, parallel bilingual study, and daily verse.">
+  <link rel="stylesheet" href="/bible/bible-styles.css">
+  <link rel="manifest" href="/bible-data/manifest.json">
+  <meta name="theme-color" content="#0a0f1d">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="bible-header" id="app-header">
+    <div class="header-inner">
+      <div class="brand-section">
+        <a href="/" class="brand-link" title="Return to Church Home">
+          <span class="brand-cross-icon">✝</span>
+          <div class="brand-titles">
+            <h1 id="app-title">Grace Church Bible</h1>
+            <span class="brand-tagline">పరిశుద్ధ గ్రంథము • Holy Scriptures</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="header-actions">
+        <!-- Translation Selector -->
+        <div class="translation-toggle-group" id="translation-group">
+          <button class="btn-toggle-lang active" data-lang="kjv" id="btn-lang-kjv" title="Read King James Version">English (KJV)</button>
+          <button class="btn-toggle-lang" data-lang="telugu" id="btn-lang-telugu" title="Read Telugu Holy Bible">తెలుగు (Telugu)</button>
+        </div>
+
+        <!-- Parallel View Toggle -->
+        <button class="btn-toggle-parallel" id="btn-toggle-parallel" title="Enable Parallel Dual-Translation View">
+          <span>⚖️</span>
+          <span>Parallel</span>
+        </button>
+
+        <!-- Font Size Controls -->
+        <button class="btn-icon" id="btn-font-decrease" title="Decrease Font Size">A-</button>
+        <button class="btn-icon" id="btn-font-increase" title="Increase Font Size">A+</button>
+
+        <!-- Theme Toggle -->
+        <button class="btn-icon" id="btn-theme-toggle" title="Switch Theme">☀️</button>
+
+        <!-- Network Status -->
+        <div class="status-pill online" id="status-pill">
+          <span class="status-dot">●</span> Online
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="bible-main" id="main-content">
+
+    <!-- Daily Scripture Hero Card -->
+    <section id="daily-verse-section" aria-label="Verse of the Day">
+      <div id="daily-verse-container"></div>
+    </section>
+
+    <!-- Feature Navigation Tabs -->
+    <nav class="view-tabs-bar" aria-label="Bible Feature Views">
+      <div class="tabs-group">
+        <button class="btn-view-tab active" data-view="reader" id="tab-reader">
+          <span>📖</span>
+          <span>Read Scripture</span>
+        </button>
+        <button class="btn-view-tab" data-view="search" id="tab-search">
+          <span>🔍</span>
+          <span>Search Bible</span>
+        </button>
+        <button class="btn-view-tab" data-view="bookmarks" id="tab-bookmarks">
+          <span>🔖</span>
+          <span>Bookmarks</span>
+          <span class="badge-count" id="bookmarks-badge">0</span>
+        </button>
+        <button class="btn-view-tab" data-view="offline" id="tab-offline">
+          <span>📥</span>
+          <span>Offline Reading</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Passage Navigation Bar (Always available in Reader view) -->
+    <section class="passage-nav-bar" id="passage-nav-bar" aria-label="Passage Selector">
+      <div class="nav-selectors-group">
+        <!-- Testament filter -->
+        <div class="testament-pills" id="testament-pills">
+          <button class="btn-testament-pill active" data-testament="all" id="pill-testament-all">All</button>
+          <button class="btn-testament-pill" data-testament="OT" id="pill-testament-ot">OT (పాత నిబంధన)</button>
+          <button class="btn-testament-pill" data-testament="NT" id="pill-testament-nt">NT (క్రొత్త నిబంధన)</button>
+        </div>
+
+        <!-- Book Dropdown -->
+        <select class="custom-select book-select" id="select-book" aria-label="Select Bible Book"></select>
+
+        <!-- Chapter Dropdown -->
+        <select class="custom-select chapter-select" id="select-chapter" aria-label="Select Chapter"></select>
+      </div>
+
+      <!-- Prev / Next Navigation Arrows -->
+      <div class="nav-arrows-group">
+        <button class="btn-nav-arrow btn-prev-chapter" id="btn-prev-chapter" title="Previous Chapter">
+          <span>◀</span>
+          <span>Previous</span>
+        </button>
+        <button class="btn-nav-arrow btn-next-chapter" id="btn-next-chapter" title="Next Chapter">
+          <span>Next</span>
+          <span>▶</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- PANEL 1: SCRIPTURE READER -->
+    <section class="reader-card" id="panel-reader" aria-label="Scripture Reader Panel">
+      <div id="reader-content">
+        <!-- Populated dynamically by BibleReader -->
+      </div>
+
+      <!-- Bottom Next / Prev for seamless reading -->
+      <div class="bottom-nav-mobile" id="reader-bottom-nav">
+        <button class="btn-nav-arrow btn-prev-chapter" id="btn-bottom-prev">◀ Previous Chapter</button>
+        <button class="btn-nav-arrow btn-next-chapter" id="btn-bottom-next">Next Chapter ▶</button>
+      </div>
+    </section>
+
+    <!-- PANEL 2: BIBLE SEARCH -->
+    <section class="reader-card" id="panel-search" style="display: none;" aria-label="Bible Search Panel">
+      <div class="search-controls-bar">
+        <div class="search-input-wrapper">
+          <input type="text" id="search-input" class="search-input" placeholder="Search by keyword, phrase, or reference (e.g. John 3:16, ప్రేమ, grace)..." autocomplete="off" aria-label="Search Scripture">
+          <button class="btn-clear-search" id="btn-clear-search" title="Clear Search">✕</button>
+        </div>
+
+        <select class="custom-select" id="select-search-testament" aria-label="Filter search scope">
+          <option value="all">Entire Bible (అన్ని గ్రంథాలు)</option>
+          <option value="ot">Old Testament Only (పాత నిబంధన)</option>
+          <option value="nt">New Testament Only (క్రొత్త నిబంధన)</option>
+        </select>
+
+        <button class="btn-search-submit" id="btn-search-submit">
+          <span>🔍</span>
+          <span>Search</span>
+        </button>
+      </div>
+
+      <div id="search-results-container">
+        <!-- Rendered by BibleSearch -->
+      </div>
+    </section>
+
+    <!-- PANEL 3: BOOKMARKS -->
+    <section class="reader-card" id="panel-bookmarks" style="display: none;" aria-label="Bookmarks Panel">
+      <div class="bookmarks-header-row">
+        <div>
+          <h2>Saved Bible Verses</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Saved locally in your browser. No login required.
+          </p>
+        </div>
+        <button class="btn-clear-bookmarks" id="btn-clear-all-bookmarks" title="Clear all bookmarks">Clear All</button>
+      </div>
+
+      <div id="bookmarks-list-container">
+        <!-- Rendered by BibleBookmarks -->
+      </div>
+    </section>
+
+    <!-- PANEL 4: OFFLINE STORAGE -->
+    <section class="reader-card" id="panel-offline" style="display: none;" aria-label="Offline Storage Management">
+      <div class="offline-panel">
+        <h2 style="margin-bottom: 0.5rem;">Offline Scripture Storage</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Download and cache Bible translations directly in your browser. Once cached, you can read chapters, navigate books, and search verses with no internet connection.
+        </p>
+
+        <div class="offline-status-card">
+          <div class="offline-row">
+            <div class="offline-label">
+              <h4>English King James Version (KJV)</h4>
+              <p id="offline-kjv-status">Checking cache status...</p>
+            </div>
+            <button class="btn-download-cache" id="btn-cache-kjv">📥 Cache KJV Offline</button>
+          </div>
+          <div class="progress-container" id="progress-kjv">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-bar-kjv"></div>
+            </div>
+            <span class="progress-text" id="progress-text-kjv">0%</span>
+          </div>
+        </div>
+
+        <div class="offline-status-card">
+          <div class="offline-row">
+            <div class="offline-label">
+              <h4>Telugu Bible (పరిశుద్ధ గ్రంథము)</h4>
+              <p id="offline-telugu-status">Checking cache status...</p>
+            </div>
+            <button class="btn-download-cache" id="btn-cache-telugu">📥 Cache Telugu Offline</button>
+          </div>
+          <div class="progress-container" id="progress-telugu">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-bar-telugu"></div>
+            </div>
+            <span class="progress-text" id="progress-text-telugu">0%</span>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-card-hover); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-secondary);">
+          <strong>ℹ️ Privacy & Device Storage Note:</strong>
+          All Bible texts and bookmarks are stored completely on your local device. No personal data, tracking cookies, or browsing history are sent to external servers.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- App Footer -->
+  <footer class="bible-footer">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+      <p>Grace Church &amp; Ministries • Online Bible Module</p>
+      <p>English KJV (1611 Public Domain) &amp; Telugu Holy Bible (పరిశుద్ధ గ్రంథము) • Data curated by Arul John under MIT License.</p>
+      <p>
+        <a href="/BIBLE_SOURCES_AND_LICENSING.md" target="_blank">Sources &amp; Licensing Documentation</a> • 
+        <a href="/">Church Website Home</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts in dependency order -->
+  <script src="/bible/bible-bookmarks.js"></script>
+  <script src="/bible/bible-offline.js"></script>
+  <script src="/bible/bible-daily-verse.js"></script>
+  <script src="/bible/bible-navigation.js"></script>
+  <script src="/bible/bible-reader.js"></script>
+  <script src="/bible/bible-search.js"></script>
+  <script src="/bible/bible-app.js"></script>
+
+</body>
+</html>
