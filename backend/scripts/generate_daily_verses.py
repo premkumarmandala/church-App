@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 import json
 import sys
 
-target_base = r'c:\my projects\Church App\bible-data'
+# Target directory: backend/data
+target_base = Path(__file__).resolve().parent.parent / 'data'
 
 with open(os.path.join(target_base, 'books.json'), encoding='utf-8') as f:
     books_meta = json.load(f)

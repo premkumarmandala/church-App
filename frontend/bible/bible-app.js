@@ -84,7 +84,11 @@
 
     async loadBooksMetadata() {
       try {
-        const res = await fetch('/bible-data/books.json');
+        const apiBase = window.API_BASE_URL || '';
+        let res = await fetch(${apiBase}/api/bible/books);
+        if (!res.ok) {
+          res = await fetch(${apiBase}/bible-data/books.json);
+        }
         if (!res.ok) throw new Error('Failed to load books.json');
         this.books = await res.json();
         window.BibleState.books = this.books;
