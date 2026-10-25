@@ -1,0 +1,9 @@
+{
+  "name": "Grace Church Online Bible",
+  "short_name": "Holy Bible",
+  "start_url": "/bible/",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#0a0f1d",
+  "description": "English KJV and Telugu Holy Bible Reader and Study Tool"
+}
