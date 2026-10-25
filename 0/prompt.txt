@@ -1,0 +1,5 @@
+@[c:\my projects\Church App\scripts\setup_daily_verses.py]  what is the use in this project.
+
+---
+
+backend should be in fast api python in a folder. use react and  type script for ui only. if need use postgre sql.
