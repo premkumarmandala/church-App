@@ -61,13 +61,14 @@
       // Try Online API search first
       if (navigator.onLine) {
         try {
+          const apiBase = window.API_BASE_URL || '';
           const params = new URLSearchParams({
             q: this.currentQuery,
             translation: translation,
             testament: testament,
             limit: '50'
           });
-          const res = await fetch(`/api/bible/search?${params.toString()}`);
+          const res = await fetch(`${apiBase}/api/bible/search?${params.toString()}`);
           if (res.ok) {
             const data = await res.json();
             data.referenceMatch = refMatch;

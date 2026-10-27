@@ -26,7 +26,13 @@
           const reg = await navigator.serviceWorker.register('/bible/sw.js', { scope: '/' });
           console.log('[Offline] ServiceWorker registered with scope:', reg.scope);
         } catch (e) {
-          console.warn('[Offline] ServiceWorker registration failed:', e);
+          // If scope '/' is not permitted by server headers, fall back to default scope (/bible/)
+          try {
+            const reg = await navigator.serviceWorker.register('/bible/sw.js');
+            console.log('[Offline] ServiceWorker registered with default scope:', reg.scope);
+          } catch (e2) {
+            console.warn('[Offline] ServiceWorker registration failed:', e2);
+          }
         }
       }
     }

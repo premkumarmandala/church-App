@@ -155,6 +155,32 @@
       }
     }
 
+    highlightAndScrollVerse(verseNum) {
+      if (!this.container) return;
+
+      // Remove existing highlight
+      this.container.querySelectorAll('.verse-highlighted').forEach(el => {
+        el.classList.remove('verse-highlighted');
+      });
+
+      this.highlightedVerse = verseNum ? parseInt(verseNum, 10) : null;
+
+      if (this.highlightedVerse) {
+        const el = document.getElementById(`verse-${this.highlightedVerse}`);
+        if (el) {
+          el.classList.add('verse-highlighted');
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        const chapterHeader = this.container.querySelector('.chapter-header');
+        if (chapterHeader) {
+          chapterHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          this.container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+
     bindVerseActions(book, chapter, translation, verses) {
       // Bookmark buttons
       this.container.querySelectorAll('.btn-verse-bookmark').forEach(btn => {

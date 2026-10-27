@@ -85,9 +85,9 @@
     async loadBooksMetadata() {
       try {
         const apiBase = window.API_BASE_URL || '';
-        let res = await fetch(${apiBase}/api/bible/books);
+        let res = await fetch(`${apiBase}/api/bible/books`);
         if (!res.ok) {
-          res = await fetch(${apiBase}/bible-data/books.json);
+          res = await fetch(`${apiBase}/bible-data/books.json`);
         }
         if (!res.ok) throw new Error('Failed to load books.json');
         this.books = await res.json();
@@ -118,8 +118,8 @@
       const pill = document.getElementById('status-pill');
       if (pill) {
         pill.className = `status-pill ${online ? 'online' : 'offline'}`;
-        pill.innerHTML = online 
-          ? '<span class="status-dot">●</span> Online' 
+        pill.innerHTML = online
+          ? '<span class="status-dot">●</span> Online'
           : '<span class="status-dot">○</span> Offline Mode';
       }
     }
@@ -196,7 +196,36 @@
       }
     }
 
-    async handlePassageChange({ book, chapter, translation, parallelMode, targetVerse }) {
+    populateVersesDropdown(versesCount, selectedVerse = null) {
+      const select = document.getElementById('select-verse');
+      if (!select) return;
+
+      const isTelugu = window.BibleState.translation === 'telugu';
+      const allLabel = isTelugu ? 'అన్ని వాక్యాలు (All Verses)' : 'All Verses';
+
+      select.innerHTML = `<option value="">${allLabel}</option>`;
+      const selNum = selectedVerse ? parseInt(selectedVerse, 10) : null;
+
+      for (let i = 1; i <= versesCount; i++) {
+        const opt = document.createElement('option');
+        opt.value = i.toString();
+        opt.textContent = isTelugu ? `${i}`;
+        if (selNum === i) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
+      }
+    }
+
+    async handlePassageChange({ book, chapter, translation, parallelMode, targetVerse, verseOnly = false }) {
+      if (verseOnly && this.currentBook && this.currentBook.id === book.id && this.currentChapter === chapter) {
+        window.BibleReader.highlightAndScrollVerse(targetVerse);
+        const selectVerse = document.getElementById('select-verse');
+        if (selectVerse) {
+          selectVerse.value = targetVerse ? targetVerse.toString() : '';
+        }
+        return;
+      }
       this.currentBook = book;
       this.currentChapter = chapter;
       window.BibleState.translation = translation;
@@ -240,6 +269,9 @@
           parallelVerses: passageData.parallelVerses,
           targetVerse: targetVerse
         });
+
+        // Populate Verse Selector with exact chapter verse count
+        this.populateVersesDropdown(passageData.verses.length, targetVerse);
       } catch (err) {
         console.error('[App] Failed to load passage:', err);
         window.BibleReader.showError(
@@ -250,10 +282,12 @@
     }
 
     async fetchChapterData(translation, book, chapter, parallel) {
+      const apiBase = window.API_BASE_URL || '';
+
       // 1. Try Online API first
       if (navigator.onLine) {
         try {
-          const res = await fetch(`/api/bible/chapter?translation=${translation}&book=${book.slug}&chapter=${chapter}&parallel=${parallel}`);
+          const res = await fetch(`${apiBase}/api/bible/chapter?translation=${translation}&book=${book.slug}&chapter=${chapter}&parallel=${parallel}`);
           if (res.ok) {
             const data = await res.json();
             return data;
@@ -270,7 +304,7 @@
       if (!bookData) {
         // Try direct fetch of raw JSON in case service worker can answer
         const folder = translation === 'telugu' ? 'telugu' : 'kjv';
-        const res = await fetch(`/bible-data/${folder}/${fileName}`);
+        const res = await fetch(`${apiBase}/bible-data/${folder}/${fileName}`);
         if (res.ok) {
           bookData = await res.json();
         }
@@ -369,6 +403,14 @@
       if (selectChapter) {
         selectChapter.addEventListener('change', (e) => {
           window.BibleNavigation.setChapter(e.target.value);
+        });
+      }
+
+      // 7b. Verse Selector
+      const selectVerse = document.getElementById('select-verse');
+      if (selectVerse) {
+        selectVerse.addEventListener('change', (e) => {
+          window.BibleNavigation.setVerse(e.target.value);
         });
       }
 
@@ -506,13 +548,13 @@
       const btnTelugu = document.getElementById('btn-cache-telugu');
 
       if (kjvStatusEl) {
-        kjvStatusEl.textContent = status.kjvReady 
-          ? '✓ 66 / 66 Books Available Offline' 
+        kjvStatusEl.textContent = status.kjvReady
+          ? '✓ 66 / 66 Books Available Offline'
           : `${status.kjvCount} / 66 Books Cached`;
       }
       if (teluguStatusEl) {
-        teluguStatusEl.textContent = status.teluguReady 
-          ? '✓ 66 / 66 Books Available Offline' 
+        teluguStatusEl.textContent = status.teluguReady
+          ? '✓ 66 / 66 Books Available Offline'
           : `${status.teluguCount} / 66 Books Cached`;
       }
       if (btnKjv && status.kjvReady) btnKjv.textContent = '✓ Update Cache';
@@ -531,9 +573,9 @@
           <div class="search-empty-state">
             <span class="empty-icon">🔖</span>
             <h3>${isTelugu ? 'ఇంకా బుక్‌మార్క్‌లు లేవు' : 'No Bookmarks Saved Yet'}</h3>
-            <p>${isTelugu 
-              ? 'మీకు ఇష్టమైన వాక్యాలను సేవ్ చేయడానికి చదివే సమయంలో వాక్యం పక్కన ఉన్న నక్షత్ర చిహ్నాన్ని (★) క్లిక్ చేయండి.' 
-              : 'Click the star icon (★) beside any verse while reading to save it to your personal bookmarks.'}
+            <p>${isTelugu
+            ? 'మీకు ఇష్టమైన వాక్యాలను సేవ్ చేయడానికి చదివే సమయంలో వాక్యం పక్కన ఉన్న నక్షత్ర చిహ్నాన్ని (★) క్లిక్ చేయండి.'
+            : 'Click the star icon (★) beside any verse while reading to save it to your personal bookmarks.'}
             </p>
           </div>
         `;

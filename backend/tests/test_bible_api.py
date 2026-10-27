@@ -220,3 +220,18 @@ def test_bible_data_static_mount():
     books = response.json()
     assert len(books) == 66
 
+
+def test_bible_slash_redirect():
+    """Verify GET /bible cleanly redirects to /bible/."""
+    response = client.get("/bible", follow_redirects=False)
+    assert response.status_code == 307
+    assert response.headers.get("location") == "/bible/"
+
+
+def test_service_worker_headers():
+    """Verify GET /bible/sw.js serves Service-Worker-Allowed header."""
+    response = client.get("/bible/sw.js")
+    assert response.status_code == 200
+    assert response.headers.get("service-worker-allowed") == "/"
+
+

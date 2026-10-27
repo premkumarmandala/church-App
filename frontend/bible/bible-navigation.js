@@ -130,6 +130,21 @@
       }
     }
 
+    setVerse(verseNum) {
+      this.targetVerse = verseNum ? parseInt(verseNum, 10) : null;
+      this.updateHash();
+      if (this.onPassageChanged && this.currentBook) {
+        this.onPassageChanged({
+          book: this.currentBook,
+          chapter: this.currentChapter,
+          translation: this.currentTranslation,
+          parallelMode: this.parallelMode,
+          targetVerse: this.targetVerse,
+          verseOnly: true
+        });
+      }
+    }
+
     goToPassage(bookSlug, chapter, verse = null) {
       const b = this.books.find(item => item.slug === bookSlug || item.name.toLowerCase() === bookSlug.toLowerCase());
       if (b) {

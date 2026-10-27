@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import FileResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import router as api_router
@@ -49,6 +49,27 @@ def get_licensing_doc() -> Response:
     if doc_path.exists():
         return FileResponse(doc_path, media_type="text/markdown; charset=utf-8")
     return Response(content="# Licensing Documentation\nPublic Domain / MIT License.", media_type="text/markdown")
+
+
+# Clean redirect for /bible without trailing slash to /bible/
+@app.get("/bible", include_in_schema=False)
+def redirect_to_bible_app() -> Response:
+    """Redirect /bible to /bible/ for clean URL normalization."""
+    return RedirectResponse(url="/bible/", status_code=307)
+
+
+# Serve service worker with Service-Worker-Allowed header to permit root scope
+@app.get("/bible/sw.js", include_in_schema=False)
+def get_service_worker() -> Response:
+    """Serve Service Worker with Service-Worker-Allowed header for full app caching."""
+    sw_path = settings.FRONTEND_DIR / "bible" / "sw.js"
+    if sw_path.exists():
+        return FileResponse(
+            sw_path,
+            media_type="application/javascript; charset=utf-8",
+            headers={"Service-Worker-Allowed": "/"},
+        )
+    return Response(status_code=404)
 
 
 # Mount /bible-data directory for offline caching and raw JSON access

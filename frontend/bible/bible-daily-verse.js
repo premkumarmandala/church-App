@@ -21,14 +21,14 @@
     async loadDailyVerse() {
       try {
         const apiBase = window.API_BASE_URL || '';
-        let res = await fetch(${apiBase}/api/bible/daily-verse);
+        let res = await fetch(`${apiBase}/api/bible/daily-verse`);
         if (!res.ok) throw new Error('API request failed');
         this.currentData = await res.json();
       } catch (err) {
         console.warn('[DailyVerse] API fetch failed, loading from local daily-verses.json:', err);
         try {
           const apiBase = window.API_BASE_URL || '';
-          const res = await fetch(${apiBase}/bible-data/daily-verses.json);
+          const res = await fetch(`${apiBase}/bible-data/daily-verses.json`);
           const allVerses = await res.json();
           const now = new Date();
           const start = new Date(now.getFullYear(), 0, 0);
