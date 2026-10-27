@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M5YG821QFHR8P3KESVMJ2WEP",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 5,
+  "files_touched": [
+    "backend/app/main.py",
+    "backend/tests/test_bible_api.py",
+    "frontend/bible/bible-app.js",
+    "frontend/bible/bible-daily-verse.js",
+    "frontend/bible/bible-navigation.js",
+    "frontend/bible/bible-offline.js",
+    "frontend/bible/bible-reader.js",
+    "frontend/bible/bible-search.js",
+    "frontend/bible/bible-styles.css",
+    "frontend/bible/index.html"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ]
+}

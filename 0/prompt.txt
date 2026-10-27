@@ -1,0 +1,37 @@
+check every to work. i am getting errors while navigating to bible page.
+
+---
+
+already bible i can read using scripture using chapters and verses for respting to each chapter. so when i select a chepter i can also select verese. first say the plan.
+
+---
+
+give a use side exmple.
+
+---
+
+ok implemnt
+
+---
+
+Continue from where I stopped.
+
+---
+
+stope the server
+
+---
+
+stop the server which is currenty running
+
+---
+
+how can i run the project.
+
+---
+
+remove  word verse to every respected verse in topdown menu.
+
+---
+
+remove  word verse to every respected verse in topdown menu.
