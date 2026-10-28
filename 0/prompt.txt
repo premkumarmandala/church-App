@@ -1,0 +1,1730 @@
+You're about to initialize a Catalyst project in this directory:
+
+  C:\my projects\Church App
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+  * You are initializing in an existing Catalyst project directory
+
+i .catalystrc already has church as a default project. To overwrite use --force option
+
+Which are the features you want to setup for this folder?
+ This step is optional! Press <return> to proceed.
+ Client, AppSail
+
+===> Client Setup
+Choose the type of client to initialise:  (Use arrow keys)
+> Angular web app
+  React web app
+  Basic web app
+
+---
+
+===> Client Setup
+Choose the type of client to initialise:  BASIC
+i A directory client will be created with a webapp pre-configured.
+How do you want to address the client ? (sampleApp)
+
+---
+
+===> Appsail Setup
+
+=> Configure AppSail
+Please select the runtime type for your AppSail to continue: (Use arrow keys)
+
+  Catalyst let's you choose the runtime of your choice for your AppSail. You can 
+either select
+  "Catalyst-Managed Runtime" to select one of the Catalyst offered runtimes or you 
+can select 
+  "Docker Image" to use a docker image, which can utilize OCI compliant containers  
+to host your AppSail
+  For more info: 
+https://docs.catalyst.zoho.com/en/serverless/help/appsail/introduction/
+
+❯ Catalyst-Managed Runtime
+  Docker Image
+
+---
+
+=> Configure AppSail
+Please select the runtime type for your AppSail to continue: Catalyst-Managed 
+Runtime
+Do you want to get-started with a list of example AppSails? (Y/n)
+
+---
+
+Do you want to initialize an AppSail in this directory? (Y/n)
+
+---
+
+Please provide the name for your AppSail:  (AppSail)
+
+---
+
+Please provide the build path of your AppSail: (./)
+
+---
+
+Please choose a stack for your AppSail:  
+  NodeJS 12 (i This runtime has reached its EOL) 
+  - NodeJS 10 (‼ Only updates are allowed in this runtime) (Disabled)
+  ---Python---
+> Python 3.13 
+  Python 3.12 
+  Python 3.11 
+  Python 3.10 
+(Move up and down to reveal more choices)
+
+---
+
+why client folder in the project
+
+---
+
+ok
+
+---
+
+how to deploye it in zoho catalyst
+
+---
+
+‼ AppSail: No targets are ready to be served in local
+
+ >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+i client[church-app]: http://localhost:3000/app/
+
+[1793158650344]  "GET"  "/"
+[1793158650376]  "GET"  "/app/"
+(node:10456) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[1793158650494]  "GET"  "/app/.catalyst%5Creload-script.js"
+[1793158650508]  "GET"  "/bible/bible-styles.css"
+[1793158651426]  "GET"  "/favicon.ico"
+[1793158655245]  "GET"  "/bible/"
+[1793158673597]  "GET"  "/app/"
+[1793158673654]  "GET"  "/bible/bible-styles.css"
+[1793158673663]  "GET"  "/app/.catalyst%5Creload-script.js"
+[1793158685897]  "GET"  "/app/bible"
+× Error fetching the resource: Error: EISDIR, read
+[1793158717358]  "GET"  "/bible/"
+
+---
+
+‼ skipping serve of AppSail [backend] since unable to locate python3.11 in your system
+‼ AppSail: No targets are ready to be served in local
+
+---
+
+PS C:\my projects\Church App> catalyst serve
+
+   ┌───────────────────────────────────────────────────────────────────────────┐    
+   │                                                                           │    
+   │         ⚠  Security warning: vulnerable Node.js version detected          │    
+   │                                                                           │    
+   │  The Node.js v26.7.0 running the Catalyst CLI is affected by the October  │    
+   │    2026 Node.js security releases (high severity: DNS, TLS certificate    │    
+   │                   validation and Brotli decoder bugs).                    │    
+   │                                                                           │    
+   │   Upgrade to v26.12.1 or later (patched: v22.23.4, v24.22.1, v26.12.1).   │    
+   │                                                                           │    
+   │                                 Details:                                  │    
+   │  https://nodejs.org/en/blog/vulnerability/october-2026-security-releases  │    
+   │                                                                           │    
+   └───────────────────────────────────────────────────────────────────────────┘    
+
+‼ skipping serve of AppSail [backend] since unable to locate python3.11 in your system
+‼ AppSail: No targets are ready to be served in local
+
+ >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+i client[church-app]: http://localhost:3000/app/
+
+[1793159291511]  "GET"  "/"
+[1793159291549]  "GET"  "/app/"
+(node:29344) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[1793159291619]  "GET"  "/app/.catalyst%5Creload-script.js"
+[1793159291637]  "GET"  "/app/bible/bible-styles.css"
+[1793159294320]  "GET"  "/app/bible/"
+× Error fetching the resource: Error: EISDIR, read
+
+---
+
+>>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+i client[church-app]: http://localhost:3000/app/
+
+[1793159763859]  "GET"  "/"
+[1793159763941]  "GET"  "/app/"
+(node:20340) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[1793159764062]  "GET"  "/app/.catalyst%5Creload-script.js"
+[1793159764071]  "GET"  "/app/bible/bible-styles.css"
+[1793159768627]  "GET"  "/app/bible/index.html"
+[1793159768664]  "GET"  "/app/bible/.catalyst%5Creload-script.js"
+[1793159768682]  "GET"  "/app/bible/bible-styles.css"
+[1793159768689]  "GET"  "/app/bible/bible-bookmarks.js"
+[1793159768697]  "GET"  "/app/bible/bible-offline.js"
+[1793159768706]  "GET"  "/app/bible/bible-daily-verse.js"
+[1793159768718]  "GET"  "/app/bible/bible-navigation.js"
+× [404 - Resource not found]: /bible/.catalyst\reload-script.js
+
+[1793159768750]  "GET"  "/app/bible/bible-reader.js"
+[1793159768779]  "GET"  "/app/bible/bible-search.js"
+[1793159768831]  "GET"  "/app/bible/bible-app.js"
+[1793159768867]  "GET"  "/bible-data/manifest.json"
+[1793159768989]  "GET"  "/api/bible/books"
+[1793159770894]  "GET"  "/bible-data/books.json"
+[1793159770904]  "GET"  "/app/bible/sw.js"
+[1793159771020]  "GET"  "/api/bible/daily-verse"
+[1793159771029]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+[1793159771033]  "GET"  "/app/bible/"
+[1793159771035]  "GET"  "/app/bible/index.html"
+[1793159771037]  "GET"  "/app/bible/bible-styles.css"
+× Error fetching the resource: Error: EISDIR, read
+[1793159771062]  "GET"  "/app/bible/bible-app.js"
+[1793159771067]  "GET"  "/app/bible/bible-navigation.js"
+[1793159771080]  "GET"  "/app/bible/bible-reader.js"
+[1793159771104]  "GET"  "/app/bible/bible-search.js"
+[1793159772151]  "GET"  "/bible-data/daily-verses.json"
+[1793159772231]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/daily-verses.json
+Error: connect ETIMEDOUT 169.148.148.85:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16) {
+  errno: -4039,
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '169.148.148.85',
+  port: 443
+}
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json
+Error: connect ETIMEDOUT 169.148.148.85:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16) {
+  errno: -4039,
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '169.148.148.85',
+  port: 443
+}
+[1793159809247]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159809270]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159810104]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159810118]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159812474]  "GET"  "/api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159812485]  "GET"  "/bible-data/telugu/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Genesis.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159814441]  "GET"  "/api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159814456]  "GET"  "/bible-data/telugu/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Genesis.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159817214]  "GET"  "/api/bible/chapter?translation=telugu&book=numbers&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=numbers&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159817232]  "GET"  "/bible-data/telugu/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Numbers.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828866]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828888]  "GET"  "/bible-data/kjv/Exodus.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Exodus.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828906]  "GET"  "/bible-data/kjv/Leviticus.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Leviticus.json  
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828929]  "GET"  "/bible-data/kjv/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Numbers.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828952]  "GET"  "/bible-data/kjv/Deuteronomy.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Deuteronomy.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828969]  "GET"  "/bible-data/kjv/Joshua.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Joshua.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828982]  "GET"  "/bible-data/kjv/Judges.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Judges.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828999]  "GET"  "/bible-data/kjv/Ruth.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Ruth.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829012]  "GET"  "/bible-data/kjv/1Samuel.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Samuel.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829026]  "GET"  "/bible-data/kjv/2Samuel.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2Samuel.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829039]  "GET"  "/bible-data/kjv/1Kings.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Kings.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829050]  "GET"  "/bible-data/kjv/2Kings.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2Kings.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829059]  "GET"  "/bible-data/kjv/1Chronicles.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Chronicles.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829073]  "GET"  "/bible-data/kjv/2Chronicles.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2Chronicles.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829085]  "GET"  "/bible-data/kjv/Ezra.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Ezra.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829093]  "GET"  "/bible-data/kjv/Nehemiah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Nehemiah.json   
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829106]  "GET"  "/bible-data/kjv/Esther.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Esther.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829119]  "GET"  "/bible-data/kjv/Job.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Job.json        
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829129]  "GET"  "/bible-data/kjv/Psalms.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Psalms.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829142]  "GET"  "/bible-data/kjv/Proverbs.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Proverbs.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829157]  "GET"  "/bible-data/kjv/Ecclesiastes.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Ecclesiastes.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829168]  "GET"  "/bible-data/kjv/SongofSolomon.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/SongofSolomon.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829175]  "GET"  "/bible-data/kjv/Isaiah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Isaiah.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829186]  "GET"  "/bible-data/kjv/Jeremiah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Jeremiah.json   
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829195]  "GET"  "/bible-data/kjv/Lamentations.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Lamentations.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829207]  "GET"  "/bible-data/kjv/Ezekiel.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Ezekiel.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829217]  "GET"  "/bible-data/kjv/Daniel.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Daniel.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829224]  "GET"  "/bible-data/kjv/Hosea.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Hosea.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829236]  "GET"  "/bible-data/kjv/Joel.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Joel.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829244]  "GET"  "/bible-data/kjv/Amos.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Amos.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829257]  "GET"  "/bible-data/kjv/Obadiah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Obadiah.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829270]  "GET"  "/bible-data/kjv/Jonah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Jonah.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829282]  "GET"  "/bible-data/kjv/Micah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Micah.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829293]  "GET"  "/bible-data/kjv/Nahum.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Nahum.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829305]  "GET"  "/bible-data/kjv/Habakkuk.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Habakkuk.json   
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829314]  "GET"  "/bible-data/kjv/Zephaniah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Zephaniah.json  
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829324]  "GET"  "/bible-data/kjv/Haggai.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Haggai.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829334]  "GET"  "/bible-data/kjv/Zechariah.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Zechariah.json  
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829343]  "GET"  "/bible-data/kjv/Malachi.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Malachi.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829356]  "GET"  "/bible-data/kjv/Matthew.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Matthew.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829365]  "GET"  "/bible-data/kjv/Mark.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Mark.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829373]  "GET"  "/bible-data/kjv/Luke.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Luke.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829383]  "GET"  "/bible-data/kjv/John.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/John.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829391]  "GET"  "/bible-data/kjv/Acts.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Acts.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829405]  "GET"  "/bible-data/kjv/Romans.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Romans.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829418]  "GET"  "/bible-data/kjv/1Corinthians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Corinthians.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829425]  "GET"  "/bible-data/kjv/2Corinthians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2Corinthians.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829436]  "GET"  "/bible-data/kjv/Galatians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Galatians.json  
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829449]  "GET"  "/bible-data/kjv/Ephesians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Ephesians.json  
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829461]  "GET"  "/bible-data/kjv/Philippians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Philippians.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829472]  "GET"  "/bible-data/kjv/Colossians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Colossians.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829482]  "GET"  "/bible-data/kjv/1Thessalonians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Thessalonians.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829497]  "GET"  "/bible-data/kjv/2Thessalonians.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2Thessalonians.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829544]  "GET"  "/bible-data/kjv/1Timothy.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Timothy.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829618]  "GET"  "/bible-data/kjv/2Timothy.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2Timothy.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829672]  "GET"  "/bible-data/kjv/Titus.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Titus.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829718]  "GET"  "/bible-data/kjv/Philemon.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Philemon.json   
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829731]  "GET"  "/bible-data/kjv/Hebrews.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Hebrews.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829740]  "GET"  "/bible-data/kjv/James.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/James.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829763]  "GET"  "/bible-data/kjv/1Peter.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Peter.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829809]  "GET"  "/bible-data/kjv/2Peter.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2Peter.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829818]  "GET"  "/bible-data/kjv/1John.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1John.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829827]  "GET"  "/bible-data/kjv/2John.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/2John.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829838]  "GET"  "/bible-data/kjv/3John.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/3John.json      
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829845]  "GET"  "/bible-data/kjv/Jude.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Jude.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829856]  "GET"  "/bible-data/kjv/Revelation.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Revelation.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159834485]  "GET"  "/api/bible/chapter?translation=kjv&book=numbers&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=numbers&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159834504]  "GET"  "/bible-data/kjv/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Numbers.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159835630]  "GET"  "/api/bible/chapter?translation=kjv&book=numbers&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=numbers&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159835645]  "GET"  "/bible-data/kjv/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Numbers.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159839258]  "GET"  "/api/bible/chapter?translation=kjv&book=numbers&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=numbers&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159839273]  "GET"  "/bible-data/kjv/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Numbers.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+
+---
+
+PS C:\my projects\Church App> catalyst serve
+
+   ┌───────────────────────────────────────────────────────────────────────────┐
+   │                                                                           │
+   │         ⚠  Security warning: vulnerable Node.js version detected          │
+   │                                                                           │
+   │  The Node.js v26.7.0 running the Catalyst CLI is affected by the October  │
+   │    2026 Node.js security releases (high severity: DNS, TLS certificate    │
+   │                   validation and Brotli decoder bugs).                    │
+   │                                                                           │
+   │   Upgrade to v26.12.1 or later (patched: v22.23.4, v24.22.1, v26.12.1).   │
+   │                                                                           │
+   │                                 Details:                                  │
+   │  https://nodejs.org/en/blog/vulnerability/october-2026-security-releases  │
+   │                                                                           │
+   └───────────────────────────────────────────────────────────────────────────┘
+
+‼ skipping serve of AppSail [backend] since unable to locate python3.11 in your system
+‼ AppSail: No targets are ready to be served in local
+
+ >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+i client[church-app]: http://localhost:3000/app/
+
+[1793159763859]  "GET"  "/"
+[1793159763941]  "GET"  "/app/"
+(node:20340) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[1793159764062]  "GET"  "/app/.catalyst%5Creload-script.js"
+[1793159764071]  "GET"  "/app/bible/bible-styles.css"
+[1793159768627]  "GET"  "/app/bible/index.html"
+[1793159768664]  "GET"  "/app/bible/.catalyst%5Creload-script.js"
+[1793159768682]  "GET"  "/app/bible/bible-styles.css"
+[1793159768689]  "GET"  "/app/bible/bible-bookmarks.js"
+[1793159768697]  "GET"  "/app/bible/bible-offline.js"
+[1793159768706]  "GET"  "/app/bible/bible-daily-verse.js"
+[1793159768718]  "GET"  "/app/bible/bible-navigation.js"
+× [404 - Resource not found]: /bible/.catalyst\reload-script.js
+
+[1793159768750]  "GET"  "/app/bible/bible-reader.js"
+[1793159768779]  "GET"  "/app/bible/bible-search.js"
+[1793159768831]  "GET"  "/app/bible/bible-app.js"
+[1793159768867]  "GET"  "/bible-data/manifest.json"
+[1793159768989]  "GET"  "/api/bible/books"
+[1793159770894]  "GET"  "/bible-data/books.json"
+[1793159770904]  "GET"  "/app/bible/sw.js"
+[1793159771020]  "GET"  "/api/bible/daily-verse"
+[1793159771029]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+[1793159771033]  "GET"  "/app/bible/"
+[1793159771035]  "GET"  "/app/bible/index.html"
+[1793159771037]  "GET"  "/app/bible/bible-styles.css"
+× Error fetching the resource: Error: EISDIR, read
+[1793159771062]  "GET"  "/app/bible/bible-app.js"
+[1793159771067]  "GET"  "/app/bible/bible-navigation.js"
+[1793159771080]  "GET"  "/app/bible/bible-reader.js"
+[1793159771104]  "GET"  "/app/bible/bible-search.js"
+[1793159772151]  "GET"  "/bible-data/daily-verses.json"
+[1793159772231]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/daily-verses.json
+Error: connect ETIMEDOUT 169.148.148.85:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16) {
+  errno: -4039,
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '169.148.148.85',
+  port: 443
+}
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json
+Error: connect ETIMEDOUT 169.148.148.85:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16) {
+  errno: -4039,
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '169.148.148.85',
+  port: 443
+}
+[1793159809247]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159809270]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159810104]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159810118]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159812474]  "GET"  "/api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159812485]  "GET"  "/bible-data/telugu/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Genesis.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159814441]  "GET"  "/api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159814456]  "GET"  "/bible-data/telugu/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Genesis.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159817214]  "GET"  "/api/bible/chapter?translation=telugu&book=numbers&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=numbers&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159817232]  "GET"  "/bible-data/telugu/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Numbers.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828866]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828888]  "GET"  "/bible-data/kjv/Exodus.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Exodus.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828906]  "GET"  "/bible-data/kjv/Leviticus.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Leviticus.json  
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828929]  "GET"  "/bible-data/kjv/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Numbers.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828952]  "GET"  "/bible-data/kjv/Deuteronomy.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Deuteronomy.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828969]  "GET"  "/bible-data/kjv/Joshua.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Joshua.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828982]  "GET"  "/bible-data/kjv/Judges.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Judges.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828999]  "GET"  "/bible-data/kjv/Ruth.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Ruth.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829012]  "GET"  "/bible-data/kjv/1Samuel.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Samuel.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+
+---
+
+PS C:\my projects\Church App> catalyst serve
+
+   ┌───────────────────────────────────────────────────────────────────────────┐
+   │                                                                           │
+   │         ⚠  Security warning: vulnerable Node.js version detected          │
+   │                                                                           │
+   │  The Node.js v26.7.0 running the Catalyst CLI is affected by the October  │
+   │    2026 Node.js security releases (high severity: DNS, TLS certificate    │
+   │                   validation and Brotli decoder bugs).                    │
+   │                                                                           │
+   │   Upgrade to v26.12.1 or later (patched: v22.23.4, v24.22.1, v26.12.1).   │
+   │                                                                           │
+   │                                 Details:                                  │
+   │  https://nodejs.org/en/blog/vulnerability/october-2026-security-releases  │
+   │                                                                           │
+   └───────────────────────────────────────────────────────────────────────────┘
+
+‼ skipping serve of AppSail [backend] since unable to locate python3.11 in your system
+‼ AppSail: No targets are ready to be served in local
+
+ >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+i client[church-app]: http://localhost:3000/app/
+
+[1793159763859]  "GET"  "/"
+[1793159763941]  "GET"  "/app/"
+(node:20340) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[1793159764062]  "GET"  "/app/.catalyst%5Creload-script.js"
+[1793159764071]  "GET"  "/app/bible/bible-styles.css"
+[1793159768627]  "GET"  "/app/bible/index.html"
+[1793159768664]  "GET"  "/app/bible/.catalyst%5Creload-script.js"
+[1793159768682]  "GET"  "/app/bible/bible-styles.css"
+[1793159768689]  "GET"  "/app/bible/bible-bookmarks.js"
+[1793159768697]  "GET"  "/app/bible/bible-offline.js"
+[1793159768706]  "GET"  "/app/bible/bible-daily-verse.js"
+[1793159768718]  "GET"  "/app/bible/bible-navigation.js"
+× [404 - Resource not found]: /bible/.catalyst\reload-script.js
+
+[1793159768750]  "GET"  "/app/bible/bible-reader.js"
+[1793159768779]  "GET"  "/app/bible/bible-search.js"
+[1793159768831]  "GET"  "/app/bible/bible-app.js"
+[1793159768867]  "GET"  "/bible-data/manifest.json"
+[1793159768989]  "GET"  "/api/bible/books"
+[1793159770894]  "GET"  "/bible-data/books.json"
+[1793159770904]  "GET"  "/app/bible/sw.js"
+[1793159771020]  "GET"  "/api/bible/daily-verse"
+[1793159771029]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+[1793159771033]  "GET"  "/app/bible/"
+[1793159771035]  "GET"  "/app/bible/index.html"
+[1793159771037]  "GET"  "/app/bible/bible-styles.css"
+× Error fetching the resource: Error: EISDIR, read
+[1793159771062]  "GET"  "/app/bible/bible-app.js"
+[1793159771067]  "GET"  "/app/bible/bible-navigation.js"
+[1793159771080]  "GET"  "/app/bible/bible-reader.js"
+[1793159771104]  "GET"  "/app/bible/bible-search.js"
+[1793159772151]  "GET"  "/bible-data/daily-verses.json"
+[1793159772231]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/daily-verses.json
+Error: connect ETIMEDOUT 169.148.148.85:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16) {
+  errno: -4039,
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '169.148.148.85',
+  port: 443
+}
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json
+Error: connect ETIMEDOUT 169.148.148.85:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16) {
+  errno: -4039,
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '169.148.148.85',
+  port: 443
+}
+[1793159809247]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159809270]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159810104]  "GET"  "/api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=kjv&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159810118]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159812474]  "GET"  "/api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=false"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=false
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159812485]  "GET"  "/bible-data/telugu/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Genesis.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159814441]  "GET"  "/api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=genesis&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159814456]  "GET"  "/bible-data/telugu/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Genesis.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159817214]  "GET"  "/api/bible/chapter?translation=telugu&book=numbers&chapter=1&parallel=true"
+
+Unable to reach the servers to serve the request:   /api/bible/chapter?translation=telugu&book=numbers&chapter=1&parallel=true
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159817232]  "GET"  "/bible-data/telugu/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/telugu/Numbers.json 
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828866]  "GET"  "/bible-data/kjv/Genesis.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Genesis.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828888]  "GET"  "/bible-data/kjv/Exodus.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Exodus.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828906]  "GET"  "/bible-data/kjv/Leviticus.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Leviticus.json  
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828929]  "GET"  "/bible-data/kjv/Numbers.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Numbers.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828952]  "GET"  "/bible-data/kjv/Deuteronomy.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Deuteronomy.json
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828969]  "GET"  "/bible-data/kjv/Joshua.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Joshua.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828982]  "GET"  "/bible-data/kjv/Judges.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Judges.json     
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159828999]  "GET"  "/bible-data/kjv/Ruth.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/Ruth.json       
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+[1793159829012]  "GET"  "/bible-data/kjv/1Samuel.json"
+
+Unable to reach the servers to serve the request:   /bible-data/kjv/1Samuel.json    
+Error: getaddrinfo ENOTFOUND church-60092968270.development.catalystserverless.in   
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:121:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'church-60092968270.development.catalystserverless.in'
+}
+
+---
+
+where i can see the logs
+
+---
+
+Installing the dependencies using npm...
+
+09:47:55:690
+
+Command failed: npm install
+
+09:47:55:949
+
+npm error code ENOENT
+
+09:47:55:949
+
+npm error syscall open
+
+09:47:55:949
+
+npm error path /catalyst/church-App/package.json
+
+09:47:55:949
+
+npm error errno -2
+
+09:47:55:949
+
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/catalyst/church-App/package.json'
+
+09:47:55:949
+
+npm error enoent This is related to npm not being able to find a file.
+
+09:47:55:949
+
+npm error enoent
+
+09:47:55:949
+
+npm error A complete log of this run can be found in: /root/.npm/_logs/2026-10-28T04_17_55_739Z-debug-0.log
+
+09:47:55:949
+
+
+
+Job Failure Reason :: exit code 1
+
+09:47:55:993
+
+Skipping artifact upload.
+
+---
+
+Loading the Slate deployer image v0.0.5
+
+09:53:22:751
+
+Configuring the node runtime 22
+
+09:53:22:831
+
+
+Initialization completed in 0.08s
+
+09:53:22:833
+
+Cloning git repository for the commit 999551d4812841ac7fff6e9d5731fec779004c06
+
+09:53:22:836
+
+Cloning into 'church-App'
+
+09:53:25:637
+
+
+Cloning completed in 2.93s
+
+09:53:25:685
+
+Installing the dependencies using npm...
+
+09:53:25:687
+
+
+up to date, audited 1 package in 244ms
+
+09:53:26:030
+
+
+found 0 vulnerabilities
+
+09:53:26:030
+
+
+
+Installed dependencies in 3.28s
+
+09:53:26:032
+
+Building the application...
+
+09:53:26:035
+
+Running the build command: npm run build
+
+09:53:26:037
+
+
+
+> church-app@1.0.0 build
+
+09:53:26:131
+
+> echo 'No build step required for static client'
+
+09:53:26:132
+
+
+No build step required for static client
+
+09:53:26:132
+
+
+
+Build process completed in 3.38s
+
+09:53:26:133
+
+ENOENT: no such file or directory, access '/catalyst/church-App/dist'
+
+09:53:26:136
+
+
+Job Failure Reason :: exit code 1
+
+09:53:26:195
+
+Skipping artifact upload.
+
+09:53:26:195
+
+---
+
+bible-app.js:96 [App] Failed to load books metadata: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+loadBooksMetadata @ bible-app.js:96
+manifest.json:1  Failed to load resource: the server responded with a status of 404 ()
+index.html:1 Manifest fetch from https://church-app-lbtqwerw.onslate.in/bible-data/manifest.json failed, code 404
+bible-offline.js:27 [Offline] ServiceWorker registered with scope: https://church-app-lbtqwerw.onslate.in/bible/
+bible-daily-verse.js:28 [DailyVerse] API fetch failed, loading from local daily-verses.json: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+loadDailyVerse @ bible-daily-verse.js:28
+/bible-data/daily-verses.json:1  Failed to load resource: the server responded with a status of 404 ()
+manifest.json:1  Failed to load resource: the server responded with a status of 404 ()
+
+---
+
+make a  render file to deploy thi project in render
