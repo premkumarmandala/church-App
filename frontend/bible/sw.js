@@ -5,20 +5,16 @@
 const CACHE_NAME = 'church-bible-v1';
 
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/bible/',
-  '/bible/index.html',
-  '/bible/bible-styles.css',
-  '/bible/bible-app.js',
-  '/bible/bible-navigation.js',
-  '/bible/bible-reader.js',
-  '/bible/bible-search.js',
-  '/bible/bible-bookmarks.js',
-  '/bible/bible-daily-verse.js',
-  '/bible/bible-offline.js',
-  '/bible-data/books.json',
-  '/bible-data/daily-verses.json'
+  './',
+  './index.html',
+  './bible-styles.css',
+  './bible-app.js',
+  './bible-navigation.js',
+  './bible-reader.js',
+  './bible-search.js',
+  './bible-bookmarks.js',
+  './bible-daily-verse.js',
+  './bible-offline.js'
 ];
 
 self.addEventListener('install', (event) => {

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+Telugu:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/bible/bible-styles.css">
+  <link rel="stylesheet" href="bible-styles.css">
   <link rel="manifest" href="/bible-data/manifest.json">
   <meta name="theme-color" content="#fbf9f5">
 </head>
@@ -18,7 +18,7 @@
   <header class="bible-header" id="app-header">
     <div class="header-inner">
       <div class="brand-section">
-        <a href="/" class="brand-link" title="Return to Church Home">
+        <a href="../index.html" class="brand-link" title="Return to Church Home">
           <span class="brand-cross-icon">✝</span>
           <div class="brand-titles">
             <h1 id="app-title">Grace Church Bible</h1>
@@ -232,19 +232,27 @@
       <p>English KJV (1611 Public Domain) &amp; Telugu Holy Bible (పరిశుద్ధ గ్రంథము) • Data curated by Arul John under MIT License.</p>
       <p>
         <a href="/BIBLE_SOURCES_AND_LICENSING.md" target="_blank">Sources &amp; Licensing Documentation</a> • 
-        <a href="/">Church Website Home</a>
+        <a href="../index.html">Church Website Home</a>
       </p>
     </div>
   </footer>
 
+  <!-- Configuration for Local Dev & Catalyst Hosting -->
+  <script>
+    // When testing via Catalyst Client emulator on port 3000, forward API calls to the local FastAPI server on port 8000
+    if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000') {
+      window.API_BASE_URL = 'http://localhost:8000';
+    }
+  </script>
+
   <!-- Scripts in dependency order -->
-  <script src="/bible/bible-bookmarks.js"></script>
-  <script src="/bible/bible-offline.js"></script>
-  <script src="/bible/bible-daily-verse.js"></script>
-  <script src="/bible/bible-navigation.js"></script>
-  <script src="/bible/bible-reader.js"></script>
-  <script src="/bible/bible-search.js"></script>
-  <script src="/bible/bible-app.js"></script>
+  <script src="bible-bookmarks.js"></script>
+  <script src="bible-offline.js"></script>
+  <script src="bible-daily-verse.js"></script>
+  <script src="bible-navigation.js"></script>
+  <script src="bible-reader.js"></script>
+  <script src="bible-search.js"></script>
+  <script src="bible-app.js"></script>
 
 </body>
 </html>
