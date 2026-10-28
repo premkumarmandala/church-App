@@ -12,7 +12,7 @@
     translation: 'kjv',
     parallel: false,
     activeView: 'reader', // 'reader' | 'search' | 'bookmarks' | 'offline'
-    theme: localStorage.getItem('church_bible_theme') || 'dark'
+    theme: localStorage.getItem('church_bible_theme') || 'light'
   };
 
   // Toast Notification Helper
@@ -106,6 +106,10 @@
       if (themeBtn) {
         themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
         themeBtn.title = theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme';
+      }
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme) {
+        metaTheme.setAttribute('content', theme === 'dark' ? '#0a1124' : '#fbf9f5');
       }
     }
 
@@ -201,7 +205,7 @@
       if (!select) return;
 
       const isTelugu = window.BibleState.translation === 'telugu';
-      const allLabel = isTelugu ? 'అన్ని వాక్యాలు (All Verses)' : 'All Verses';
+      const allLabel = isTelugu ? 'అన్ని (All)' : 'All';
 
       select.innerHTML = `<option value="">${allLabel}</option>`;
       const selNum = selectedVerse ? parseInt(selectedVerse, 10) : null;
@@ -209,7 +213,7 @@
       for (let i = 1; i <= versesCount; i++) {
         const opt = document.createElement('option');
         opt.value = i.toString();
-        opt.textContent = isTelugu ? `${i}`;
+        opt.textContent = i.toString();
         if (selNum === i) {
           opt.selected = true;
         }

@@ -1,16 +1,16 @@
-# Dedicated Online Bible Module (`bible/`)
+# Dedicated Online Bible Module (`frontend/bible/`)
 
 ## Module Structure
 ```
 bible/
-  ├── index.html             # Main Bible reader, search, bookmarks, and offline UI
-  ├── bible-styles.css       # Complete vanilla CSS design system with Telugu typography
-  ├── bible-app.js           # Main coordinator tying together all sub-modules
-  ├── bible-navigation.js    # Book, chapter, testament, and translation routing
-  ├── bible-reader.js        # Verse renderer (single and parallel views, copy, bookmarks)
-  ├── bible-search.js        # Search controller (online & offline search with highlighting)
+  ├── index.html             # Main Bible reader, search, bookmarks, and offline UI (with Book, Chapter & Verse selectors)
+  ├── bible-styles.css       # Minimalist design system (Warm White, Navy, Antique Gold, Lora & Noto Serif typography)
+  ├── bible-app.js           # Main coordinator tying together all sub-modules & verse dropdown population
+  ├── bible-navigation.js    # Book, chapter, verse, testament, and translation routing
+  ├── bible-reader.js        # Verse renderer (single and parallel dual-column views, copy, bookmarks, golden highlight)
+  ├── bible-search.js        # Search controller (online & offline search with keyword highlighting)
   ├── bible-bookmarks.js     # Persistent client-side bookmarks manager (localStorage)
-  ├── bible-daily-verse.js   # Daily Scripture component
+  ├── bible-daily-verse.js   # Daily Scripture component with 1-click chapter jump
   ├── bible-offline.js       # Offline storage manager & Service Worker client
   ├── sw.js                  # Service Worker for offline asset and data caching
   └── README.md              # This module documentation
@@ -20,11 +20,12 @@ bible/
 1. **Translations**:
    - English King James Version (KJV)
    - Telugu Holy Bible (పరిశుద్ధ గ్రంథము)
-   - Parallel Dual-Column Bilingual Study Mode
+   - Parallel Dual-Column Bilingual Study Mode with synchronized study headers
 2. **Navigation**:
    - 66 Canonical Books (39 Old Testament, 27 New Testament)
-   - Testament filtering (All, OT, NT)
-   - Chapter switching with cross-book boundary preservation
+   - Testament filtering (`All`, `OT`, `NT`)
+   - **Book, Chapter & Verse Selectors**: Direct selection with smooth scroll & golden highlight
+   - Cross-book boundary navigation (`◀ Previous` / `Next ▶`)
    - Deep linking with hash routes (e.g. `#telugu/genesis/1`, `#kjv/john/3/16`)
 3. **Scripture Search**:
    - Full-text keyword search across 31,102 verses
@@ -46,15 +47,13 @@ bible/
    - Real-time online/offline network indicator
 
 ## Setup & Running Locally
+From the workspace root:
 ```bash
-# Start the server (port 3000 by default)
-node server.js
-# Or via npm:
-npm start
-
-# Run validation and test suite
-npm test
+# Start the FastAPI backend server (port 8000)
+python backend/run_server.py
 ```
-Access the application:
-- Church Home: `http://localhost:3000/`
-- Online Bible Module: `http://localhost:3000/bible/`
+
+Access the application in your browser:
+- **Church Home**: [http://localhost:8000/](http://localhost:8000/)
+- **Online Bible**: [http://localhost:8000/bible/](http://localhost:8000/bible/)
+- **API Swagger Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)

@@ -88,7 +88,17 @@
 
       if (hasParallel) {
         // PARALLEL BILINGUAL VIEW
-        html += `<div class="verses-parallel-container">`;
+        const primaryLabel = translation === 'telugu' ? 'పరిశుద్ధ గ్రంథము (Telugu)' : 'King James Version (English)';
+        const parallelLabel = parallelTranslation === 'telugu' ? 'పరిశుద్ధ గ్రంథము (Telugu)' : 'King James Version (English)';
+
+        html += `
+          <div class="parallel-header-row">
+            <span></span>
+            <span class="parallel-col-header">${primaryLabel}</span>
+            <span class="parallel-col-header">${parallelLabel}</span>
+          </div>
+          <div class="verses-parallel-container">
+        `;
         for (let i = 0; i < verses.length; i++) {
           const v = verses[i];
           const pv = parallelVerses[i] || { text: '' };
