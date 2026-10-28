@@ -13,8 +13,11 @@ from app.config import settings
 
 if __name__ == "__main__":
     host = os.getenv("HOST", settings.HOST)
-    port = int(os.getenv("X_ZOHO_CATALYST_LISTEN_PORT", os.getenv("PORT", str(settings.PORT))))
-    reload = os.getenv("RELOAD", "true").lower() in ("true", "1", "yes")
+    is_catalyst = bool(os.getenv("X_ZOHO_CATALYST_LISTEN_PORT"))
+    port = int(os.getenv("X_ZOHO_CATALYST_LISTEN_PORT") or os.getenv("PORT") or str(settings.PORT))
+    # Disable reloader on Catalyst AppSail container to run as production service
+    default_reload = "false" if is_catalyst else "true"
+    reload = os.getenv("RELOAD", default_reload).lower() in ("true", "1", "yes")
 
     print(f"================================================================")
     print(f" Starting {settings.TITLE} v{settings.VERSION}")

@@ -239,10 +239,11 @@
 
   <!-- Configuration for Local Dev & Catalyst Hosting -->
   <script>
-    // When testing via Catalyst Client emulator on port 3000, forward API calls to the local FastAPI server on port 8000
+    // Local dev: forward API calls to localhost:8000
     if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000') {
       window.API_BASE_URL = 'http://localhost:8000';
-    } else if (window.location.hostname.includes('catalystserverless')) {
+    } else if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      // Cloud hosting (onslate.in, catalystserverless.in, custom domain)
       window.API_BASE_URL = 'https://backend-50047126302.development.catalystappsail.in';
     }
   </script>
