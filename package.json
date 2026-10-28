@@ -4,6 +4,6 @@
   "description": "Grace Church & Ministries - Application Platform",
   "private": true,
   "scripts": {
-    "build": "echo 'No build step required for static client'"
+    "build": "node scripts/build.js"
   }
 }
