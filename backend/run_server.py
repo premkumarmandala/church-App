@@ -13,7 +13,7 @@ from app.config import settings
 
 if __name__ == "__main__":
     host = os.getenv("HOST", settings.HOST)
-    port = int(os.getenv("PORT", str(settings.PORT)))
+    port = int(os.getenv("X_ZOHO_CATALYST_LISTEN_PORT", os.getenv("PORT", str(settings.PORT))))
     reload = os.getenv("RELOAD", "true").lower() in ("true", "1", "yes")
 
     print(f"================================================================")

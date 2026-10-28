@@ -9,6 +9,24 @@
   },
   "projects": [
     {
+      "idx": 2,
+      "id": "101580000000013024",
+      "name": "Project-Rainfall",
+      "domain": {
+        "id": "50047111287",
+        "name": "project-rainfall-60092968270.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "60092968270",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    },
+    {
       "idx": 1,
       "id": "101580000000013050",
       "name": "church",
@@ -22,7 +40,15 @@
           "idx": 1,
           "id": "60092968270",
           "name": "Development",
-          "type": 3
+          "type": 3,
+          "env_status": "Active",
+          "project_details": {
+            "project_name": "church",
+            "id": "101580000000013050",
+            "project_type": "Live"
+          },
+          "is_default": true,
+          "action_required": false
         }
       ]
     }
