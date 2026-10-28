@@ -237,15 +237,16 @@
     </div>
   </footer>
 
-  <!-- Configuration for Local Dev & Catalyst Hosting -->
+  <!-- Configuration for Local Dev, Render & Catalyst Hosting -->
   <script>
-    // Local dev: forward API calls to localhost:8000
+    // 1. Local dev via Catalyst emulator (port 3000): forward to local FastAPI server (port 8000)
     if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000') {
       window.API_BASE_URL = 'http://localhost:8000';
-    } else if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      // Cloud hosting (onslate.in, catalystserverless.in, custom domain)
+    } else if (window.location.hostname.includes('onslate.in') || window.location.hostname.includes('catalystserverless.in')) {
+      // 2. Zoho Catalyst Slate hosting: route to Catalyst AppSail backend
       window.API_BASE_URL = 'https://backend-50047126302.development.catalystappsail.in';
     }
+    // 3. On Render.com (or unified single-domain hosting): API_BASE_URL remains '' (same-origin)
   </script>
 
   <!-- Scripts in dependency order -->

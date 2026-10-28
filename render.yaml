@@ -1,0 +1,26 @@
+# ============================================================
+# Render.com Blueprint (render.yaml)
+# Grace Church & Ministries - Full-Stack Application Platform
+# ============================================================
+
+services:
+  # Unified Full-Stack Service:
+  # Serves the FastAPI REST API, Canonical Scripture Data,
+  # and the Complete Web Frontend (Church Home & Online Bible)
+  - type: web
+    name: church-app
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/run_server.py
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: HOST
+        value: 0.0.0.0
+      - key: RELOAD
+        value: "false"
