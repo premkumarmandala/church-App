@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M60DDY4DQ7V04MNSGPTZCJHY",
+  "session_id": "30dfbd63-d145-4209-830e-fd2183ac63cb",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-28T04:48:59.9888845Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "save_step_count": 2,
+  "files_touched": [
+    "backend/run_server.py",
+    "frontend/bible/index.html",
+    "scripts/build.js"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "7dc93fbee5fa",
+  "session_metrics": {
+    "turn_count": 20
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-28T04:48:59.9002959Z",
+    "agent_lines": 16,
+    "agent_removed": 9,
+    "human_added": 0,
+    "human_modified": 261,
+    "human_removed": 0,
+    "total_committed": 277,
+    "total_lines_changed": 286,
+    "agent_percentage": 8.741258741258742,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
