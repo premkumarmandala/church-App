@@ -1,0 +1,9 @@
+{
+  "name": "church-app",
+  "version": "1.0.0",
+  "description": "Grace Church & Ministries - Application Platform",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build step required for static client'"
+  }
+}
