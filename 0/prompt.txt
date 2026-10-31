@@ -1,0 +1,29 @@
+Review and fix the Church App frontend homepage (`frontend/`).
+
+**Tasks:**
+
+1. Fix incomplete or invalid HTML structure in `index.html`.
+2. Restore and correct missing CSS, styles, and theme variables.
+3. Fix responsive design for mobile, tablet, and desktop.
+4. Connect the prayer request form to the existing FastAPI backend. Never show success without a successful response.
+5. Verify donation details and remove unverified information or fake claims.
+6. Add actual images to the gallery.
+7. Fix sermon cards and connect valid audio/video links.
+8. Check navigation, buttons, links, and JavaScript functionality.
+9. Fix console errors, broken assets, and API integration issues.
+10. Improve accessibility and frontend performance.
+
+**Important instructions:**
+- Preserve the existing design and branding.
+- Do not add unnecessary features.
+- Do not replace working functionality.
+- Reuse existing backend APIs wherever possible.
+- Do not use fake data or placeholder success messages.
+- Make changes directly in the existing project files.
+
+**Final deliverable:**
+Provide a summary of issues found, files modified, fixes implemented, remaining issues, and testing results. Do not claim a feature is working unless it has been tested.
+
+---
+
+what is the commit message.

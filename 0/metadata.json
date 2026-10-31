@@ -1,0 +1,64 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M688TVV05VVCNG0NP2HCMGXS",
+  "session_id": "9e7e6191-bceb-47ce-a6f7-9f4759c85985",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-31T06:02:35.7779614Z",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "save_step_count": 2,
+  "files_touched": [
+    "README.md",
+    "backend/app/api/routes.py",
+    "backend/app/models/__init__.py",
+    "backend/app/models/bible_models.py",
+    "backend/tests/test_bible_api.py",
+    "frontend/index.html"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "15d99a99bb62",
+  "checkpoint_transcript_start": 215,
+  "transcript_lines_at_start": 215,
+  "session_metrics": {
+    "turn_count": 3
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-31T06:02:35.7244434Z",
+    "agent_lines": 0,
+    "agent_removed": 11,
+    "human_added": 658,
+    "human_modified": 91,
+    "human_removed": 0,
+    "total_committed": 674,
+    "total_lines_changed": 760,
+    "agent_percentage": 1.4473684210526316,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 749,
+      "user_lines_removed": 91,
+      "agent_lines_added": 16,
+      "agent_lines_removed": 11,
+      "user_added_per_file": {
+        "backend/app/api/routes.py": 25,
+        "backend/app/models/__init__.py": 4,
+        "backend/app/models/bible_models.py": 16,
+        "backend/tests/test_bible_api.py": 23,
+        "frontend/index.html": 681
+      },
+      "user_removed_per_file": {
+        "frontend/index.html": 91
+      }
+    }
+  ]
+}
