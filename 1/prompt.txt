@@ -1,0 +1,85 @@
+## Task: Convert Existing Bible UI into React
+
+Convert only the **frontend UI of my existing Bible feature** from HTML, CSS, and vanilla JavaScript into React using JavaScript (JSX).
+
+### Requirements
+
+1. Inspect the existing Bible frontend before making changes.
+2. Recreate the uploaded screenshot as closely as possible.
+3. Implement the following UI:
+   - Left sidebar with Bible navigation.
+   - English KJV and Telugu language selectors.
+   - Verse of the Day banner.
+   - Read Scripture, Search Bible, Bookmarks, and Offline Reading tabs.
+   - Old Testament and New Testament filters.
+   - Book and chapter selectors.
+   - Previous and Next navigation buttons.
+   - Scripture reading area with verse numbers.
+   - Search, bookmark, copy, and font-size controls.
+4. Use React functional components and Hooks.
+5. Create a separate `bible/` folder and keep all Bible UI components, CSS files, and related frontend code inside it.
+6. Use reusable components and maintain clean, organized code.
+7. Make the UI responsive for desktop, tablet, and mobile.
+8. Use the existing colors, typography, spacing, and layout from the uploaded screenshot.
+
+### Important Restrictions
+- Use JavaScript and JSX, not TypeScript.
+- Implement UI only.
+- Do not modify the backend, database, APIs, or Bible JSON files.
+- Do not implement actual Bible data loading, search logic, bookmarks, or offline functionality.
+- Use temporary mock data only to demonstrate the UI.
+- Do not modify unrelated website features.
+- Do not rebuild the entire application.
+
+### Completion
+Run the frontend, fix UI errors, and verify responsiveness. Report the files created and modified.
+
+**Goal: Convert only the existing Bible page UI into a clean, reusable React interface matching my uploaded screenshot.**
+
+---
+
+## Task: Convert Existing Bible UI into React
+
+Convert only the **frontend UI of my existing Bible feature** from HTML, CSS, and vanilla JavaScript into React using JavaScript (JSX).
+
+### Requirements
+
+1. Inspect the existing Bible frontend before making changes.
+2. Recreate the uploaded screenshot as closely as possible.
+3. Implement the following UI:
+   - Left sidebar with Bible navigation.
+   - English KJV and Telugu language selectors.
+   - Verse of the Day banner.
+   - Read Scripture, Search Bible, Bookmarks, and Offline Reading tabs.
+   - Old Testament and New Testament filters.
+   - Book and chapter selectors.
+   - Previous and Next navigation buttons.
+   - Scripture reading area with verse numbers.
+   - Search, bookmark, copy, and font-size controls.
+4. Use React functional components and Hooks.
+5. Create a separate `bible/` folder and keep all Bible UI components, CSS files, and related frontend code inside it.
+6. Use reusable components and maintain clean, organized code.
+7. Make the UI responsive for desktop, tablet, and mobile.
+8. Use the existing colors, typography, spacing, and layout from the uploaded screenshot.
+
+### Important Restrictions
+- Use JavaScript and JSX, not TypeScript.
+- Implement UI only.
+- Do not modify the backend, database, APIs, or Bible JSON files.
+- Do not implement actual Bible data loading, search logic, bookmarks, or offline functionality.
+- Use temporary mock data only to demonstrate the UI.
+- Do not modify unrelated website features.
+- Do not rebuild the entire application.
+
+### Completion
+Run the frontend, fix UI errors, and verify responsiveness. Report the files created and modified.
+
+**Goal: Convert only the existing Bible page UI into a clean, reusable React interface matching my uploaded screenshot.**
+
+---
+
+remove old files or extra code.
+
+---
+
+what is the commit message.

@@ -3,9 +3,31 @@
   "checkpoint_id": "01M685CRW4QKMHMPGPR134Q6VZ",
   "strategy": "manual-commit",
   "branch": "main",
-  "checkpoints_count": 8,
+  "checkpoints_count": 9,
   "files_touched": [
+    "frontend/bible/BibleApp.jsx",
+    "frontend/bible/assets/hero_cross_sunset.jpg",
+    "frontend/bible/bible-app.js",
+    "frontend/bible/bible-bookmarks.js",
+    "frontend/bible/bible-daily-verse.js",
+    "frontend/bible/bible-navigation.js",
+    "frontend/bible/bible-offline.js",
+    "frontend/bible/bible-react.css",
+    "frontend/bible/bible-reader.js",
+    "frontend/bible/bible-search.js",
     "frontend/bible/bible-styles.css",
+    "frontend/bible/components/BookmarksPanel.jsx",
+    "frontend/bible/components/DailyVerseHero.jsx",
+    "frontend/bible/components/OfflinePanel.jsx",
+    "frontend/bible/components/PassageNavigation.jsx",
+    "frontend/bible/components/ScriptureReader.jsx",
+    "frontend/bible/components/SearchPanel.jsx",
+    "frontend/bible/components/Sidebar.jsx",
+    "frontend/bible/components/TopBar.jsx",
+    "frontend/bible/components/ViewTabs.jsx",
+    "frontend/bible/index.html",
+    "frontend/bible/mockData.js",
+    "frontend/bible/sw.js",
     "frontend/home/assets/church_building.jpg",
     "frontend/home/assets/hero_cross_sunset.jpg",
     "frontend/home/assets/open_bible_banner.jpg",
@@ -17,6 +39,12 @@
       "transcript": "/0/full.jsonl",
       "content_hash": "/0/content_hash.txt",
       "prompt": "/0/prompt.txt"
+    },
+    {
+      "metadata": "/1/metadata.json",
+      "transcript": "/1/full.jsonl",
+      "content_hash": "/1/content_hash.txt",
+      "prompt": "/1/prompt.txt"
     }
   ]
 }
