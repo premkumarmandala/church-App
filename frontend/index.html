@@ -1,27 +1,291 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grace Church &amp; Ministries - Welcome</title>
-  <meta name="description" content="Grace Church and Ministry Organization. Growing in faith, sharing God's love, and studying the Holy Scriptures.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+Telugu:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="bible/bible-styles.css">
-  <style>
-    .church-hero {
-      max-width: 1000px;
-      margin: 2rem auto;
+
+color: var(--text-primary);
+      line-height: 1.15;
+    }
+
+    .nav-subtitle {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Desktop Navigation Menu */
+    .nav-desktop {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-links-list {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-item {
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0.45rem 0.72rem;
+      border-radius: var(--radius-full);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-item:hover {
+      color: var(--text-primary);
+      background: var(--bg-card-hover);
+    }
+
+    .nav-item.active {
+      color: var(--accent-gold);
+      background: var(--accent-gold-glow);
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px var(--border-highlight);
+    }
+
+    /* Distinctive Bible Nav Pill */
+    .nav-item-bible {
+      color: var(--accent-gold) !important;
+      font-weight: 700;
+      background: var(--accent-gold-glow);
+      border: 1px solid var(--border-highlight);
+      padding: 0.42rem 0.9rem;
+      box-shadow: 0 2px 8px rgba(184, 134, 11, 0.15);
+    }
+
+    .nav-item-bible:hover {
+      background: var(--accent-gold);
+      color: #000 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(184, 134, 11, 0.35);
+    }
+
+    /* Donate CTA Button */
+    .btn-nav-donate {
+      background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+      color: #0b132b;
+      font-weight: 700;
+      font-size: 0.86rem;
+      text-decoration: none;
+      padding: 0.48rem 1.15rem;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 14px rgba(184, 134, 11, 0.28);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      margin-left: 0.4rem;
+    }
+
+    .btn-nav-donate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(184, 134, 11, 0.45);
+      filter: brightness(1.05);
+    }
+
+    /* Mobile Hamburger Button */
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 42px;
+      height: 42px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .hamburger-btn:hover {
+      border-color: var(--accent-gold);
+    }
+
+    .hamburger-line {
+      width: 22px;
+      height: 2px;
+      background-color: var(--text-primary);
+      border-radius: 2px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: center;
+    }
+
+    .hamburger-btn.is-active .line-1 {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .hamburger-btn.is-active .line-2 {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .hamburger-btn.is-active .line-3 {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile Drawer Menu */
+    .mobile-drawer {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-bottom: 2px solid var(--accent-gold);
+      box-shadow: 0 20px 40px rgba(15, 30, 54, 0.15);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      opacity: 0;
+    }
+
+    .mobile-drawer.is-open {
+      max-height: 90vh;
+      opacity: 1;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer-inner {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mobile-links-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      color: var(--text-primary);
+      font-size: 0.98rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+      min-height: 48px;
+    }
+
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active {
+      background: var(--accent-gold-glow);
+      color: var(--accent-gold);
+    }
+
+    .mobile-bible-link {
+      background: var(--accent-gold-glow);
+      border: 1px solid var(--border-highlight);
+      color: var(--accent-gold) !important;
+    }
+
+    .mobile-badge {
+      margin-left: auto;
+      font-size: 0.72rem;
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-full);
+    }
+
+    .btn-mobile-donate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+      color: #0b132b;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.95rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(184, 134, 11, 0.35);
+      min-height: 48px;
+    }
+
+    /* ==========================================================================
+       Sections & Page Layout
+       ========================================================================== */
+    .page-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 4rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5rem;
+    }
+
+    .section-header {
       text-align: center;
-      padding: clamp(1.5rem, 5vw, 3rem) clamp(1rem, 4vw, 2.5rem);
+      margin-bottom: 2rem;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0 0 0.5rem 0;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* Hero Section */
+    .church-hero {
+      text-align: center;
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-lg);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      position: relative;
+      overflow: hidden;
     }
+
     .hero-cross {
       font-size: clamp(2.5rem, 6vw, 3.5rem);
       color: var(--accent-gold);
@@ -29,33 +293,91 @@
       display: inline-block;
       filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.45));
     }
+
     .church-hero h1 {
       font-family: var(--font-heading);
-      font-size: clamp(1.75rem, 4.5vw, 2.65rem);
+      font-size: clamp(1.85rem, 4.5vw, 2.75rem);
       font-weight: 800;
       letter-spacing: -0.02em;
       margin-bottom: 0.85rem;
       line-height: 1.2;
     }
+
     .church-hero p.lead {
-      font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+      font-size: clamp(1rem, 2.2vw, 1.18rem);
       color: var(--text-secondary);
-      max-width: 650px;
-      margin: 0 auto 1.75rem auto;
+      max-width: 680px;
+      margin: 0 auto 2rem auto;
       line-height: 1.7;
     }
+
+    /* Hero CTAs */
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+      color: #0b132b;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 0.85rem 1.85rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 48px;
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
+    }
+
+    .btn-hero-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.05rem;
+      padding: 0.85rem 1.65rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 48px;
+    }
+
+    .btn-hero-secondary:hover {
+      border-color: var(--border-highlight);
+      background: var(--bg-card-hover);
+    }
+
+    /* Featured Bible Portal Card */
     .featured-bible-portal {
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
       border: 2px solid var(--border-highlight);
       border-radius: var(--radius-lg);
-      padding: clamp(1.25rem, 3.5vw, 2rem);
+      padding: clamp(1.25rem, 3.5vw, 2.25rem);
       margin: 1.75rem auto 0 auto;
-      max-width: 720px;
+      max-width: 800px;
       text-align: left;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
+      box-shadow: var(--shadow-sm);
     }
+
     .portal-header {
       display: flex;
       align-items: center;
@@ -63,6 +385,7 @@
       flex-wrap: wrap;
       gap: 0.65rem;
     }
+
     .portal-tag {
       background: var(--accent-gold);
       color: #000;
@@ -73,24 +396,31 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+
     .portal-title {
       font-family: var(--font-heading);
-      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      font-size: clamp(1.3rem, 3vw, 1.65rem);
       color: var(--text-primary);
+      margin: 0;
     }
+
     .portal-features-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 0.75rem;
       list-style: none;
+      margin: 0;
+      padding: 0;
       color: var(--text-secondary);
-      font-size: clamp(0.85rem, 2vw, 0.92rem);
+      font-size: clamp(0.85rem, 2vw, 0.95rem);
     }
+
     .portal-features-list li {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
+
     .btn-portal-launch {
       display: inline-flex;
       align-items: center;
@@ -100,7 +430,7 @@
       color: #000;
       font-weight: 700;
       font-size: 1.05rem;
-      padding: 0.85rem 1.75rem;
+      padding: 0.85rem 1.85rem;
       min-height: 48px;
       border-radius: var(--radius-md);
       text-decoration: none;
@@ -108,110 +438,550 @@
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
       align-self: flex-start;
     }
+
     .btn-portal-launch:hover {
       background: var(--accent-gold-light);
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
     }
-    .services-card {
-      margin-top: 2rem;
-      padding: clamp(1rem, 3vw, 1.5rem);
+
+    /* About Cards Grid */
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .about-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      text-align: left;
-    }
-    .services-card h3 {
-      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
-    }
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .service-box {
-      background: var(--bg-input);
-      padding: 1rem;
-      border-radius: var(--radius-sm);
-      border-left: 3px solid var(--accent-gold);
-    }
-    .service-box h4 {
-      margin-bottom: 0.35rem;
-      color: var(--text-primary);
-      font-size: 0.95rem;
-    }
-    .service-box p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
-    /* Responsive Breakpoints: Mobile (Phone) & Tablet */
+    .about-card-icon {
+      font-size: 2rem;
+      color: var(--accent-gold);
+    }
+
+    .about-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    .about-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* Sermons Grid */
+    .sermons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .sermon-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sermon-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-highlight);
+    }
+
+    .sermon-thumbnail {
+      height: 180px;
+      background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+      position: relative;
+    }
+
+    .play-badge {
+      width: 52px;
+      height: 52px;
+      background: rgba(212, 175, 55, 0.95);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .sermon-card:hover .play-badge {
+      transform: scale(1.1);
+    }
+
+    .sermon-content {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .sermon-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sermon-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .sermon-speaker {
+      font-size: 0.88rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .sermon-passage {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      background: var(--bg-input);
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
+      align-self: flex-start;
+      margin-top: auto;
+    }
+
+    /* Events Grid */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      transition: all 0.2s ease;
+    }
+
+    .event-card:hover {
+      border-color: var(--border-highlight);
+      transform: translateY(-2px);
+    }
+
+    .event-calendar-badge {
+      background: var(--accent-gold-glow);
+      border: 1px solid var(--border-highlight);
+      color: var(--accent-gold);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 0.85rem;
+      text-align: center;
+      min-width: 65px;
+    }
+
+    .event-month {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+    }
+
+    .event-day {
+      font-size: 1.65rem;
+      font-weight: 800;
+      line-height: 1;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .event-details h4 {
+      margin: 0 0 0.35rem 0;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+    }
+
+    .event-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    /* Ministries Grid */
+    .ministries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .ministry-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      border-left: 4px solid var(--accent-gold);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease;
+    }
+
+    .ministry-box:hover {
+      transform: translateY(-2px);
+    }
+
+    .ministry-box h4 {
+      margin: 0 0 0.4rem 0;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .ministry-box p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      height: 180px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #1c2541 0%, #3a506b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-align: center;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+      border-color: var(--accent-gold);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Contact & Timings */
+    .contact-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .contact-card, .prayer-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+    }
+
+    .contact-icon {
+      font-size: 1.25rem;
+      color: var(--accent-gold);
+    }
+
+    /* Prayer Request Form */
+    .prayer-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .form-input, .form-textarea {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--accent-gold);
+      background: var(--bg-card);
+    }
+
+    .btn-submit-prayer {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      padding: 0.85rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+      min-height: 46px;
+    }
+
+    .btn-submit-prayer:hover {
+      background: var(--accent-gold-light);
+    }
+
+    /* Donate Section */
+    .donate-card {
+      background: linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, var(--bg-card) 60%, rgba(29, 78, 216, 0.05) 100%);
+      border: 2px solid var(--border-highlight);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.5rem, 4vw, 2.75rem);
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    .donate-quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-secondary);
+      margin: 0 auto 1.5rem auto;
+      max-width: 650px;
+      line-height: 1.7;
+    }
+
+    .donate-options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+
+    .donate-box {
+      background: var(--bg-input);
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .donate-box h4 {
+      margin: 0 0 0.35rem 0;
+      color: var(--accent-gold);
+      font-size: 1rem;
+    }
+
+    .donate-box p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1040px) {
+      .nav-desktop {
+        display: none;
+      }
+      .hamburger-btn {
+        display: flex;
+      }
+      .mobile-drawer {
+        display: block;
+      }
+    }
+
     @media (max-width: 640px) {
-      .btn-portal-launch {
+      .btn-portal-launch, .btn-hero-primary, .btn-hero-secondary {
         width: 100%;
-        align-self: stretch;
+        justify-content: center;
       }
       .portal-features-list {
         grid-template-columns: 1fr;
       }
-      .services-grid {
+      .about-grid, .sermons-grid, .events-grid, .ministries-grid, .gallery-grid, .contact-container {
         grid-template-columns: 1fr;
       }
-      .portal-header {
+      .event-card {
         flex-direction: column;
-        align-items: flex-start;
+      }
+      .page-container {
+        padding: 1rem 0.85rem 3rem 0.85rem;
+        gap: 2.5rem;
       }
     }
 
     @media (max-width: 480px) {
-      .church-hero {
-        margin: 0.75rem auto;
-      }
-      .brand-titles .brand-tagline {
+      .nav-subtitle {
         display: none;
+      }
+      .nav-container {
+        padding: 0.5rem 1rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Church Header -->
-  <header class="bible-header">
-    <div class="header-inner">
-      <div class="brand-section">
-        <a href="./index.html" class="brand-link">
-          <span class="brand-cross-icon">✝</span>
-          <div class="brand-titles">
-            <h1>Grace Church &amp; Ministries</h1>
-            <span class="brand-tagline">Faith • Fellowship • Word of God</span>
-          </div>
-        </a>
-      </div>
-      <nav style="display: flex; gap: 1rem; align-items: center;">
-        <a href="bible/index.html" style="color: var(--accent-gold); font-weight: 700; text-decoration: none; padding: 0.4rem 0.8rem; background: var(--accent-gold-glow); border-radius: var(--radius-full); border: 1px solid var(--border-highlight);">
-          📖 Online Bible
+  <!-- ========================================================================
+       1. Floating Top Navigation Bar
+       ======================================================================== -->
+  <header class="floating-navbar" id="floating-navbar">
+    <div class="nav-container">
+      <!-- Brand Section -->
+      <a href="#home" class="nav-brand" aria-label="Grace Church Home">
+        <span class="nav-cross">✝</span>
+        <div class="nav-titles">
+          <span class="nav-title">Grace Church</span>
+          <span class="nav-subtitle">&amp; Ministries</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="nav-desktop" aria-label="Main Navigation">
+        <ul class="nav-links-list">
+          <li><a href="#home" class="nav-item active">Home</a></li>
+          <li><a href="#about" class="nav-item">About</a></li>
+          <li>
+            <a href="bible/index.html" class="nav-item nav-item-bible" title="Online Bible (English &amp; Telugu)">
+              <span class="nav-bible-icon">📖</span>
+              <span>Bible</span>
+            </a>
+          </li>
+          <li><a href="#sermons" class="nav-item">Sermons</a></li>
+          <li><a href="#events" class="nav-item">Events</a></li>
+          <li><a href="#ministries" class="nav-item">Ministries</a></li>
+          <li><a href="#gallery" class="nav-item">Gallery</a></li>
+          <li><a href="#contact" class="nav-item">Contact</a></li>
+        </ul>
+        <a href="#donate" class="btn-nav-donate" aria-label="Donate Online">
+          <span class="donate-heart">💝</span>
+          <span>Donate</span>
         </a>
       </nav>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-drawer">
+        <span class="hamburger-line line-1"></span>
+        <span class="hamburger-line line-2"></span>
+        <span class="hamburger-line line-3"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+      <div class="mobile-drawer-inner">
+        <ul class="mobile-links-list">
+          <li><a href="#home" class="mobile-nav-link active"><span class="link-icon">🏠</span> Home</a></li>
+          <li><a href="#about" class="mobile-nav-link"><span class="link-icon">🏛️</span> About Us</a></li>
+          <li>
+            <a href="bible/index.html" class="mobile-nav-link mobile-bible-link">
+              <span class="link-icon">📖</span> 
+              <span>Online Bible (KJV &amp; తెలుగు)</span>
+              <span class="mobile-badge">Live</span>
+            </a>
+          </li>
+          <li><a href="#sermons" class="mobile-nav-link"><span class="link-icon">🎙️</span> Sermons &amp; Messages</a></li>
+          <li><a href="#events" class="mobile-nav-link"><span class="link-icon">📅</span> Events &amp; Services</a></li>
+          <li><a href="#ministries" class="mobile-nav-link"><span class="link-icon">🤝</span> Ministries</a></li>
+          <li><a href="#gallery" class="mobile-nav-link"><span class="link-icon">🖼️</span> Photo Gallery</a></li>
+          <li><a href="#contact" class="mobile-nav-link"><span class="link-icon">📍</span> Contact &amp; Timings</a></li>
+        </ul>
+        <div class="mobile-drawer-footer">
+          <a href="#donate" class="btn-mobile-donate">
+            <span>💝</span>
+            <span>Support &amp; Donate Online</span>
+          </a>
+        </div>
+      </div>
     </div>
   </header>
 
-  <main style="max-width: 1200px; margin: 0 auto; padding: 1.5rem; flex: 1;">
-    <div class="church-hero">
+  <!-- ========================================================================
+       Main Content Container with Smooth Scroll Sections
+       ======================================================================== -->
+  <main class="page-container">
+
+    <!-- 1. HOME SECTION -->
+    <section id="home" class="church-hero">
       <span class="hero-cross">✝</span>
       <h1>Welcome to Grace Church</h1>
       <p class="lead">
-        A community centered on the teachings of Jesus Christ and the power of the living Word. Explore Scripture in English and Telugu anytime, online and offline.
+        A community centered on the teachings of Jesus Christ and the power of the living Word. Growing in faith, sharing God's eternal love, and studying the Holy Scriptures.
       </p>
 
+      <div class="hero-actions">
+        <a href="bible/index.html" class="btn-hero-primary">
+          <span>📖</span>
+          <span>Read Holy Bible</span>
+        </a>
+        <a href="#sermons" class="btn-hero-secondary">
+          <span>🎙️</span>
+          <span>Watch Sermons</span>
+        </a>
+      </div>
+
       <!-- Featured Bible Feature Portal -->
-      <div class="featured-bible-portal">
+      <div class="featured-bible-portal" id="bible">
         <div class="portal-header">
           <h2 class="portal-title">Online Bible • పరిశుద్ధ గ్రంథము</h2>
-          <span class="portal-tag">Active Feature</span>
+          <span class="portal-tag">Direct Access</span>
         </div>
-        <p style="color: var(--text-secondary); line-height: 1.6;">
-          Read, navigate, and study all 66 books of the Old and New Testaments in English King James Version (KJV) and standard Telugu (పరిశుద్ధ గ్రంథము).
+        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">
+          Read, navigate, and study all 66 books of the Old and New Testaments in English King James Version (KJV) and standard Telugu (పరిశుద్ధ గ్రంథము) with parallel bilingual reading.
         </p>
 
         <ul class="portal-features-list">
@@ -220,40 +990,401 @@
           <li>⚖️ Parallel Bilingual Reading</li>
           <li>🔍 Scripture Keyword Search</li>
           <li>🔖 Account-Free Bookmarks</li>
-          <li>📥 Full Offline Capability</li>
+          <li>📥 Full Offline PWA Capability</li>
         </ul>
 
         <a href="bible/index.html" class="btn-portal-launch" id="btn-launch-bible">
-          <span>Open Online Bible</span>
+          <span>Launch Bible Reader</span>
           <span>➔</span>
         </a>
       </div>
+    </section>
 
-      <!-- Service Timings Overview (Feature #4 in specs) -->
-      <div class="services-card">
-        <h3>Worship Service Timings</h3>
-        <div class="services-grid">
-          <div class="service-box">
-            <h4>Sunday Morning Worship</h4>
-            <p>09:30 AM – 11:30 AM (English &amp; Telugu)</p>
+    <!-- 2. ABOUT US SECTION -->
+    <section id="about">
+      <div class="section-header">
+        <span class="section-eyebrow">Who We Are</span>
+        <h2 class="section-title">About Grace Church</h2>
+        <p class="section-desc">Rooted in Scripture, devoted to Christ, and committed to loving and serving our local and global community.</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-card-icon">📜</div>
+          <h3>Our Mission</h3>
+          <p>To proclaim the unchanging truth of the Gospel, foster authentic Christian discipleship, and serve families through active faith, hope, and compassionate outreach.</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-card-icon">🕊️</div>
+          <h3>Our Vision</h3>
+          <p>A thriving, multi-generational body of believers worshipping God in Spirit and Truth, empowering leaders, and bringing Christ's transformation to every home.</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-card-icon">⚓</div>
+          <h3>Our Core Beliefs</h3>
+          <p>We believe in the Holy Trinity, the infallible authority of the Holy Scriptures, salvation by grace through faith in Jesus Christ, and the power of prayer and fellowship.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SERMONS & MESSAGES SECTION -->
+    <section id="sermons">
+      <div class="section-header">
+        <span class="section-eyebrow">Word of God</span>
+        <h2 class="section-title">Sermons &amp; Messages</h2>
+        <p class="section-desc">Listen to uplifting Biblical teachings, expository sermons, and spiritual messages in English and Telugu.</p>
+      </div>
+
+      <div class="sermons-grid">
+        <div class="sermon-card">
+          <div class="sermon-thumbnail">
+            <div class="play-badge">▶</div>
           </div>
-          <div class="service-box">
-            <h4>Wednesday Midweek Prayer</h4>
-            <p>06:30 PM – 07:30 PM (Online &amp; Sanctuary)</p>
+          <div class="sermon-content">
+            <span class="sermon-date">Oct 25, 2026 • Sunday Message</span>
+            <h3 class="sermon-title">The Power of Living Faith</h3>
+            <span class="sermon-speaker">Pastor John Wesley</span>
+            <span class="sermon-passage">Hebrews 11:1–6</span>
           </div>
-          <div class="service-box">
-            <h4>Friday Youth Fellowship</h4>
-            <p>07:00 PM – 08:30 PM</p>
+        </div>
+
+        <div class="sermon-card">
+          <div class="sermon-thumbnail">
+            <div class="play-badge">▶</div>
+          </div>
+          <div class="sermon-content">
+            <span class="sermon-date">Oct 18, 2026 • Sunday Message</span>
+            <h3 class="sermon-title">Walking in Grace &amp; Truth</h3>
+            <span class="sermon-speaker">Associate Pastor David Raj</span>
+            <span class="sermon-passage">John 1:14–17</span>
+          </div>
+        </div>
+
+        <div class="sermon-card">
+          <div class="sermon-thumbnail">
+            <div class="play-badge">▶</div>
+          </div>
+          <div class="sermon-content">
+            <span class="sermon-date">Oct 11, 2026 • Telugu Message</span>
+            <h3 class="sermon-title">దేవుని నిబంధన మరియు నమ్మకత్వం</h3>
+            <span class="sermon-speaker">Pastor John Wesley</span>
+            <span class="sermon-passage">కీర్తనలు 89:1–4</span>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- 4. EVENTS SECTION -->
+    <section id="events">
+      <div class="section-header">
+        <span class="section-eyebrow">Gatherings &amp; Services</span>
+        <h2 class="section-title">Worship Timings &amp; Events</h2>
+        <p class="section-desc">Join us in person or online for fellowship, Bible study, and vibrant prayer gatherings.</p>
+      </div>
+
+      <div class="events-grid">
+        <div class="event-card">
+          <div class="event-calendar-badge">
+            <span class="event-month">SUN</span>
+            <span class="event-day">01</span>
+          </div>
+          <div class="event-details">
+            <h4>Sunday Morning Worship</h4>
+            <div class="event-meta">
+              <span>⏰ 09:30 AM – 11:30 AM</span>
+              <span>📍 Main Sanctuary (English &amp; Telugu)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <div class="event-calendar-badge">
+            <span class="event-month">WED</span>
+            <span class="event-day">04</span>
+          </div>
+          <div class="event-details">
+            <h4>Midweek Bible Study &amp; Prayer</h4>
+            <div class="event-meta">
+              <span>⏰ 06:30 PM – 07:30 PM</span>
+              <span>📍 Fellowship Hall &amp; Live Stream</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <div class="event-calendar-badge">
+            <span class="event-month">FRI</span>
+            <span class="event-day">06</span>
+          </div>
+          <div class="event-details">
+            <h4>Youth Fellowship Night</h4>
+            <div class="event-meta">
+              <span>⏰ 07:00 PM – 08:30 PM</span>
+              <span>📍 Youth Center</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. MINISTRIES SECTION -->
+    <section id="ministries">
+      <div class="section-header">
+        <span class="section-eyebrow">Get Involved</span>
+        <h2 class="section-title">Church Ministries</h2>
+        <p class="section-desc">Find your calling, connect with fellow believers, and grow spiritually through our active ministries.</p>
+      </div>
+
+      <div class="ministries-grid">
+        <div class="ministry-box">
+          <h4>👶 Kids for Christ (Sunday School)</h4>
+          <p>Nurturing young hearts with scripture memorization, joyful hymns, and creative biblical learning.</p>
+        </div>
+
+        <div class="ministry-box">
+          <h4>🔥 Ignite Youth &amp; Young Adults</h4>
+          <p>Empowering the next generation to stand firm in faith, character, and purposeful Christian leadership.</p>
+        </div>
+
+        <div class="ministry-box">
+          <h4>🌸 Women of Grace Fellowship</h4>
+          <p>Gathering women for intercessory prayer, biblical mentorship, family encouragement, and mutual support.</p>
+        </div>
+
+        <div class="ministry-box">
+          <h4>🛡️ Men's Brotherhood &amp; Prayer Band</h4>
+          <p>Encouraging men to lead with godly integrity in their homes, workplaces, and spiritual walk.</p>
+        </div>
+
+        <div class="ministry-box">
+          <h4>🎵 Zion Voices Choir &amp; Worship</h4>
+          <p>Leading the congregation into deep, Christ-honoring praise and worship every service.</p>
+        </div>
+
+        <div class="ministry-box">
+          <h4>🌍 Community Outreach &amp; Missions</h4>
+          <p>Extending Christ's hands to the needy through food drives, medical camps, and global mission support.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. GALLERY SECTION -->
+    <section id="gallery">
+      <div class="section-header">
+        <span class="section-eyebrow">Community Life</span>
+        <h2 class="section-title">Fellowship Moments</h2>
+        <p class="section-desc">Glimpses of worship, prayer, baptismal celebrations, and church family fellowship.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item">Sunday Morning Praise &amp; Worship</div>
+        <div class="gallery-item">Baptismal Service Celebrations</div>
+        <div class="gallery-item">Vacation Bible School (VBS)</div>
+        <div class="gallery-item">Annual Thanksgiving Gathering</div>
+      </div>
+    </section>
+
+    <!-- 7. CONTACT & PRAYER REQUEST SECTION -->
+    <section id="contact">
+      <div class="section-header">
+        <span class="section-eyebrow">Connect With Us</span>
+        <h2 class="section-title">Contact &amp; Prayer Requests</h2>
+        <p class="section-desc">We are here to pray with you, answer questions, and welcome you into our family.</p>
+      </div>
+
+      <div class="contact-container">
+        <!-- Contact Details -->
+        <div class="contact-card">
+          <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">Church Office &amp; Sanctuary</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Feel free to reach out anytime or visit our services.</p>
+
+          <ul class="contact-list">
+            <li>
+              <span class="contact-icon">📍</span>
+              <div>
+                <strong>Location:</strong><br>
+                Grace Church &amp; Ministries Sanctuary,<br>
+                Church Road, Hyderabad, Telangana, India
+              </div>
+            </li>
+            <li>
+              <span class="contact-icon">📞</span>
+              <div>
+                <strong>Phone &amp; Pastoral Care:</strong><br>
+                +91 98765 43210 / +91 40 1234 5678
+              </div>
+            </li>
+            <li>
+              <span class="contact-icon">✉️</span>
+              <div>
+                <strong>Email:</strong><br>
+                contact@gracechurch.org
+              </div>
+            </li>
+            <li>
+              <span class="contact-icon">⏰</span>
+              <div>
+                <strong>Office Hours:</strong><br>
+                Tuesday – Saturday: 09:00 AM – 05:00 PM
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Prayer Request Form -->
+        <div class="prayer-card">
+          <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">Submit a Prayer Request</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Our pastoral prayer team intercedes daily for every request.</p>
+
+          <form class="prayer-form" id="prayer-form" onsubmit="event.preventDefault(); alert('Thank you! Your prayer request has been received. Our prayer team will intercede for you.'); this.reset();">
+            <input type="text" class="form-input" placeholder="Your Name (Optional)" aria-label="Your Name">
+            <input type="email" class="form-input" placeholder="Email or Phone Number" required aria-label="Contact information">
+            <textarea class="form-textarea" rows="4" placeholder="How can we pray for you today?" required aria-label="Prayer request details"></textarea>
+            <button type="submit" class="btn-submit-prayer">Send Prayer Request 🙏</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. DONATE & GIVING SECTION -->
+    <section id="donate">
+      <div class="donate-card">
+        <span class="section-eyebrow">TITHES &amp; OFFERINGS</span>
+        <h2 class="section-title">Support the Ministry</h2>
+        <p class="donate-quote">
+          "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver."
+          <br><strong style="font-style: normal; font-size: 0.88rem; color: var(--accent-gold);">— 2 Corinthians 9:7</strong>
+        </p>
+
+        <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 620px; margin: 0 auto;">
+          Your faithful contributions support the proclamation of the Gospel, local church ministry, missionary support, and compassion relief work.
+        </p>
+
+        <div class="donate-options-grid">
+          <div class="donate-box">
+            <h4>🏦 Bank Transfer (NEFT/IMPS)</h4>
+            <p>
+              <strong>Account:</strong> Grace Church Ministries<br>
+              <strong>Account No:</strong> 123456789012<br>
+              <strong>IFSC:</strong> SBIN0012345<br>
+              <strong>Bank:</strong> State Bank of India
+            </p>
+          </div>
+
+          <div class="donate-box">
+            <h4>📱 UPI / QR Giving</h4>
+            <p>
+              <strong>UPI ID:</strong> gracechurch@sbi<br>
+              <strong>Accepted:</strong> Google Pay, PhonePe, Paytm, BHIM<br>
+              <em>Instant donation receipt issued via SMS</em>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
+  <!-- ========================================================================
+       Footer
+       ======================================================================== -->
   <footer class="bible-footer">
-    <p>Grace Church &amp; Ministries • All Scripture text from verified public domain sources (MIT License Arul John).</p>
-    <p><a href="/BIBLE_SOURCES_AND_LICENSING.md">Data Sources &amp; Licensing Documentation</a></p>
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; align-items: center;">
+      <p style="margin: 0; font-weight: 700; font-size: 0.95rem;">Grace Church &amp; Ministries</p>
+      <p style="margin: 0;">All Scripture text from verified public domain sources (King James Version &amp; Telugu పరిశుద్ధ గ్రంథము, MIT License Arul John).</p>
+      <p style="margin: 0;">
+        <a href="#home">Home</a> • 
+        <a href="#about">About</a> • 
+        <a href="bible/index.html">Online Bible</a> • 
+        <a href="#sermons">Sermons</a> • 
+        <a href="#events">Events</a> • 
+        <a href="#ministries">Ministries</a> • 
+        <a href="#contact">Contact</a> • 
+        <a href="#donate">Donate</a> • 
+        <a href="/BIBLE_SOURCES_AND_LICENSING.md" target="_blank">Licensing Documentation</a>
+      </p>
+      <p style="margin: 0; color: var(--text-muted); font-size: 0.78rem;">&copy; 2026 Grace Church &amp; Ministries. All rights reserved.</p>
+    </div>
   </footer>
+
+  <!-- ========================================================================
+       Smooth Navigation, Scrollspy & Mobile Hamburger Menu Controller
+       ======================================================================== -->
+  <script>
+    // 1. Mobile Drawer Toggle
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileDrawer = document.getElementById('mobile-drawer');
+
+    function toggleMenu() {
+      const isOpen = hamburgerBtn.classList.toggle('is-active');
+      mobileDrawer.classList.toggle('is-open', isOpen);
+      hamburgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      mobileDrawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    }
+
+    hamburgerBtn.addEventListener('click', toggleMenu);
+
+    // Auto-close menu on link click
+    document.querySelectorAll('.mobile-nav-link, .btn-mobile-donate').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburgerBtn.classList.remove('is-active');
+        mobileDrawer.classList.remove('is-open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        mobileDrawer.setAttribute('aria-hidden', 'true');
+      });
+    });
+
+    // Close when tapping outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#floating-navbar') && mobileDrawer.classList.contains('is-open')) {
+        hamburgerBtn.classList.remove('is-active');
+        mobileDrawer.classList.remove('is-open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        mobileDrawer.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    // 2. Scrollspy & Dynamic Floating Navbar Shadow
+    const navItems = document.querySelectorAll('.nav-item[href^="#"], .mobile-nav-link[href^="#"]');
+    const trackedSections = document.querySelectorAll('section[id]');
+    const navbar = document.getElementById('floating-navbar');
+
+    function onScrollUpdate() {
+      // Add floating shadow when user scrolls
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+
+      // Detect current section in viewport
+      const scrollPos = window.scrollY + 120;
+      let currentSection = 'home';
+
+      trackedSections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+
+      // Highlight active nav item
+      navItems.forEach(item => {
+        const targetId = item.getAttribute('href');
+        if (targetId === `#${currentSection}`) {
+          item.classList.add('active');
+        } else if (targetId && targetId.startsWith('#')) {
+          item.classList.remove('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', onScrollUpdate, { passive: true });
+    window.addEventListener('load', onScrollUpdate);
+  </script>
 
 </body>
 </html>

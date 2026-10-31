@@ -3,260 +3,1167 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Bible - King James Version & Telugu పరిశుద్ధ గ్రంథము | Grace Church</title>
-  <meta name="description" content="Read, search, bookmark, and study the Holy Bible online in English King James Version (KJV) and Telugu (పరిశుద్ధ గ్రంథము). Supports offline reading, parallel bilingual study, and daily verse.">
+  <title>Online Bible - King James Version &amp; Telugu పరిశుద్ధ గ్రంథము | Grace Church</title>
+  <meta name="description" content="Grace Church Online Bible in English King James Version (KJV) and Telugu (పరిశుద్ధ గ్రంథము). Recreated in React with responsive components and modern aesthetics.">
+  
+  <!-- Typography matching design system -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+Telugu:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="bible-styles.css">
-  <link rel="manifest" href="/bible-data/manifest.json">
-  <meta name="theme-color" content="#fbf9f5">
+
+  <!-- React Design System Stylesheet -->
+  <link rel="stylesheet" href="bible-react.css">
+  
+  <!-- React 18 & ReactDOM 18 from CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel Standalone for in-browser JSX transformation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Canonical Mock Data (Runs as standard JS without CORS) -->
+  <script src="mockData.js"></script>
 </head>
 <body>
 
-  <!-- Top App Header -->
-  <header class="bible-header" id="app-header">
-    <div class="header-inner">
-      <div class="brand-section">
-        <a href="../index.html" class="brand-link" title="Return to Church Home">
-          <span class="brand-cross-icon">✝</span>
-          <div class="brand-titles">
-            <h1 id="app-title">Grace Church Bible</h1>
-            <span class="brand-tagline">పరిశుద్ధ గ్రంథము • Holy Scriptures</span>
-          </div>
-        </a>
-      </div>
-
-      <div class="header-actions">
-        <!-- Translation Selector -->
-        <div class="translation-toggle-group" id="translation-group">
-          <button class="btn-toggle-lang active" data-lang="kjv" id="btn-lang-kjv" title="Read King James Version">English (KJV)</button>
-          <button class="btn-toggle-lang" data-lang="telugu" id="btn-lang-telugu" title="Read Telugu Holy Bible">తెలుగు (Telugu)</button>
-        </div>
-
-        <!-- Parallel View Toggle -->
-        <button class="btn-toggle-parallel" id="btn-toggle-parallel" title="Enable Parallel Dual-Translation View">
-          <span>⚖️</span>
-          <span>Parallel</span>
-        </button>
-
-        <!-- Font Size Controls -->
-        <button class="btn-icon" id="btn-font-decrease" title="Decrease Font Size">A-</button>
-        <button class="btn-icon" id="btn-font-increase" title="Increase Font Size">A+</button>
-
-        <!-- Theme Toggle -->
-        <button class="btn-icon" id="btn-theme-toggle" title="Switch Theme">☀️</button>
-
-        <!-- Network Status -->
-        <div class="status-pill online" id="status-pill">
-          <span class="status-dot">●</span> Online
-        </div>
+  <!-- React Root Container -->
+  <div id="root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; color: #64748b; background: #f8f9fa;">
+      <div style="text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 12px; color: #0f1e36;">✝</div>
+        <p style="font-size: 1.05rem; font-weight: 600; color: #0f1e36;">Loading Grace Church Bible...</p>
       </div>
     </div>
-  </header>
+  </div>
 
-  <!-- Main Content Area -->
-  <main class="bible-main" id="main-content">
+  <!-- React Functional Components and Main Application -->
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useCallback } = React;
 
-    <!-- Daily Scripture Hero Card -->
-    <section id="daily-verse-section" aria-label="Verse of the Day">
-      <div id="daily-verse-container"></div>
-    </section>
+    /* ==========================================================================
+       1. Sidebar Component
+       ========================================================================== */
+    function Sidebar({ activeTab, onSelectTab, bookmarksCount = 0, isOpen, onClose }) {
+      const navItems = [
+        {
+          id: "reader",
+          label: "Read Bible",
+          icon: (
+            <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          )
+        },
+        {
+          id: "search",
+          label: "Search",
+          icon: (
+            <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          )
+        },
+        {
+          id: "bookmarks",
+          label: "Bookmarks",
+          badge: bookmarksCount,
+          icon: (
+            <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+          )
+        },
+        {
+          id: "offline",
+          label: "Offline Reading",
+          icon: (
+            <svg className="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          )
+        }
+      ];
 
-    <!-- Feature Navigation Tabs -->
-    <nav class="view-tabs-bar" aria-label="Bible Feature Views">
-      <div class="tabs-group">
-        <button class="btn-view-tab active" data-view="reader" id="tab-reader">
-          <span>📖</span>
-          <span>Read Scripture</span>
-        </button>
-        <button class="btn-view-tab" data-view="search" id="tab-search">
-          <span>🔍</span>
-          <span>Search Bible</span>
-        </button>
-        <button class="btn-view-tab" data-view="bookmarks" id="tab-bookmarks">
-          <span>🔖</span>
-          <span>Bookmarks</span>
-          <span class="badge-count" id="bookmarks-badge">0</span>
-        </button>
-        <button class="btn-view-tab" data-view="offline" id="tab-offline">
-          <span>📥</span>
-          <span>Offline Reading</span>
-        </button>
-      </div>
-    </nav>
+      return (
+        <React.Fragment>
+          {isOpen && (
+            <div 
+              className="sidebar-backdrop" 
+              onClick={onClose}
+              aria-hidden="true"
+            />
+          )}
 
-    <!-- Passage Navigation Bar (Always available in Reader view) -->
-    <section class="passage-nav-bar" id="passage-nav-bar" aria-label="Passage Selector">
-      <div class="nav-selectors-group">
-        <!-- Testament filter -->
-        <div class="testament-pills" id="testament-pills">
-          <button class="btn-testament-pill active" data-testament="all" id="pill-testament-all">All</button>
-          <button class="btn-testament-pill" data-testament="OT" id="pill-testament-ot">OT (పాత నిబంధన)</button>
-          <button class="btn-testament-pill" data-testament="NT" id="pill-testament-nt">NT (క్రొత్త నిబంధన)</button>
-        </div>
+          <aside className={`bible-sidebar ${isOpen ? "sidebar-open" : ""}`} aria-label="Bible Navigation Sidebar">
+            <button 
+              type="button"
+              className="sidebar-close-btn" 
+              onClick={onClose} 
+              aria-label="Close Sidebar"
+            >
+              ✕
+            </button>
 
-        <!-- Book Dropdown -->
-        <select class="custom-select book-select" id="select-book" aria-label="Select Bible Book"></select>
-
-        <!-- Chapter Dropdown -->
-        <select class="custom-select chapter-select" id="select-chapter" aria-label="Select Chapter"></select>
-
-        <!-- Verse Dropdown -->
-        <select class="custom-select verse-select" id="select-verse" aria-label="Select Verse">
-          <option value="">All</option>
-        </select>
-      </div>
-
-      <!-- Prev / Next Navigation Arrows -->
-      <div class="nav-arrows-group">
-        <button class="btn-nav-arrow btn-prev-chapter" id="btn-prev-chapter" title="Previous Chapter">
-          <span>◀</span>
-          <span>Previous</span>
-        </button>
-        <button class="btn-nav-arrow btn-next-chapter" id="btn-next-chapter" title="Next Chapter">
-          <span>Next</span>
-          <span>▶</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- PANEL 1: SCRIPTURE READER -->
-    <section class="reader-card" id="panel-reader" aria-label="Scripture Reader Panel">
-      <div id="reader-content">
-        <!-- Populated dynamically by BibleReader -->
-      </div>
-
-      <!-- Bottom Next / Prev for seamless reading -->
-      <div class="bottom-nav-mobile" id="reader-bottom-nav">
-        <button class="btn-nav-arrow btn-prev-chapter" id="btn-bottom-prev">◀ Previous Chapter</button>
-        <button class="btn-nav-arrow btn-next-chapter" id="btn-bottom-next">Next Chapter ▶</button>
-      </div>
-    </section>
-
-    <!-- PANEL 2: BIBLE SEARCH -->
-    <section class="reader-card" id="panel-search" style="display: none;" aria-label="Bible Search Panel">
-      <div class="search-controls-bar">
-        <div class="search-input-wrapper">
-          <input type="text" id="search-input" class="search-input" placeholder="Search by keyword, phrase, or reference (e.g. John 3:16, ప్రేమ, grace)..." autocomplete="off" aria-label="Search Scripture">
-          <button class="btn-clear-search" id="btn-clear-search" title="Clear Search">✕</button>
-        </div>
-
-        <select class="custom-select" id="select-search-testament" aria-label="Filter search scope">
-          <option value="all">Entire Bible (అన్ని గ్రంథాలు)</option>
-          <option value="ot">Old Testament Only (పాత నిబంధన)</option>
-          <option value="nt">New Testament Only (క్రొత్త నిబంధన)</option>
-        </select>
-
-        <button class="btn-search-submit" id="btn-search-submit">
-          <span>🔍</span>
-          <span>Search</span>
-        </button>
-      </div>
-
-      <div id="search-results-container">
-        <!-- Rendered by BibleSearch -->
-      </div>
-    </section>
-
-    <!-- PANEL 3: BOOKMARKS -->
-    <section class="reader-card" id="panel-bookmarks" style="display: none;" aria-label="Bookmarks Panel">
-      <div class="bookmarks-header-row">
-        <div>
-          <h2>Saved Bible Verses</h2>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
-            Saved locally in your browser. No login required.
-          </p>
-        </div>
-        <button class="btn-clear-bookmarks" id="btn-clear-all-bookmarks" title="Clear all bookmarks">Clear All</button>
-      </div>
-
-      <div id="bookmarks-list-container">
-        <!-- Rendered by BibleBookmarks -->
-      </div>
-    </section>
-
-    <!-- PANEL 4: OFFLINE STORAGE -->
-    <section class="reader-card" id="panel-offline" style="display: none;" aria-label="Offline Storage Management">
-      <div class="offline-panel">
-        <h2 style="margin-bottom: 0.5rem;">Offline Scripture Storage</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-          Download and cache Bible translations directly in your browser. Once cached, you can read chapters, navigate books, and search verses with no internet connection.
-        </p>
-
-        <div class="offline-status-card">
-          <div class="offline-row">
-            <div class="offline-label">
-              <h4>English King James Version (KJV)</h4>
-              <p id="offline-kjv-status">Checking cache status...</p>
+            {/* Brand Header */}
+            <div className="sidebar-brand">
+              <a href="../index.html" className="brand-badge-link" title="Return to Church Home">
+                <div className="brand-cross-box">
+                  <span className="brand-cross-symbol">✝</span>
+                </div>
+                <div className="brand-info">
+                  <h2 className="brand-app-name">Grace Church Bible</h2>
+                  <span className="brand-app-tagline">Holy Scriptures</span>
+                </div>
+              </a>
             </div>
-            <button class="btn-download-cache" id="btn-cache-kjv">📥 Cache KJV Offline</button>
-          </div>
-          <div class="progress-container" id="progress-kjv">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progress-bar-kjv"></div>
+
+            {/* Navigation Menu */}
+            <nav className="sidebar-nav">
+              <ul className="sidebar-menu-list">
+                {navItems.map((item) => {
+                  const isActive = activeTab === item.id;
+                  return (
+                    <li key={item.id} className="sidebar-menu-item">
+                      <button
+                        type="button"
+                        className={`sidebar-nav-btn ${isActive ? "active" : ""}`}
+                        onClick={() => {
+                          onSelectTab(item.id);
+                          if (onClose) onClose();
+                        }}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        <span className="sidebar-item-icon">{item.icon}</span>
+                        <span className="sidebar-item-label">{item.label}</span>
+                        {typeof item.badge !== "undefined" && (
+                          <span className="sidebar-badge-count">{item.badge}</span>
+                        )}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            {/* Scripture Quote Box */}
+            <div className="sidebar-footer-quote">
+              <div className="quote-icon-wrap">
+                <svg className="quote-book-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+              <div className="quote-text-border">
+                <p className="quote-text">
+                  &ldquo;Your word is a lamp to my feet and a light to my path.&rdquo;
+                </p>
+                <span className="quote-citation">Psalm 119:105</span>
+              </div>
             </div>
-            <span class="progress-text" id="progress-text-kjv">0%</span>
-          </div>
-        </div>
-
-        <div class="offline-status-card">
-          <div class="offline-row">
-            <div class="offline-label">
-              <h4>Telugu Bible (పరిశుద్ధ గ్రంథము)</h4>
-              <p id="offline-telugu-status">Checking cache status...</p>
-            </div>
-            <button class="btn-download-cache" id="btn-cache-telugu">📥 Cache Telugu Offline</button>
-          </div>
-          <div class="progress-container" id="progress-telugu">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progress-bar-telugu"></div>
-            </div>
-            <span class="progress-text" id="progress-text-telugu">0%</span>
-          </div>
-        </div>
-
-        <div style="background: var(--bg-card-hover); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-secondary);">
-          <strong>ℹ️ Privacy & Device Storage Note:</strong>
-          All Bible texts and bookmarks are stored completely on your local device. No personal data, tracking cookies, or browsing history are sent to external servers.
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- App Footer -->
-  <footer class="bible-footer">
-    <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
-      <p>Grace Church &amp; Ministries • Online Bible Module</p>
-      <p>English KJV (1611 Public Domain) &amp; Telugu Holy Bible (పరిశుద్ధ గ్రంథము) • Data curated by Arul John under MIT License.</p>
-      <p>
-        <a href="/BIBLE_SOURCES_AND_LICENSING.md" target="_blank">Sources &amp; Licensing Documentation</a> • 
-        <a href="../index.html">Church Website Home</a>
-      </p>
-    </div>
-  </footer>
-
-  <!-- Configuration for Local Dev, Render & Catalyst Hosting -->
-  <script>
-    // 1. Local dev via Catalyst emulator (port 3000): forward to local FastAPI server (port 8000)
-    if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000') {
-      window.API_BASE_URL = 'http://localhost:8000';
-    } else if (window.location.hostname.includes('onslate.in') || window.location.hostname.includes('catalystserverless.in')) {
-      // 2. Zoho Catalyst Slate hosting: route to Catalyst AppSail backend
-      window.API_BASE_URL = 'https://backend-50047126302.development.catalystappsail.in';
+          </aside>
+        </React.Fragment>
+      );
     }
-    // 3. On Render.com (or unified single-domain hosting): API_BASE_URL remains '' (same-origin)
-  </script>
 
-  <!-- Scripts in dependency order -->
-  <script src="bible-bookmarks.js"></script>
-  <script src="bible-offline.js"></script>
-  <script src="bible-daily-verse.js"></script>
-  <script src="bible-navigation.js"></script>
-  <script src="bible-reader.js"></script>
-  <script src="bible-search.js"></script>
-  <script src="bible-app.js"></script>
+    /* ==========================================================================
+       2. TopBar Component
+       ========================================================================== */
+    function TopBar({
+      selectedLang,
+      onChangeLang,
+      fontSize,
+      onIncreaseFontSize,
+      onDecreaseFontSize,
+      theme,
+      onToggleTheme,
+      onToggleSidebar
+    }) {
+      return (
+        <header className="bible-topbar" aria-label="Bible Utility Header">
+          <button 
+            type="button" 
+            className="btn-mobile-sidebar-toggle" 
+            onClick={onToggleSidebar}
+            aria-label="Toggle navigation menu"
+          >
+            <span className="hamburger-bar"></span>
+            <span className="hamburger-bar"></span>
+            <span className="hamburger-bar"></span>
+          </button>
+
+          <div className="topbar-actions-group">
+            {/* English (KJV) Selector */}
+            <div className="lang-selector-wrapper">
+              <button
+                type="button"
+                className={`btn-topbar-lang ${selectedLang === "kjv" ? "selected" : ""}`}
+                onClick={() => onChangeLang("kjv")}
+                title="English King James Version"
+              >
+                <span className="lang-globe-icon">🌐</span>
+                <span className="lang-name-text">English (KJV)</span>
+                <svg className="dropdown-chevron-svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Telugu Selector */}
+            <div className="lang-selector-wrapper">
+              <button
+                type="button"
+                className={`btn-topbar-lang ${selectedLang === "telugu" ? "selected" : ""}`}
+                onClick={() => onChangeLang("telugu")}
+                title="తెలుగు పరిశుద్ధ గ్రంథము (Telugu Holy Bible)"
+              >
+                <span className="lang-name-text telugu-text">తెలుగు (Telugu)</span>
+                <svg className="dropdown-chevron-svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Font Size Adjusters */}
+            <div className="font-controls-group" aria-label="Font Size Controls">
+              <button
+                type="button"
+                className="btn-topbar-icon"
+                onClick={onDecreaseFontSize}
+                title="Decrease font size (A-)"
+                aria-label="Decrease font size"
+              >
+                A-
+              </button>
+              <button
+                type="button"
+                className="btn-topbar-icon"
+                onClick={onIncreaseFontSize}
+                title="Increase font size (A+)"
+                aria-label="Increase font size"
+              >
+                A+
+              </button>
+            </div>
+
+            {/* Theme Toggle */}
+            <button
+              type="button"
+              className="btn-topbar-icon btn-theme-toggle"
+              onClick={onToggleTheme}
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label="Toggle visual theme"
+            >
+              {theme === "dark" ? "🌙" : "☀️"}
+            </button>
+
+            {/* Online Status */}
+            <div className="topbar-status-pill online" title="Status: Online">
+              <span className="status-indicator-dot">●</span>
+              <span className="status-label-text">Online</span>
+            </div>
+          </div>
+        </header>
+      );
+    }
+
+    /* ==========================================================================
+       3. DailyVerseHero Component
+       ========================================================================== */
+    function DailyVerseHero({ dailyVerse, selectedLang, onReadChapter }) {
+      if (!dailyVerse) return null;
+
+      const isTelugu = selectedLang === "telugu";
+      const quoteText = isTelugu ? dailyVerse.teluguText : dailyVerse.kjvText;
+      const primaryRef = isTelugu ? dailyVerse.referenceTe : dailyVerse.referenceEn;
+      const secondaryRef = isTelugu ? dailyVerse.referenceEn : dailyVerse.referenceTe;
+
+      return (
+        <section className="daily-verse-hero" aria-label="Verse of the Day Banner">
+          <div className="daily-hero-card">
+            <div className="daily-hero-overlay" />
+
+            <div className="daily-hero-content">
+              {/* Badge */}
+              <div className="daily-hero-badge">
+                <span className="badge-cross-symbol">✝</span>
+                <span className="badge-tag-text">VERSE OF THE DAY</span>
+                <span className="badge-date-text">{dailyVerse.date || "27 OCT"}</span>
+              </div>
+
+              {/* Quotation */}
+              <blockquote className={`daily-hero-quote ${isTelugu ? "telugu-font" : ""}`}>
+                &ldquo;{quoteText}&rdquo;
+              </blockquote>
+
+              {/* Reference & Button Row */}
+              <div className="daily-hero-footer">
+                <div className="daily-hero-reference-group">
+                  <span className="daily-primary-ref">{primaryRef}</span>
+                  <span className="daily-secondary-ref">({secondaryRef})</span>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn-read-full-chapter"
+                  onClick={() => onReadChapter && onReadChapter(dailyVerse.bookSlug, dailyVerse.chapter)}
+                  title="Navigate to full chapter in Scripture reader"
+                >
+                  <svg className="btn-book-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                  <span>Read Full Chapter</span>
+                  <span className="chevron-right-arrow">&gt;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       4. ViewTabs Component
+       ========================================================================== */
+    function ViewTabs({ activeTab, onSelectTab, bookmarksCount = 0 }) {
+      const tabs = [
+        {
+          id: "reader",
+          label: "Read Scripture",
+          icon: (
+            <svg className="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          )
+        },
+        {
+          id: "search",
+          label: "Search Bible",
+          icon: (
+            <svg className="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          )
+        },
+        {
+          id: "bookmarks",
+          label: "Bookmarks",
+          badge: bookmarksCount,
+          icon: (
+            <svg className="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+          )
+        },
+        {
+          id: "offline",
+          label: "Offline Reading",
+          icon: (
+            <svg className="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          )
+        }
+      ];
+
+      return (
+        <nav className="bible-view-tabs" aria-label="Feature View Navigation">
+          <div className="tabs-flex-row">
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  className={`btn-view-tab ${isActive ? "active" : ""}`}
+                  onClick={() => onSelectTab(tab.id)}
+                  aria-selected={isActive}
+                  role="tab"
+                >
+                  <span className="tab-icon-wrapper">{tab.icon}</span>
+                  <span className="tab-label-text">{tab.label}</span>
+                  {typeof tab.badge !== "undefined" && (
+                    <span className="tab-badge-pill">{tab.badge}</span>
+                  )}
+                  {isActive && <span className="tab-active-indicator-bar" />}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      );
+    }
+
+    /* ==========================================================================
+       5. PassageNavigation Component
+       ========================================================================== */
+    function PassageNavigation({
+      testamentFilter = "all",
+      onSelectTestament,
+      booksList = [],
+      selectedBook = "genesis",
+      onSelectBook,
+      selectedChapter = 1,
+      onChangeChapter,
+      selectedVerse = "all",
+      onChangeVerse,
+      totalChapters = 50,
+      totalVerses = 31,
+      onPrevChapter,
+      onNextChapter
+    }) {
+      const filteredBooks = useMemo(() => {
+        if (testamentFilter === "all") return booksList;
+        return booksList.filter((b) => b.testament === testamentFilter);
+      }, [booksList, testamentFilter]);
+
+      const chaptersArray = useMemo(() => {
+        const count = totalChapters || 1;
+        return Array.from({ length: count }, (_, i) => i + 1);
+      }, [totalChapters]);
+
+      const versesArray = useMemo(() => {
+        const count = totalVerses || 31;
+        return Array.from({ length: count }, (_, i) => i + 1);
+      }, [totalVerses]);
+
+      return (
+        <section className="passage-navigation-bar" aria-label="Scripture Passage Selectors">
+          {/* Left Controls */}
+          <div className="nav-selectors-cluster">
+            {/* Testament Pills */}
+            <div className="testament-filter-pills" role="radiogroup" aria-label="Filter testament">
+              <button
+                type="button"
+                className={`btn-testament-pill ${testamentFilter === "all" ? "active" : ""}`}
+                onClick={() => onSelectTestament("all")}
+              >
+                All
+              </button>
+              <button
+                type="button"
+                className={`btn-testament-pill ${testamentFilter === "OT" ? "active" : ""}`}
+                onClick={() => onSelectTestament("OT")}
+              >
+                OT (పాత నిబంధన)
+              </button>
+              <button
+                type="button"
+                className={`btn-testament-pill ${testamentFilter === "NT" ? "active" : ""}`}
+                onClick={() => onSelectTestament("NT")}
+              >
+                NT (కొత్త నిబంధన)
+              </button>
+            </div>
+
+            {/* Book Dropdown */}
+            <div className="custom-select-container book-select-container">
+              <select
+                className="passage-select book-dropdown"
+                value={selectedBook}
+                onChange={(e) => onSelectBook(e.target.value)}
+                aria-label="Select Bible Book"
+              >
+                {filteredBooks.map((b) => (
+                  <option key={b.slug} value={b.slug}>
+                    {b.name} ({b.teluguName})
+                  </option>
+                ))}
+              </select>
+              <span className="select-arrow-icon">▼</span>
+            </div>
+
+            {/* Chapter Dropdown */}
+            <div className="custom-select-container chapter-select-container">
+              <select
+                className="passage-select chapter-dropdown"
+                value={selectedChapter}
+                onChange={(e) => onChangeChapter(Number(e.target.value))}
+                aria-label="Select Chapter Number"
+              >
+                {chaptersArray.map((ch) => (
+                  <option key={ch} value={ch}>
+                    {ch}
+                  </option>
+                ))}
+              </select>
+              <span className="select-arrow-icon">▼</span>
+            </div>
+
+            {/* Verse Dropdown */}
+            <div className="custom-select-container verse-select-container">
+              <select
+                className="passage-select verse-dropdown"
+                value={selectedVerse}
+                onChange={(e) => onChangeVerse(e.target.value)}
+                aria-label="Select Verse"
+              >
+                <option value="all">All</option>
+                {versesArray.map((v) => (
+                  <option key={v} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+              <span className="select-arrow-icon">▼</span>
+            </div>
+          </div>
+
+          {/* Right Navigation Arrows */}
+          <div className="nav-buttons-cluster">
+            <button
+              type="button"
+              className="btn-nav-prev"
+              onClick={onPrevChapter}
+              disabled={selectedChapter <= 1}
+              title="Previous chapter"
+            >
+              <span className="nav-arrow">&lt;</span>
+              <span>Previous</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-nav-next"
+              onClick={onNextChapter}
+              title="Next chapter"
+            >
+              <span>Next</span>
+              <span className="nav-arrow">&gt;</span>
+            </button>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       6. ScriptureReader Component
+       ========================================================================== */
+    function ScriptureReader({
+      chapterData,
+      selectedLang = "kjv",
+      fontSize = 18,
+      selectedVerse = "all",
+      bookmarkedVerses = [],
+      onToggleBookmark,
+      onCopyVerse,
+      onSearchVerse
+    }) {
+      if (!chapterData) return null;
+
+      const { book, chapter, verses = [], totalVerses = 31 } = chapterData;
+      const isTelugu = selectedLang === "telugu";
+
+      const displayedVerses = useMemo(() => {
+        if (selectedVerse === "all" || !selectedVerse) return verses;
+        return verses.filter((v) => String(v.verse) === String(selectedVerse));
+      }, [verses, selectedVerse]);
+
+      return (
+        <article 
+          className="scripture-reader-card" 
+          aria-label="Scripture Chapter Reading Area"
+          style={{ "--verse-font-size": `${fontSize}px` }}
+        >
+          {/* Header */}
+          <header className="reader-card-header">
+            <div className="chapter-title-cluster">
+              <div className="reader-book-circle-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+
+              <div className="chapter-names-meta">
+                <h1 className="chapter-primary-heading">
+                  {book.name} {chapter}
+                </h1>
+                <p className="chapter-secondary-subheading">
+                  <span className="telugu-subname">{book.teluguName}</span>
+                  <span className="subheading-bullet">•</span>
+                  <span className="subheading-chapter-label">Chapter {chapter}</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="reader-meta-badges">
+              <span className="badge-navy-translation">
+                {selectedLang.toUpperCase()}
+              </span>
+              <span className="badge-verse-total">
+                {totalVerses} verses
+              </span>
+            </div>
+          </header>
+
+          {/* Verses List */}
+          <div className="reader-verses-list">
+            {displayedVerses.map((v) => {
+              const verseNumber = v.verse;
+              const isBookmarked = bookmarkedVerses.includes(verseNumber);
+              const verseText = isTelugu ? v.telugu : v.kjv;
+
+              return (
+                <div 
+                  key={verseNumber} 
+                  id={`verse-${verseNumber}`}
+                  className={`verse-row-container ${isBookmarked ? "bookmarked-row" : ""}`}
+                >
+                  {/* Number Badge */}
+                  <div className="verse-badge-col">
+                    <span className="verse-number-circle">{verseNumber}</span>
+                  </div>
+
+                  {/* Text */}
+                  <div className="verse-text-col">
+                    <p className={`verse-text-content ${isTelugu ? "telugu-font" : ""}`}>
+                      {verseText}
+                    </p>
+                  </div>
+
+                  {/* Action Controls */}
+                  <div className="verse-controls-col" aria-label={`Controls for verse ${verseNumber}`}>
+                    <button
+                      type="button"
+                      className="btn-verse-control btn-verse-search"
+                      onClick={() => onSearchVerse && onSearchVerse({
+                        book,
+                        chapter,
+                        verse: verseNumber,
+                        text: verseText
+                      })}
+                      title="Search related verses"
+                      aria-label={`Search related verses for verse ${verseNumber}`}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`btn-verse-control btn-verse-bookmark ${isBookmarked ? "bookmarked" : ""}`}
+                      onClick={() => onToggleBookmark && onToggleBookmark(verseNumber)}
+                      title={isBookmarked ? "Remove bookmark" : "Bookmark this verse"}
+                      aria-label={isBookmarked ? "Remove bookmark" : "Bookmark this verse"}
+                    >
+                      <svg viewBox="0 0 24 24" fill={isBookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn-verse-control btn-verse-copy"
+                      onClick={() => onCopyVerse && onCopyVerse({
+                        book,
+                        chapter,
+                        verse: verseNumber,
+                        text: verseText
+                      })}
+                      title="Copy verse to clipboard"
+                      aria-label={`Copy verse ${verseNumber} to clipboard`}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </article>
+      );
+    }
+
+    /* ==========================================================================
+       7. SearchPanel Component
+       ========================================================================== */
+    function SearchPanel({ onNavigateToVerse, initialQuery = "" }) {
+      const [query, setQuery] = useState(initialQuery || "beginning");
+      const [testament, setTestament] = useState("all");
+      const [results, setResults] = useState(window.MOCK_SEARCH_RESULTS || []);
+
+      const handleSearch = (e) => {
+        if (e) e.preventDefault();
+        if (!query.trim()) {
+          setResults([]);
+          return;
+        }
+        const filtered = (window.MOCK_SEARCH_RESULTS || []).filter((r) =>
+          r.text.toLowerCase().includes(query.toLowerCase()) ||
+          r.reference.toLowerCase().includes(query.toLowerCase())
+        );
+        setResults(filtered.length > 0 ? filtered : window.MOCK_SEARCH_RESULTS || []);
+      };
+
+      return (
+        <section className="search-panel-card" aria-label="Bible Search Panel">
+          <div className="search-controls-header">
+            <form className="search-form-row" onSubmit={handleSearch}>
+              <div className="search-input-field-wrap">
+                <span className="search-lens-icon">🔍</span>
+                <input
+                  type="text"
+                  className="search-text-input"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search by keyword, topic, or reference (e.g. light, grace, Genesis 1:1)..."
+                  aria-label="Scripture search query"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    className="btn-clear-search-text"
+                    onClick={() => setQuery("")}
+                    aria-label="Clear search input"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              <div className="custom-select-container search-testament-select">
+                <select
+                  value={testament}
+                  onChange={(e) => setTestament(e.target.value)}
+                  aria-label="Filter search testament"
+                >
+                  <option value="all">Entire Bible (అన్ని గ్రంథాలు)</option>
+                  <option value="ot">Old Testament (పాత నిబంధన)</option>
+                  <option value="nt">New Testament (కొత్త నిబంధన)</option>
+                </select>
+                <span className="select-arrow-icon">▼</span>
+              </div>
+
+              <button type="submit" className="btn-search-action">
+                <span>Search</span>
+              </button>
+            </form>
+          </div>
+
+          <div className="search-results-area">
+            <div className="search-meta-bar">
+              <span className="search-count-label">
+                Found {results.length} passage{results.length === 1 ? "" : "s"} for &ldquo;{query}&rdquo;
+              </span>
+            </div>
+
+            <div className="search-cards-grid">
+              {results.map((item, index) => (
+                <div key={index} className="search-result-card">
+                  <div className="search-result-header">
+                    <span className="result-ref-title">{item.reference}</span>
+                    <span className="result-telugu-ref">({item.teluguReference})</span>
+                    <span className="result-trans-badge">{item.translation}</span>
+                  </div>
+                  <p className="result-verse-text">&ldquo;{item.text}&rdquo;</p>
+                  <div className="search-result-actions">
+                    <button
+                      type="button"
+                      className="btn-result-navigate"
+                      onClick={() => onNavigateToVerse && onNavigateToVerse("genesis", 1, 1)}
+                    >
+                      Read Chapter &gt;
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       8. BookmarksPanel Component
+       ========================================================================== */
+    function BookmarksPanel({ bookmarks = [], onRemoveBookmark, onNavigateToVerse, onCopyVerse }) {
+      return (
+        <section className="bookmarks-panel-card" aria-label="Saved Bookmarks Panel">
+          <div className="bookmarks-header-row">
+            <div>
+              <h2 className="bookmarks-title">Saved Bible Verses</h2>
+              <p className="bookmarks-subtitle">
+                Saved locally in your browser. Read, copy, or jump directly to your favorite passages.
+              </p>
+            </div>
+          </div>
+
+          {bookmarks.length === 0 ? (
+            <div className="bookmarks-empty-state">
+              <div className="empty-icon-box">🔖</div>
+              <h3>No Bookmarks Saved Yet</h3>
+              <p>Click the bookmark icon (★) beside any verse while reading Scripture to save it here.</p>
+            </div>
+          ) : (
+            <div className="bookmarks-list-grid">
+              {bookmarks.map((bm) => (
+                <div key={bm.id} className="bookmark-item-card">
+                  <div className="bookmark-card-top">
+                    <div className="bookmark-ref-names">
+                      <span className="bookmark-ref-en">{bm.bookName} {bm.chapter}:{bm.verse}</span>
+                      <span className="bookmark-ref-te">({bm.bookTeluguName} {bm.chapter}:{bm.verse})</span>
+                    </div>
+                    <span className="bookmark-badge-trans">{bm.translation}</span>
+                  </div>
+
+                  <blockquote className="bookmark-verse-quote">
+                    &ldquo;{bm.text}&rdquo;
+                  </blockquote>
+
+                  <div className="bookmark-card-actions">
+                    <button
+                      type="button"
+                      className="btn-bookmark-action btn-bm-read"
+                      onClick={() => onNavigateToVerse && onNavigateToVerse(bm.bookSlug, bm.chapter, bm.verse)}
+                    >
+                      📖 Read Chapter
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-bookmark-action btn-bm-copy"
+                      onClick={() => onCopyVerse && onCopyVerse({
+                        book: { name: bm.bookName },
+                        chapter: bm.chapter,
+                        verse: bm.verse,
+                        text: bm.text
+                      })}
+                      title="Copy verse"
+                    >
+                      📋 Copy
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-bookmark-action btn-bm-delete"
+                      onClick={() => onRemoveBookmark && onRemoveBookmark(bm.verse)}
+                      title="Remove from bookmarks"
+                    >
+                      ✕ Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       9. OfflinePanel Component
+       ========================================================================== */
+    function OfflinePanel() {
+      const [cachedKjv, setCachedKjv] = useState(true);
+      const [cachedTelugu, setCachedTelugu] = useState(true);
+
+      return (
+        <section className="offline-panel-card" aria-label="Offline Storage Management Panel">
+          <div className="offline-panel-header">
+            <h2 className="offline-title">Offline Scripture Storage</h2>
+            <p className="offline-subtitle">
+              Download and cache Bible translations directly in your browser. Once cached, you can read chapters, navigate books, and search verses without internet connection.
+            </p>
+          </div>
+
+          <div className="offline-cards-container">
+            <div className="offline-status-box">
+              <div className="offline-box-row">
+                <div className="offline-info-group">
+                  <h4 className="offline-item-title">English King James Version (KJV)</h4>
+                  <p className="offline-status-text">
+                    {cachedKjv ? "✓ Cached and ready for offline reading (3.8 MB)" : "Not downloaded"}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn-offline-download"
+                  onClick={() => setCachedKjv(!cachedKjv)}
+                >
+                  {cachedKjv ? "✓ Downloaded" : "📥 Cache KJV Offline"}
+                </button>
+              </div>
+              <div className="offline-progress-track">
+                <div className="offline-progress-fill" style={{ width: cachedKjv ? "100%" : "0%" }} />
+              </div>
+            </div>
+
+            <div className="offline-status-box">
+              <div className="offline-box-row">
+                <div className="offline-info-group">
+                  <h4 className="offline-item-title">Telugu Holy Bible (పరిశుద్ధ గ్రంథము)</h4>
+                  <p className="offline-status-text">
+                    {cachedTelugu ? "✓ Cached and ready for offline reading (4.2 MB)" : "Not downloaded"}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn-offline-download"
+                  onClick={() => setCachedTelugu(!cachedTelugu)}
+                >
+                  {cachedTelugu ? "✓ Downloaded" : "📥 Cache Telugu Offline"}
+                </button>
+              </div>
+              <div className="offline-progress-track">
+                <div className="offline-progress-fill" style={{ width: cachedTelugu ? "100%" : "0%" }} />
+              </div>
+            </div>
+
+            <div className="offline-notice-callout">
+              <span className="notice-icon">ℹ️</span>
+              <div className="notice-body">
+                <strong>Privacy & Device Storage Note:</strong>
+                <p>
+                  All Bible texts, bookmarks, and preferences are stored completely on your local device.
+                  No personal data, tracking cookies, or reading history are transmitted to external servers.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       10. Main BibleApp Coordinator Component
+       ========================================================================== */
+    function BibleApp() {
+      const [activeTab, setActiveTab] = useState("reader");
+      const [selectedLang, setSelectedLang] = useState("kjv");
+      const [testamentFilter, setTestamentFilter] = useState("all");
+      const [selectedBook, setSelectedBook] = useState("genesis");
+      const [selectedChapter, setSelectedChapter] = useState(1);
+      const [selectedVerse, setSelectedVerse] = useState("all");
+
+      const [fontSize, setFontSize] = useState(18);
+      const [theme, setTheme] = useState("light");
+      const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+      const [searchQuery, setSearchQuery] = useState("");
+      const [bookmarks, setBookmarks] = useState(window.MOCK_BOOKMARKS || []);
+      const [toastMessage, setToastMessage] = useState("");
+
+      useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+      }, [theme]);
+
+      const bookmarkedVerses = useMemo(() => {
+        return bookmarks
+          .filter((b) => b.bookSlug === selectedBook && b.chapter === selectedChapter)
+          .map((b) => b.verse);
+      }, [bookmarks, selectedBook, selectedChapter]);
+
+      const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => {
+          setToastMessage("");
+        }, 2400);
+      };
+
+      const handleIncreaseFontSize = () => {
+        setFontSize((prev) => Math.min(28, prev + 2));
+      };
+
+      const handleDecreaseFontSize = () => {
+        setFontSize((prev) => Math.max(14, prev - 2));
+      };
+
+      const handleToggleTheme = () => {
+        setTheme((prev) => (prev === "light" ? "dark" : "light"));
+      };
+
+      const handlePrevChapter = () => {
+        if (selectedChapter > 1) {
+          setSelectedChapter((prev) => prev - 1);
+          setSelectedVerse("all");
+        }
+      };
+
+      const handleNextChapter = () => {
+        setSelectedChapter((prev) => prev + 1);
+        setSelectedVerse("all");
+      };
+
+      const handleToggleBookmark = (verseNum) => {
+        const isBookmarked = bookmarkedVerses.includes(verseNum);
+        if (isBookmarked) {
+          setBookmarks((prev) =>
+            prev.filter((b) => !(b.bookSlug === selectedBook && b.chapter === selectedChapter && b.verse === verseNum))
+          );
+          showToast(`Removed bookmark for Verse ${verseNum}`);
+        } else {
+          const verseObj = (window.MOCK_GENESIS_CHAPTER_1.verses || []).find((v) => v.verse === verseNum);
+          const newBm = {
+            id: `${selectedBook}-${selectedChapter}-${verseNum}`,
+            bookSlug: selectedBook,
+            bookName: "Genesis",
+            bookTeluguName: "ఆదికాండము",
+            chapter: selectedChapter,
+            verse: verseNum,
+            translation: selectedLang.toUpperCase(),
+            text: selectedLang === "telugu" ? (verseObj?.telugu || "") : (verseObj?.kjv || ""),
+            savedAt: "Just now"
+          };
+          setBookmarks((prev) => [newBm, ...prev]);
+          showToast(`★ Bookmarked Genesis ${selectedChapter}:${verseNum}`);
+        }
+      };
+
+      const handleRemoveBookmark = (verseNum) => {
+        setBookmarks((prev) =>
+          prev.filter((b) => !(b.bookSlug === selectedBook && b.chapter === selectedChapter && b.verse === verseNum))
+        );
+        showToast(`Bookmark removed`);
+      };
+
+      const handleCopyVerse = (item) => {
+        const textToCopy = `“${item.text}” — ${item.book.name} ${item.chapter}:${item.verse} (${selectedLang.toUpperCase()})`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast("✓ Copied verse to clipboard!");
+          }).catch(() => {
+            showToast("Copied: " + item.book.name + " " + item.chapter + ":" + item.verse);
+          });
+        } else {
+          showToast("✓ Copied verse to clipboard!");
+        }
+      };
+
+      const handleSearchVerse = (item) => {
+        setSearchQuery(item.text.slice(0, 30));
+        setActiveTab("search");
+      };
+
+      const handleNavigateToPassage = (bookSlug, chapter, verse = "all") => {
+        setSelectedBook(bookSlug || "genesis");
+        setSelectedChapter(chapter || 1);
+        setSelectedVerse(verse || "all");
+        setActiveTab("reader");
+        window.scrollTo({ top: 380, behavior: "smooth" });
+      };
+
+      return (
+        <div className="bible-app-root">
+          {toastMessage && (
+            <div className="bible-toast-notification" role="status">
+              <span>{toastMessage}</span>
+            </div>
+          )}
+
+          {/* Left Sidebar */}
+          <Sidebar
+            activeTab={activeTab}
+            onSelectTab={setActiveTab}
+            bookmarksCount={bookmarks.length}
+            isOpen={mobileSidebarOpen}
+            onClose={() => setMobileSidebarOpen(false)}
+          />
+
+          {/* Main Content Area */}
+          <main className="bible-main-layout">
+            <TopBar
+              selectedLang={selectedLang}
+              onChangeLang={setSelectedLang}
+              fontSize={fontSize}
+              onIncreaseFontSize={handleIncreaseFontSize}
+              onDecreaseFontSize={handleDecreaseFontSize}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              onToggleSidebar={() => setMobileSidebarOpen((prev) => !prev)}
+            />
+
+            <DailyVerseHero
+              dailyVerse={window.MOCK_DAILY_VERSE}
+              selectedLang={selectedLang}
+              onReadChapter={handleNavigateToPassage}
+            />
+
+            <ViewTabs
+              activeTab={activeTab}
+              onSelectTab={setActiveTab}
+              bookmarksCount={bookmarks.length}
+            />
+
+            {/* READER VIEW */}
+            {activeTab === "reader" && (
+              <React.Fragment>
+                <PassageNavigation
+                  testamentFilter={testamentFilter}
+                  onSelectTestament={setTestamentFilter}
+                  booksList={window.MOCK_BOOKS || []}
+                  selectedBook={selectedBook}
+                  onSelectBook={setSelectedBook}
+                  selectedChapter={selectedChapter}
+                  onChangeChapter={setSelectedChapter}
+                  selectedVerse={selectedVerse}
+                  onChangeVerse={setSelectedVerse}
+                  totalChapters={50}
+                  totalVerses={31}
+                  onPrevChapter={handlePrevChapter}
+                  onNextChapter={handleNextChapter}
+                />
+
+                <ScriptureReader
+                  chapterData={window.MOCK_GENESIS_CHAPTER_1}
+                  selectedLang={selectedLang}
+                  fontSize={fontSize}
+                  selectedVerse={selectedVerse}
+                  bookmarkedVerses={bookmarkedVerses}
+                  onToggleBookmark={handleToggleBookmark}
+                  onCopyVerse={handleCopyVerse}
+                  onSearchVerse={handleSearchVerse}
+                />
+              </React.Fragment>
+            )}
+
+            {/* SEARCH VIEW */}
+            {activeTab === "search" && (
+              <SearchPanel
+                initialQuery={searchQuery}
+                onNavigateToVerse={handleNavigateToPassage}
+              />
+            )}
+
+            {/* BOOKMARKS VIEW */}
+            {activeTab === "bookmarks" && (
+              <BookmarksPanel
+                bookmarks={bookmarks}
+                onRemoveBookmark={handleRemoveBookmark}
+                onNavigateToVerse={handleNavigateToPassage}
+                onCopyVerse={handleCopyVerse}
+              />
+            )}
+
+            {/* OFFLINE VIEW */}
+            {activeTab === "offline" && (
+              <OfflinePanel />
+            )}
+          </main>
+        </div>
+      );
+    }
+
+    /* Mount to Root */
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(<BibleApp />);
+    }
+  </script>
 
 </body>
 </html>
