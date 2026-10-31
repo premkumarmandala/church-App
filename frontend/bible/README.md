@@ -1,59 +1,64 @@
-# Dedicated Online Bible Module (`frontend/bible/`)
+# Dedicated Online Bible React Module (`frontend/bible/`)
 
 ## Module Structure
+
+The Bible frontend has been converted into a modular, responsive **React (JSX)** interface matching the design system:
+
 ```
-bible/
-  ├── index.html             # Main Bible reader, search, bookmarks, and offline UI (with Book, Chapter & Verse selectors)
-  ├── bible-styles.css       # Minimalist design system (Warm White, Navy, Antique Gold, Lora & Noto Serif typography)
-  ├── bible-app.js           # Main coordinator tying together all sub-modules & verse dropdown population
-  ├── bible-navigation.js    # Book, chapter, verse, testament, and translation routing
-  ├── bible-reader.js        # Verse renderer (single and parallel dual-column views, copy, bookmarks, golden highlight)
-  ├── bible-search.js        # Search controller (online & offline search with keyword highlighting)
-  ├── bible-bookmarks.js     # Persistent client-side bookmarks manager (localStorage)
-  ├── bible-daily-verse.js   # Daily Scripture component with 1-click chapter jump
-  ├── bible-offline.js       # Offline storage manager & Service Worker client
-  ├── sw.js                  # Service Worker for offline asset and data caching
-  └── README.md              # This module documentation
+frontend/bible/
+├── index.html                   # React app entry point (React 18 & Babel Standalone mount to #root)
+├── BibleApp.jsx                 # Main React container coordinating state & Hooks
+├── bible-react.css              # Responsive styling matching the UI design system (Light & Dark theme)
+├── mockData.js                  # Canonical books index, Genesis 1 bilingual verses (1-31), Daily Verse
+├── assets/
+│   └── hero_cross_sunset.jpg    # Sunset mountain cross background image for hero banner
+├── components/
+│   ├── Sidebar.jsx              # Left sidebar with logo, navigation links, and scripture citation
+│   ├── TopBar.jsx               # Language selectors (KJV & Telugu), font sizing, theme, and Online badge
+│   ├── DailyVerseHero.jsx       # Verse of the Day banner with sunrise backdrop & Read Chapter CTA
+│   ├── ViewTabs.jsx             # Read Scripture, Search Bible, Bookmarks, and Offline Reading tabs
+│   ├── PassageNavigation.jsx    # Testament filters (All, OT, NT), Book, Chapter & Verse dropdowns, Prev/Next
+│   ├── ScriptureReader.jsx      # Scripture reader card with verse numbers, search, bookmark & copy actions
+│   ├── SearchPanel.jsx          # Full-text Scripture search interface with keyword results
+│   ├── BookmarksPanel.jsx       # Saved verses management panel with quick navigation & copy
+│   └── OfflinePanel.jsx         # Offline storage status cards for KJV and Telugu Holy Bible
+└── README.md                    # This module documentation
 ```
 
-## Features Supported
-1. **Translations**:
-   - English King James Version (KJV)
-   - Telugu Holy Bible (పరిశుద్ధ గ్రంథము)
-   - Parallel Dual-Column Bilingual Study Mode with synchronized study headers
-2. **Navigation**:
-   - 66 Canonical Books (39 Old Testament, 27 New Testament)
-   - Testament filtering (`All`, `OT`, `NT`)
-   - **Book, Chapter & Verse Selectors**: Direct selection with smooth scroll & golden highlight
-   - Cross-book boundary navigation (`◀ Previous` / `Next ▶`)
-   - Deep linking with hash routes (e.g. `#telugu/genesis/1`, `#kjv/john/3/16`)
-3. **Scripture Search**:
-   - Full-text keyword search across 31,102 verses
-   - Testament scope filtering
-   - Direct reference detection (e.g., "John 3:16", "యోహాను 3:16")
-   - Keyword highlighting and clear empty states
-   - Seamless offline search across cached books
-4. **Persistent Bookmarks**:
-   - Saved locally in the browser (`localStorage`) without requiring user accounts or logins
-   - Easy 1-click verse bookmarking and removal
-   - Direct jump from bookmark card to chapter and verse
-5. **Daily Verse**:
-   - Date-consistent daily Scripture passage
-   - Bilingual display (English KJV & Telugu)
-   - 1-click navigation to full chapter
-6. **Offline Reading**:
-   - Service worker pre-caches application shell
-   - 1-click offline caching of entire translations into Cache API
-   - Real-time online/offline network indicator
+---
 
-## Setup & Running Locally
-From the workspace root:
+## React Component Architecture
+
+All UI components are built as reusable **React functional components** utilizing modern React Hooks (`useState`, `useEffect`, `useMemo`, `useCallback`):
+
+1. **`Sidebar`**: Left navigation sidebar featuring the Grace Church Bible brand header with Latin cross emblem, navigation items with badge counts, and the Psalm 119:105 Scripture citation box.
+2. **`TopBar`**: Utility controls header with English (KJV) and Telugu dropdown selectors, font size adjustment buttons (`A-`, `A+`), theme switch (`☀️` / `🌙`), and live Online status pill.
+3. **`DailyVerseHero`**: Devotional banner featuring the rustic wooden cross sunset hillside, date badge, italic serif quotation, bilingual references, and 1-click chapter jump button.
+4. **`ViewTabs`**: Horizontal navigation tabs with active royal blue pill styling and active indicator underline.
+5. **`PassageNavigation`**: Filters for `All`, `OT (పాత నిబంధన)`, and `NT (కొత్త నిబంధన)`, customized dropdown selectors for Bible books, chapters, and verses, plus `< Previous` and `Next >` navigation buttons.
+6. **`ScriptureReader`**: Elevated reading card displaying the chapter title, Telugu subtitle, `KJV` and verse total badges, circular verse numbers (`1`, `2`, ...), and per-verse interactive actions (Search `🔍`, Bookmark `★`, and Copy `📋`).
+7. **`SearchPanel`**: Scripture search interface with testament scope filtering and highlighted verse result cards.
+8. **`BookmarksPanel`**: Saved favorite verses list with 1-click reader jump, copy, and removal.
+9. **`OfflinePanel`**: Browser Cache API storage management cards for English KJV and Telugu Holy Bible.
+
+---
+
+## Features & Controls
+
+- **Bilingual Support**: Instant toggle between English King James Version (KJV) and Telugu Holy Bible (పరిశుద్ధ గ్రంథము).
+- **Responsive Layout**: Designed for desktop (2-column layout with fixed left sidebar), tablet, and mobile (collapsible slide-out drawer).
+- **Dynamic Font Sizing**: Interactive `A-` and `A+` controls scale verse typography dynamically across the reader.
+- **Dual Themes**: Supports Minimalist Warm Light mode and Sanctuary Midnight Dark mode (`data-theme="dark"`).
+- **Zero-CORS Browser Compatibility**: Runs universally when served via local HTTP server (`http://localhost:8000/bible/`) or directly opened via file URL.
+
+---
+
+## Local Development & Testing
+
+When running the FastAPI server from workspace root:
 ```bash
-# Start the FastAPI backend server (port 8000)
 python backend/run_server.py
 ```
 
-Access the application in your browser:
-- **Church Home**: [http://localhost:8000/](http://localhost:8000/)
+Access the Bible module in your browser:
 - **Online Bible**: [http://localhost:8000/bible/](http://localhost:8000/bible/)
-- **API Swagger Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)

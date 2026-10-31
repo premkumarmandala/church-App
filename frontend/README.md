@@ -9,17 +9,24 @@ This directory contains the user-facing web applications for Grace Church & Mini
 ```
 frontend/
 ├── index.html                  # Grace Church main portal landing page
-├── bible/                      # Online Bible web application module
-│   ├── index.html              # Bible reader user interface
-│   ├── bible-app.js            # Main application coordinator & state manager
-│   ├── bible-reader.js         # Scripture chapter rendering & typography
-│   ├── bible-navigation.js     # Book, chapter, and testament navigation selector
-│   ├── bible-search.js         # Scripture full-text search interface
-│   ├── bible-daily-verse.js    # Verse of the Day devotional widget
-│   ├── bible-bookmarks.js      # Local bookmark & favorite passages manager
-│   ├── bible-offline.js        # Offline storage and download progress manager
-│   ├── bible-styles.css        # Responsive styling with dark & light themes
-│   ├── sw.js                   # Service Worker for PWA and offline caching
+├── home/                       # Church home assets and resources
+│   └── assets/                 # Photography and banner images
+├── bible/                      # Online Bible React web application module
+│   ├── index.html              # React entry point mounting to #root
+│   ├── BibleApp.jsx            # Main React coordinator & state container
+│   ├── bible-react.css         # Minimalist responsive design system (Light & Dark themes)
+│   ├── mockData.js             # Canonical Bible books metadata, Genesis 1 verses & Daily Verse
+│   ├── assets/                 # Bible module assets (hero_cross_sunset.jpg)
+│   ├── components/             # Reusable React Functional Components (JSX)
+│   │   ├── Sidebar.jsx         # Left navigation sidebar & scripture quote box
+│   │   ├── TopBar.jsx          # Language selectors, font controls, theme toggle, Online status
+│   │   ├── DailyVerseHero.jsx  # Verse of the Day banner with sunrise cross backdrop
+│   │   ├── ViewTabs.jsx        # Read Scripture, Search Bible, Bookmarks & Offline Reading tabs
+│   │   ├── PassageNavigation.jsx # Testament filters (All/OT/NT), Book/Chapter/Verse dropdowns
+│   │   ├── ScriptureReader.jsx # Scripture chapter reader with circular verse numbers & controls
+│   │   ├── SearchPanel.jsx     # Keyword Scripture search interface
+│   │   ├── BookmarksPanel.jsx  # Saved local bookmarks panel
+│   │   └── OfflinePanel.jsx    # Offline storage management panel
 │   └── README.md               # Detailed module documentation
 └── README.md                   # This file
 ```
@@ -31,10 +38,10 @@ frontend/
 ### 1. Standalone or Unified Serving
 - When running the FastAPI backend (`python backend/run_server.py`), FastAPI automatically serves this frontend at `http://localhost:8000/`.
 - The Church landing page is accessible at `http://localhost:8000/`.
-- The Online Bible application is accessible at `http://localhost:8000/bible/`.
+- The Online Bible React application is accessible at `http://localhost:8000/bible/`.
 
 ### 2. Multi-Frontend & Future Frontend Compatibility
-In the future, if you develop a separate frontend (such as a React, Next.js, Vue, or Flutter app) running on a different port or server (e.g. `http://localhost:5173`):
+In the future, if you develop a separate frontend (such as a Next.js, Vite, or mobile app) running on a different port or server (e.g. `http://localhost:5173`):
 - The backend has **CORS fully enabled** for all origins (`*`).
 - You can configure the API endpoint URL by setting `window.API_BASE_URL`:
   ```html
@@ -46,9 +53,10 @@ In the future, if you develop a separate frontend (such as a React, Next.js, Vue
 
 ---
 
-## Features
+## Key Features
+
+- **React Functional Architecture**: Pure JavaScript (JSX) components utilizing React Hooks (`useState`, `useEffect`, `useMemo`, `useCallback`).
 - **Bilingual Scripture**: English King James Version (KJV) and Telugu Holy Bible (పరిశుద్ధ గ్రంథము).
-- **Parallel Mode**: Side-by-side or stacked dual-translation reading.
-- **Full Offline Capability**: Service Worker and Cache API enable reading without internet.
-- **Privacy-First**: Bookmarks and preferences are stored locally in the browser (`localStorage`).
-- **Devotional Daily Verses**: Pre-mapped 366 daily verses with automatic day-of-year calculation.
+- **Interactive Controls**: Dynamic font scaling (`A-` / `A+`), light & dark theme switching, bookmarking, and 1-click verse copying.
+- **Passage Selector**: Filter by testament (`All`, `OT`, `NT`), select books, chapters, and verses with responsive navigation.
+- **Verse of the Day**: Curated daily devotional banner with chapter jump and bilingual citations.
