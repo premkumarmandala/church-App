@@ -1,0 +1,100 @@
+## Task: Implement Home Page in React
+
+Create my church website's **Home page as the default Index page (`/`)** using React and JavaScript (JSX).
+
+Use the uploaded screenshot as the exact UI design reference.
+
+### 1. Design and Layout
+
+Recreate the screenshot as closely as possible, including:
+- Same overall layout, colors, typography, spacing, and card designs.
+- White background with navy text and blue accents.
+- Clean, modern, professional church website appearance.
+- Responsive design for desktop, tablet, and mobile.
+
+### 2. Floating Navigation Bar
+
+Create a fixed top navigation bar that remains visible while scrolling.
+
+Include:
+- Home
+- About
+- Bible
+- Sermons
+- Events
+- Ministries
+- Gallery
+- Contact
+- Donate
+
+Add the church logo and name. Highlight the active page and provide a responsive mobile menu.
+
+### 3. Home Page Sections
+
+Implement all sections shown in the uploaded screenshot:
+
+1. **Hero Section:** Welcome message, church name, background image, Bible verse, Join Us and Watch Sermons buttons.
+2. **Announcements:** Event posters, registration notices, photos, and text announcements.
+3. **Verse of the Day:** Bible verse, reference, and Read in Bible button.
+4. **Service Timings:** Worship schedules, timings, languages, and locations.
+5. **Latest Sermons:** Video thumbnails, titles, speakers, dates, and playback controls.
+6. **Upcoming Events:** Event posters, dates, locations, and registration buttons.
+7. **Our Ministries:** Ministry images and names.
+8. **Visit Our Church:** Church photo, address, phone, email, map, and social media links.
+9. **Footer:** Navigation links, church information, copyright, and social media icons.
+
+### 4. React Folder Structure
+
+Create a dedicated `home/` folder and keep all Home page components, CSS, and related JavaScript files inside it.
+
+Example:
+
+```text
+home/
+├── components/
+│   ├── Navbar.jsx
+│   ├── Hero.jsx
+│   ├── Announcements.jsx
+│   ├── VerseOfTheDay.jsx
+│   ├── ServiceTimings.jsx
+│   ├── LatestSermons.jsx
+│   ├── UpcomingEvents.jsx
+│   ├── Ministries.jsx
+│   ├── ChurchLocation.jsx
+│   └── Footer.jsx
+├── HomePage.jsx
+└── home.css
+```
+
+### 5. Content Integration
+
+- Load announcements, posters, videos, service timings, and events from existing APIs where available.
+- Do not hardcode permanent admin-managed content.
+- Display published content only.
+- Use temporary sample data only when APIs are not yet available.
+- Handle loading, empty, and error states.
+
+### 6. Important Instructions
+
+- Use React with JavaScript and JSX, not TypeScript.
+- Make this Home page the default website index page (`/`).
+- Reuse existing project routing and components.
+- Keep all Home page code inside the `home/` folder.
+- Do not modify the backend or admin dashboard.
+- Do not modify unrelated features.
+- Do not recreate the entire application.
+
+### Acceptance Criteria
+
+- The homepage closely matches the uploaded reference screenshot.
+- All nine sections display correctly.
+- Navigation works and remains fixed while scrolling.
+- Responsive layouts work on mobile, tablet, and desktop.
+- The Home page opens by default at `/`.
+- Existing website functionality remains intact.
+
+Implement the code directly in my existing project, run the application, fix errors, and report all files created or modified.
+
+---
+
+commit message

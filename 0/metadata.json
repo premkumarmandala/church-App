@@ -1,0 +1,72 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M68CB7376G7YXHFM93HFB1EN",
+  "session_id": "9e7e6191-bceb-47ce-a6f7-9f4759c85985",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-31T07:03:56.1750373Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "frontend/home/HomePage.jsx",
+    "frontend/home/components/Announcements.jsx",
+    "frontend/home/components/ChurchLocation.jsx",
+    "frontend/home/components/Footer.jsx",
+    "frontend/home/components/Hero.jsx",
+    "frontend/home/components/LatestSermons.jsx",
+    "frontend/home/components/Ministries.jsx",
+    "frontend/home/components/Navbar.jsx",
+    "frontend/home/components/ServiceTimings.jsx",
+    "frontend/home/components/UpcomingEvents.jsx",
+    "frontend/home/components/VerseOfTheDay.jsx",
+    "frontend/home/home.css",
+    "frontend/index.html"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "c1e896f0b3a5",
+  "checkpoint_transcript_start": 358,
+  "transcript_lines_at_start": 358,
+  "session_metrics": {
+    "turn_count": 4
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-31T07:03:56.0787018Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 1861,
+    "total_committed": 0,
+    "total_lines_changed": 1861,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 3576,
+      "user_lines_removed": 1861,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "frontend/home/HomePage.jsx": 85,
+        "frontend/home/components/Announcements.jsx": 120,
+        "frontend/home/components/ChurchLocation.jsx": 189,
+        "frontend/home/components/Footer.jsx": 107,
+        "frontend/home/components/Hero.jsx": 56,
+        "frontend/home/components/LatestSermons.jsx": 140,
+        "frontend/home/components/Ministries.jsx": 76,
+        "frontend/home/components/Navbar.jsx": 139,
+        "frontend/home/components/ServiceTimings.jsx": 75,
+        "frontend/home/components/UpcomingEvents.jsx": 83,
+        "frontend/home/components/VerseOfTheDay.jsx": 86,
+        "frontend/home/home.css": 1367,
+        "frontend/index.html": 1053
+      },
+      "user_removed_per_file": {
+        "frontend/index.html": 1861
+      }
+    }
+  ]
+}
