@@ -1,1979 +1,1171 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grace Church &amp; Ministries - Welcome Home</title>
-  <meta name="description" content="Grace Church and Ministries. Growing in faith, sharing God's eternal love, and studying the Holy Scriptures in English and Telugu.">
-  <meta name="theme-color" content="#fbf9f5">
+  <title>Grace Fellowship Church - Worship • Grow • Serve • Share</title>
+  <meta name="description" content="Welcome to Grace Fellowship Church. A family of believers growing together in Christ's love. Join us for Sunday worship, service timings, announcements, and online Bible study.">
+  <meta name="theme-color" content="#ffffff">
 
   <!-- OpenGraph / Social Metadata -->
-  <meta property="og:title" content="Grace Church &amp; Ministries - Welcome Home">
-  <meta property="og:description" content="A Christ-centered fellowship devoted to Scripture, prayer, worship, and compassionate community outreach.">
+  <meta property="og:title" content="Grace Fellowship Church - Worship • Grow • Serve • Share">
+  <meta property="og:description" content="A family of believers growing together in Christ's love.">
   <meta property="og:type" content="website">
 
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230f1e36%22/><text y=%2270%22 x=%2250%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22%23d4af37%22 font-family=%22sans-serif%22 font-weight=%22bold%22>✝</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230f1e36%22/><text y=%2270%22 x=%2250%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22%23c59b27%22 font-family=%22sans-serif%22 font-weight=%22bold%22>✝</text></svg>">
 
-  <!-- Google Fonts -->
+  <!-- Typography matching Design System -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+Telugu:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    /* ==========================================================================
-       Design System Tokens & Theme Variables
-       ========================================================================== */
-    :root {
-      --bg-primary: #fbf9f5;
-      --bg-secondary: #f4efe6;
-      --bg-card: #ffffff;
-      --bg-card-hover: #f7f4ed;
-      --bg-input: #f2ede4;
-      
-      --border-color: rgba(15, 30, 54, 0.08);
-      --border-subtle: rgba(15, 30, 54, 0.04);
-      --border-highlight: rgba(184, 134, 11, 0.32);
-      --border-gold-focus: rgba(184, 134, 11, 0.6);
-      
-      --text-primary: #0f1e36;
-      --text-secondary: #3b4b66;
-      --text-muted: #6b7a94;
-      
-      --accent-gold: #b8860b;
-      --accent-gold-hover: #9a6f08;
-      --accent-gold-light: #d4af37;
-      --accent-gold-glow: rgba(184, 134, 11, 0.12);
-      --accent-gold-subtle: rgba(184, 134, 11, 0.06);
-      
-      --accent-blue: #1d4ed8;
-      --accent-blue-subtle: rgba(29, 78, 216, 0.08);
-      --accent-emerald: #15803d;
-      --accent-emerald-subtle: rgba(21, 128, 61, 0.1);
-      --accent-red: #b91c1c;
-      --accent-red-subtle: rgba(185, 28, 28, 0.08);
-      
-      --shadow-xs: 0 1px 2px rgba(15, 30, 54, 0.04);
-      --shadow-sm: 0 2px 6px rgba(15, 30, 54, 0.05), 0 1px 2px rgba(15, 30, 54, 0.03);
-      --shadow-md: 0 6px 18px rgba(15, 30, 54, 0.06), 0 2px 6px rgba(15, 30, 54, 0.03);
-      --shadow-lg: 0 16px 36px rgba(15, 30, 54, 0.08), 0 4px 12px rgba(15, 30, 54, 0.04);
-      --shadow-gold: 0 4px 20px rgba(184, 134, 11, 0.18);
-      
-      --radius-xs: 4px;
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-xl: 20px;
-      --radius-full: 9999px;
-      
-      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-heading: 'Plus Jakarta Sans', sans-serif;
-      --font-serif: 'Lora', 'EB Garamond', Georgia, serif;
-      --font-brand: 'Cinzel', serif;
-      --font-telugu: 'Noto Serif Telugu', Georgia, serif;
+  <!-- Home Design System Stylesheet -->
+  <link rel="stylesheet" href="home/home.css">
 
-      --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+  <!-- React 18 & ReactDOM 18 from CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-    [data-theme="dark"] {
-      --bg-primary: #0a1124;
-      --bg-secondary: #0f1933;
-      --bg-card: #132042;
-      --bg-card-hover: #182752;
-      --bg-input: #172449;
-      
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-subtle: rgba(255, 255, 255, 0.04);
-      --border-highlight: rgba(212, 175, 55, 0.35);
-      --border-gold-focus: rgba(212, 175, 55, 0.6);
-      
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #8899ac;
-      
-      --accent-gold: #d4af37;
-      --accent-gold-hover: #e2c366;
-      --accent-gold-light: #fae08c;
-      --accent-gold-glow: rgba(212, 175, 55, 0.16);
-      
-      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
-      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
-    }
-
-    /* Base Reset */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: 16px;
-      scroll-behavior: smooth;
-      -webkit-text-size-adjust: 100%;
-    }
-
-    body {
-      font-family: var(--font-sans);
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.65;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background-image:
-        radial-gradient(circle at 10% 8%, rgba(184, 134, 11, 0.035) 0%, transparent 45%),
-        radial-gradient(circle at 90% 92%, rgba(29, 78, 216, 0.025) 0%, transparent 50%);
-      background-attachment: fixed;
-      transition: background-color var(--transition-normal), color var(--transition-normal);
-    }
-
-    a {
-      color: inherit;
-    }
-
-    button {
-      font-family: inherit;
-    }
-
-    /* ==========================================================================
-       Floating Navbar
-       ========================================================================== */
-    .floating-navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(251, 249, 245, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border-color);
-      transition: all var(--transition-normal);
-    }
-
-    [data-theme="dark"] .floating-navbar {
-      background: rgba(10, 17, 36, 0.92);
-    }
-
-    .floating-navbar.scrolled {
-      box-shadow: var(--shadow-sm);
-    }
-
-    .nav-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0.65rem 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .nav-cross {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-md);
-      background: var(--text-primary);
-      color: var(--accent-gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(15, 30, 54, 0.15);
-      flex-shrink: 0;
-    }
-
-    .nav-titles {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .nav-title {
-      font-family: var(--font-brand);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1.15;
-    }
-
-    .nav-subtitle {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    /* Desktop Navigation Menu */
-    .nav-desktop {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .nav-links-list {
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .nav-item {
-      color: var(--text-secondary);
-      font-size: 0.86rem;
-      font-weight: 600;
-      text-decoration: none;
-      padding: 0.45rem 0.72rem;
-      border-radius: var(--radius-full);
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .nav-item:hover {
-      color: var(--text-primary);
-      background: var(--bg-card-hover);
-    }
-
-    .nav-item.active {
-      color: var(--accent-gold);
-      background: var(--accent-gold-glow);
-      font-weight: 700;
-      box-shadow: inset 0 0 0 1px var(--border-highlight);
-    }
-
-    /* Distinctive Bible Nav Pill */
-    .nav-item-bible {
-      color: var(--accent-gold) !important;
-      font-weight: 700;
-      background: var(--accent-gold-glow);
-      border: 1px solid var(--border-highlight);
-      padding: 0.42rem 0.9rem;
-      box-shadow: 0 2px 8px rgba(184, 134, 11, 0.15);
-    }
-
-    .nav-item-bible:hover {
-      background: var(--accent-gold);
-      color: #000 !important;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(184, 134, 11, 0.35);
-    }
-
-    /* Donate CTA Button */
-    .btn-nav-donate {
-      background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-      color: #0b132b;
-      font-weight: 700;
-      font-size: 0.86rem;
-      text-decoration: none;
-      padding: 0.48rem 1.15rem;
-      border-radius: var(--radius-full);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      box-shadow: 0 4px 14px rgba(184, 134, 11, 0.28);
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      margin-left: 0.3rem;
-    }
-
-    .btn-nav-donate:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(184, 134, 11, 0.45);
-      filter: brightness(1.05);
-    }
-
-    /* Theme Switcher Button */
-    .btn-theme-switcher {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-md);
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: var(--shadow-xs);
-      margin-left: 0.2rem;
-    }
-
-    .btn-theme-switcher:hover {
-      color: var(--text-primary);
-      border-color: var(--border-highlight);
-      background: var(--bg-card-hover);
-    }
-
-    /* Mobile Hamburger Button */
-    .hamburger-btn {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 5px;
-      width: 42px;
-      height: 42px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      padding: 0;
-      transition: all 0.2s ease;
-      box-shadow: var(--shadow-xs);
-    }
-
-    .hamburger-btn:hover {
-      border-color: var(--accent-gold);
-    }
-
-    .hamburger-line {
-      width: 22px;
-      height: 2px;
-      background-color: var(--text-primary);
-      border-radius: 2px;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      transform-origin: center;
-    }
-
-    .hamburger-btn.is-active .line-1 {
-      transform: translateY(7px) rotate(45deg);
-    }
-
-    .hamburger-btn.is-active .line-2 {
-      opacity: 0;
-      transform: scaleX(0);
-    }
-
-    .hamburger-btn.is-active .line-3 {
-      transform: translateY(-7px) rotate(-45deg);
-    }
-
-    /* Mobile Drawer Menu */
-    .mobile-drawer {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--bg-card);
-      border-bottom: 2px solid var(--accent-gold);
-      box-shadow: 0 20px 40px rgba(15, 30, 54, 0.15);
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-      opacity: 0;
-    }
-
-    .mobile-drawer.is-open {
-      max-height: 90vh;
-      opacity: 1;
-      overflow-y: auto;
-    }
-
-    .mobile-drawer-inner {
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .mobile-links-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .mobile-nav-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.85rem 1rem;
-      color: var(--text-primary);
-      font-size: 0.98rem;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: var(--radius-md);
-      transition: all 0.2s ease;
-      min-height: 48px;
-    }
-
-    .mobile-nav-link:hover,
-    .mobile-nav-link.active {
-      background: var(--accent-gold-glow);
-      color: var(--accent-gold);
-    }
-
-    .mobile-bible-link {
-      background: var(--accent-gold-glow);
-      border: 1px solid var(--border-highlight);
-      color: var(--accent-gold) !important;
-    }
-
-    .mobile-badge {
-      margin-left: auto;
-      font-size: 0.72rem;
-      background: var(--accent-gold);
-      color: #000;
-      font-weight: 700;
-      padding: 0.15rem 0.5rem;
-      border-radius: var(--radius-full);
-    }
-
-    .btn-mobile-donate {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-      color: #0b132b;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 0.95rem;
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      box-shadow: 0 4px 15px rgba(184, 134, 11, 0.35);
-      min-height: 48px;
-    }
-
-    /* ==========================================================================
-       Sections & Page Layout
-       ========================================================================== */
-    .page-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 1.5rem 1.25rem 4rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 3.5rem;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .section-eyebrow {
-      display: inline-block;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.4rem;
-    }
-
-    .section-title {
-      font-family: var(--font-heading);
-      font-size: clamp(1.8rem, 4.5vw, 2.5rem);
-      font-weight: 800;
-      color: var(--text-primary);
-      margin: 0 0 0.5rem 0;
-      letter-spacing: -0.02em;
-    }
-
-    .section-desc {
-      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-      color: var(--text-secondary);
-      max-width: 650px;
-      margin: 0 auto;
-      line-height: 1.65;
-    }
-
-    /* Hero Section */
-    .church-hero {
-      text-align: center;
-      padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2.5rem);
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-cross {
-      font-size: clamp(2.5rem, 6vw, 3.5rem);
-      color: var(--accent-gold);
-      margin-bottom: 0.75rem;
-      display: inline-block;
-      filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.45));
-    }
-
-    .church-hero h1 {
-      font-family: var(--font-heading);
-      font-size: clamp(1.85rem, 4.5vw, 2.75rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.85rem;
-      line-height: 1.2;
-    }
-
-    .church-hero p.lead {
-      font-size: clamp(1rem, 2.2vw, 1.18rem);
-      color: var(--text-secondary);
-      max-width: 680px;
-      margin: 0 auto 2rem auto;
-      line-height: 1.7;
-    }
-
-    /* Hero CTAs */
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-
-    .btn-hero-primary {
-      background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-      color: #0b132b;
-      font-weight: 700;
-      font-size: 1.05rem;
-      padding: 0.85rem 1.85rem;
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      min-height: 48px;
-    }
-
-    .btn-hero-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
-    }
-
-    .btn-hero-secondary {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      font-weight: 600;
-      font-size: 1.05rem;
-      padding: 0.85rem 1.65rem;
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      min-height: 48px;
-    }
-
-    .btn-hero-secondary:hover {
-      border-color: var(--border-highlight);
-      background: var(--bg-card-hover);
-    }
-
-    /* Featured Bible Portal Card */
-    .featured-bible-portal {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
-      border: 2px solid var(--border-highlight);
-      border-radius: var(--radius-lg);
-      padding: clamp(1.25rem, 3.5vw, 2.25rem);
-      margin: 1.75rem auto 0 auto;
-      max-width: 800px;
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .portal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-    }
-
-    .portal-tag {
-      background: var(--accent-gold);
-      color: #000;
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 0.25rem 0.65rem;
-      border-radius: var(--radius-full);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .portal-title {
-      font-family: var(--font-heading);
-      font-size: clamp(1.3rem, 3vw, 1.65rem);
-      color: var(--text-primary);
-      margin: 0;
-    }
-
-    .portal-features-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 0.75rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      color: var(--text-secondary);
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
-    }
-
-    .portal-features-list li {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-portal-launch {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: var(--accent-gold);
-      color: #000;
-      font-weight: 700;
-      font-size: 1.05rem;
-      padding: 0.85rem 1.85rem;
-      min-height: 48px;
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      transition: all var(--transition-fast);
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
-      align-self: flex-start;
-    }
-
-    .btn-portal-launch:hover {
-      background: var(--accent-gold-light);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
-    }
-
-    /* About Cards Grid */
-    .about-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .about-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1.75rem;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .about-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .about-card-icon {
-      font-size: 2rem;
-      color: var(--accent-gold);
-    }
-
-    .about-card h3 {
-      font-family: var(--font-heading);
-      font-size: 1.25rem;
-      margin: 0;
-      color: var(--text-primary);
-    }
-
-    .about-card p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.65;
-      margin: 0;
-    }
-
-    /* Sermons Grid */
-    .sermons-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .sermon-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sermon-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-highlight);
-    }
-
-    .sermon-thumbnail {
-      height: 180px;
-      background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent-gold);
-      position: relative;
-      cursor: pointer;
-    }
-
-    .play-badge {
-      width: 52px;
-      height: 52px;
-      background: rgba(212, 175, 55, 0.95);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #000;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      transition: transform 0.2s ease;
-    }
-
-    .sermon-card:hover .play-badge {
-      transform: scale(1.1);
-    }
-
-    .sermon-content {
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      flex: 1;
-    }
-
-    .sermon-date {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .sermon-title {
-      font-family: var(--font-heading);
-      font-size: 1.15rem;
-      color: var(--text-primary);
-      margin: 0;
-      line-height: 1.35;
-    }
-
-    .sermon-speaker {
-      font-size: 0.88rem;
-      color: var(--accent-gold);
-      font-weight: 600;
-    }
-
-    .sermon-passage-link {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      background: var(--bg-input);
-      padding: 0.25rem 0.65rem;
-      border-radius: var(--radius-sm);
-      align-self: flex-start;
-      margin-top: auto;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: all 0.2s ease;
-    }
-
-    .sermon-passage-link:hover {
-      background: var(--accent-gold-glow);
-      color: var(--accent-gold);
-    }
-
-    .sermon-audio-player {
-      margin-top: 0.5rem;
-      width: 100%;
-    }
-
-    .sermon-audio-player audio {
-      width: 100%;
-      height: 36px;
-      border-radius: var(--radius-sm);
-    }
-
-    /* Events Grid */
-    .events-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .event-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1.5rem;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      gap: 1.25rem;
-      align-items: flex-start;
-      transition: all 0.2s ease;
-    }
-
-    .event-card:hover {
-      border-color: var(--border-highlight);
-      transform: translateY(-2px);
-    }
-
-    .event-calendar-badge {
-      background: var(--accent-gold-glow);
-      border: 1px solid var(--border-highlight);
-      color: var(--accent-gold);
-      border-radius: var(--radius-md);
-      padding: 0.65rem 0.85rem;
-      text-align: center;
-      min-width: 65px;
-    }
-
-    .event-month {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: block;
-    }
-
-    .event-day {
-      font-size: 1.65rem;
-      font-weight: 800;
-      line-height: 1;
-      display: block;
-      margin-top: 2px;
-    }
-
-    .event-details h4 {
-      margin: 0 0 0.35rem 0;
-      font-size: 1.05rem;
-      color: var(--text-primary);
-    }
-
-    .event-meta {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    /* Ministries Grid */
-    .ministries-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .ministry-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1.5rem;
-      border-left: 4px solid var(--accent-gold);
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.2s ease;
-    }
-
-    .ministry-box:hover {
-      transform: translateY(-2px);
-    }
-
-    .ministry-box h4 {
-      margin: 0 0 0.4rem 0;
-      font-size: 1.1rem;
-      color: var(--text-primary);
-    }
-
-    .ministry-box p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    /* Photo Gallery Grid */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .gallery-card {
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-sm);
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .gallery-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-highlight);
-    }
-
-    .gallery-image-wrapper {
-      position: relative;
-      height: 200px;
-      overflow: hidden;
-      background: #0f1e36;
-    }
-
-    .gallery-image-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.35s ease;
-      display: block;
-    }
-
-    .gallery-card:hover .gallery-image-wrapper img {
-      transform: scale(1.05);
-    }
-
-    .gallery-card-content {
-      padding: 1rem 1.15rem;
-    }
-
-    .gallery-card-title {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
-    }
-
-    .gallery-card-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    /* Contact & Timings */
-    .contact-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
-    }
-
-    .contact-card, .prayer-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .contact-list {
-      list-style: none;
-      padding: 0;
-      margin: 1.25rem 0 0 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .contact-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-      font-size: 0.92rem;
-      color: var(--text-secondary);
-    }
-
-    .contact-icon {
-      font-size: 1.25rem;
-      color: var(--accent-gold);
-    }
-
-    /* Prayer Request Form */
-    .prayer-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      margin-top: 1rem;
-    }
-
-    .form-input, .form-textarea {
-      background: var(--bg-input);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius-md);
-      font-family: inherit;
-      font-size: 0.92rem;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    .form-input:focus, .form-textarea:focus {
-      border-color: var(--accent-gold);
-      background: var(--bg-card);
-    }
-
-    .btn-submit-prayer {
-      background: var(--accent-gold);
-      color: #000;
-      font-weight: 700;
-      border: none;
-      padding: 0.85rem;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .btn-submit-prayer:hover:not(:disabled) {
-      background: var(--accent-gold-light);
-      transform: translateY(-1px);
-    }
-
-    .btn-submit-prayer:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .prayer-feedback-banner {
-      display: none;
-      padding: 1.25rem;
-      border-radius: var(--radius-md);
-      font-size: 0.92rem;
-      line-height: 1.5;
-      margin-top: 1rem;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .prayer-feedback-banner.success {
-      display: block;
-      background: var(--accent-emerald-subtle);
-      border: 1px solid rgba(21, 128, 61, 0.3);
-      color: var(--accent-emerald);
-    }
-
-    .prayer-feedback-banner.error {
-      display: block;
-      background: var(--accent-red-subtle);
-      border: 1px solid rgba(185, 28, 28, 0.3);
-      color: var(--accent-red);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Donate Section */
-    .donate-card {
-      background: linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, var(--bg-card) 60%, rgba(29, 78, 216, 0.05) 100%);
-      border: 2px solid var(--border-highlight);
-      border-radius: var(--radius-lg);
-      padding: clamp(1.5rem, 4vw, 2.75rem);
-      text-align: center;
-      max-width: 840px;
-      margin: 0 auto;
-      box-shadow: var(--shadow-md);
-    }
-
-    .donate-quote {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--text-secondary);
-      margin: 0 auto 1.5rem auto;
-      max-width: 650px;
-      line-height: 1.7;
-    }
-
-    .donate-options-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
-      margin-top: 1.75rem;
-      text-align: left;
-    }
-
-    .donate-box {
-      background: var(--bg-input);
-      padding: 1.35rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .donate-box h4 {
-      color: var(--accent-gold);
-      font-size: 1.05rem;
-      margin-bottom: 0.2rem;
-    }
-
-    .donate-box p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-      margin: 0;
-    }
-
-    /* Footer */
-    .church-footer {
-      background: var(--bg-card);
-      border-top: 1px solid var(--border-color);
-      padding: 2.5rem 1.25rem;
-      margin-top: 3rem;
-    }
-
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      align-items: center;
-      text-align: center;
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.75rem;
-      margin: 0.5rem 0;
-    }
-
-    .footer-links a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      color: var(--accent-gold);
-    }
-
-    /* Responsive Breakpoints */
-    @media (max-width: 1040px) {
-      .nav-desktop {
-        display: none;
-      }
-      .hamburger-btn {
-        display: flex;
-      }
-      .mobile-drawer {
-        display: block;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .btn-portal-launch, .btn-hero-primary, .btn-hero-secondary {
-        width: 100%;
-        justify-content: center;
-      }
-      .portal-features-list {
-        grid-template-columns: 1fr;
-      }
-      .about-grid, .sermons-grid, .events-grid, .ministries-grid, .gallery-grid, .contact-container {
-        grid-template-columns: 1fr;
-      }
-      .event-card {
-        flex-direction: column;
-      }
-      .page-container {
-        padding: 1rem 0.85rem 3rem 0.85rem;
-        gap: 2.5rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .nav-subtitle {
-        display: none;
-      }
-      .nav-container {
-        padding: 0.5rem 1rem;
-      }
-    }
-  </style>
+  <!-- Babel Standalone for in-browser JSX transformation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
 
-  <!-- ========================================================================
-       1. Floating Top Navigation Bar
-       ======================================================================== -->
-  <header class="floating-navbar" id="floating-navbar">
-    <div class="nav-container">
-      <!-- Brand Section -->
-      <a href="#home" class="nav-brand" aria-label="Grace Church Home">
-        <span class="nav-cross">✝</span>
-        <div class="nav-titles">
-          <span class="nav-title">Grace Church</span>
-          <span class="nav-subtitle">&amp; Ministries</span>
-        </div>
-      </a>
-
-      <!-- Desktop Navigation Menu -->
-      <nav class="nav-desktop" aria-label="Main Navigation">
-        <ul class="nav-links-list">
-          <li><a href="#home" class="nav-item active">Home</a></li>
-          <li><a href="#about" class="nav-item">About</a></li>
-          <li>
-            <a href="bible/index.html" class="nav-item nav-item-bible" title="Online Bible (English &amp; Telugu)">
-              <span class="nav-bible-icon">📖</span>
-              <span>Bible</span>
-            </a>
-          </li>
-          <li><a href="#sermons" class="nav-item">Sermons</a></li>
-          <li><a href="#events" class="nav-item">Events</a></li>
-          <li><a href="#ministries" class="nav-item">Ministries</a></li>
-          <li><a href="#gallery" class="nav-item">Gallery</a></li>
-          <li><a href="#contact" class="nav-item">Contact</a></li>
-        </ul>
-        <a href="#donate" class="btn-nav-donate" aria-label="Donate Online">
-          <span class="donate-heart">💝</span>
-          <span>Donate</span>
-        </a>
-        <button type="button" class="btn-theme-switcher" id="btn-theme-switcher" aria-label="Toggle light or dark theme" title="Toggle theme">
-          ☀️
-        </button>
-      </nav>
-
-      <!-- Mobile Hamburger Button -->
-      <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-drawer">
-        <span class="hamburger-line line-1"></span>
-        <span class="hamburger-line line-2"></span>
-        <span class="hamburger-line line-3"></span>
-      </button>
-    </div>
-
-    <!-- Mobile Drawer Navigation -->
-    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
-      <div class="mobile-drawer-inner">
-        <ul class="mobile-links-list">
-          <li><a href="#home" class="mobile-nav-link active"><span class="link-icon">🏠</span> Home</a></li>
-          <li><a href="#about" class="mobile-nav-link"><span class="link-icon">🏛️</span> About Us</a></li>
-          <li>
-            <a href="bible/index.html" class="mobile-nav-link mobile-bible-link">
-              <span class="link-icon">📖</span> 
-              <span>Online Bible (KJV &amp; తెలుగు)</span>
-              <span class="mobile-badge">Live</span>
-            </a>
-          </li>
-          <li><a href="#sermons" class="mobile-nav-link"><span class="link-icon">🎙️</span> Sermons &amp; Messages</a></li>
-          <li><a href="#events" class="mobile-nav-link"><span class="link-icon">📅</span> Events &amp; Services</a></li>
-          <li><a href="#ministries" class="mobile-nav-link"><span class="link-icon">🤝</span> Ministries</a></li>
-          <li><a href="#gallery" class="mobile-nav-link"><span class="link-icon">🖼️</span> Photo Gallery</a></li>
-          <li><a href="#contact" class="mobile-nav-link"><span class="link-icon">📍</span> Contact &amp; Timings</a></li>
-        </ul>
-        <div class="mobile-drawer-footer">
-          <a href="#donate" class="btn-mobile-donate">
-            <span>💝</span>
-            <span>Support &amp; Donate Online</span>
-          </a>
-        </div>
+  <!-- React Root Container -->
+  <div id="root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; color: #64748b; background: #ffffff;">
+      <div style="text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 12px; color: #c59b27;">✝</div>
+        <p style="font-size: 1.05rem; font-weight: 700; color: #0f1e36;">Loading Grace Fellowship Church...</p>
       </div>
     </div>
-  </header>
-
-  <!-- ========================================================================
-       Main Content Container with Smooth Scroll Sections
-       ======================================================================== -->
-  <main class="page-container">
-
-    <!-- 1. HOME SECTION -->
-    <section id="home" class="church-hero">
-      <span class="hero-cross">✝</span>
-      <h1>Welcome to Grace Church</h1>
-      <p class="lead">
-        A community centered on the teachings of Jesus Christ and the power of the living Word. Growing in faith, sharing God's eternal love, and studying the Holy Scriptures.
-      </p>
-
-      <div class="hero-actions">
-        <a href="bible/index.html" class="btn-hero-primary">
-          <span>📖</span>
-          <span>Read Holy Bible</span>
-        </a>
-        <a href="#sermons" class="btn-hero-secondary">
-          <span>🎙️</span>
-          <span>Watch Sermons</span>
-        </a>
-      </div>
-
-      <!-- Featured Bible Feature Portal -->
-      <div class="featured-bible-portal" id="bible">
-        <div class="portal-header">
-          <h2 class="portal-title">Online Bible • పరిశుద్ధ గ్రంథము</h2>
-          <span class="portal-tag">Direct Access</span>
-        </div>
-        <p style="color: var(--text-secondary); line-height: 1.6; margin: 0;">
-          Read, navigate, and study all 66 books of the Old and New Testaments in English King James Version (KJV) and standard Telugu (పరిశుద్ధ గ్రంథము) with parallel bilingual reading.
-        </p>
-
-        <ul class="portal-features-list">
-          <li>✨ King James Version (KJV)</li>
-          <li>✨ తెలుగు పరిశుద్ధ గ్రంథము</li>
-          <li>⚖️ Parallel Bilingual Reading</li>
-          <li>🔍 Scripture Keyword Search</li>
-          <li>🔖 Account-Free Bookmarks</li>
-          <li>📥 Full Offline PWA Capability</li>
-        </ul>
-
-        <a href="bible/index.html" class="btn-portal-launch" id="btn-launch-bible">
-          <span>Launch Bible Reader</span>
-          <span>➔</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- 2. ABOUT US SECTION -->
-    <section id="about">
-      <div class="section-header">
-        <span class="section-eyebrow">Who We Are</span>
-        <h2 class="section-title">About Grace Church</h2>
-        <p class="section-desc">Rooted in Scripture, devoted to Christ, and committed to loving and serving our local and global community.</p>
-      </div>
-
-      <div class="about-grid">
-        <div class="about-card">
-          <div class="about-card-icon">📜</div>
-          <h3>Our Mission</h3>
-          <p>To proclaim the unchanging truth of the Gospel, foster authentic Christian discipleship, and serve families through active faith, hope, and compassionate outreach.</p>
-        </div>
-
-        <div class="about-card">
-          <div class="about-card-icon">🕊️</div>
-          <h3>Our Vision</h3>
-          <p>A thriving, multi-generational body of believers worshipping God in Spirit and Truth, empowering leaders, and bringing Christ's transformation to every home.</p>
-        </div>
-
-        <div class="about-card">
-          <div class="about-card-icon">⚓</div>
-          <h3>Our Core Beliefs</h3>
-          <p>We believe in the Holy Trinity, the infallible authority of the Holy Scriptures, salvation by grace through faith in Jesus Christ, and the power of prayer and fellowship.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. SERMONS & MESSAGES SECTION -->
-    <section id="sermons">
-      <div class="section-header">
-        <span class="section-eyebrow">Word of God</span>
-        <h2 class="section-title">Sermons &amp; Messages</h2>
-        <p class="section-desc">Listen to uplifting Biblical teachings, expository sermons, and spiritual messages in English and Telugu.</p>
-      </div>
-
-      <div class="sermons-grid">
-        <!-- Sermon Card 1 -->
-        <article class="sermon-card">
-          <div class="sermon-thumbnail" onclick="playSermonAudio('audio-player-1')" title="Click to listen">
-            <div class="play-badge">▶</div>
-          </div>
-          <div class="sermon-content">
-            <span class="sermon-date">Oct 25, 2026 • Sunday Message</span>
-            <h3 class="sermon-title">The Power of Living Faith</h3>
-            <span class="sermon-speaker">Pastor John Wesley</span>
-            <a href="bible/index.html" class="sermon-passage-link" title="Study passage in Online Bible">
-              📖 Hebrews 11:1–6 ➔
-            </a>
-            <div class="sermon-audio-player">
-              <audio id="audio-player-1" controls preload="none">
-                <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          </div>
-        </article>
-
-        <!-- Sermon Card 2 -->
-        <article class="sermon-card">
-          <div class="sermon-thumbnail" onclick="playSermonAudio('audio-player-2')" title="Click to listen">
-            <div class="play-badge">▶</div>
-          </div>
-          <div class="sermon-content">
-            <span class="sermon-date">Oct 18, 2026 • Sunday Message</span>
-            <h3 class="sermon-title">Walking in Grace &amp; Truth</h3>
-            <span class="sermon-speaker">Associate Pastor David Raj</span>
-            <a href="bible/index.html" class="sermon-passage-link" title="Study passage in Online Bible">
-              📖 John 1:14–17 ➔
-            </a>
-            <div class="sermon-audio-player">
-              <audio id="audio-player-2" controls preload="none">
-                <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          </div>
-        </article>
-
-        <!-- Sermon Card 3 -->
-        <article class="sermon-card">
-          <div class="sermon-thumbnail" onclick="playSermonAudio('audio-player-3')" title="Click to listen">
-            <div class="play-badge">▶</div>
-          </div>
-          <div class="sermon-content">
-            <span class="sermon-date">Oct 11, 2026 • Telugu Message</span>
-            <h3 class="sermon-title">దేవుని నిబంధన మరియు నమ్మకత్వం</h3>
-            <span class="sermon-speaker">Pastor John Wesley</span>
-            <a href="bible/index.html" class="sermon-passage-link" title="Study passage in Online Bible">
-              📖 కీర్తనలు 89:1–4 ➔
-            </a>
-            <div class="sermon-audio-player">
-              <audio id="audio-player-3" controls preload="none">
-                <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- 4. EVENTS SECTION -->
-    <section id="events">
-      <div class="section-header">
-        <span class="section-eyebrow">Gatherings &amp; Services</span>
-        <h2 class="section-title">Worship Timings &amp; Events</h2>
-        <p class="section-desc">Join us in person or online for fellowship, Bible study, and vibrant prayer gatherings.</p>
-      </div>
-
-      <div class="events-grid">
-        <div class="event-card">
-          <div class="event-calendar-badge">
-            <span class="event-month">SUN</span>
-            <span class="event-day">01</span>
-          </div>
-          <div class="event-details">
-            <h4>Sunday Morning Worship</h4>
-            <div class="event-meta">
-              <span>⏰ 09:30 AM – 11:30 AM</span>
-              <span>📍 Main Sanctuary (English &amp; Telugu)</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="event-card">
-          <div class="event-calendar-badge">
-            <span class="event-month">WED</span>
-            <span class="event-day">04</span>
-          </div>
-          <div class="event-details">
-            <h4>Midweek Bible Study &amp; Prayer</h4>
-            <div class="event-meta">
-              <span>⏰ 06:30 PM – 07:30 PM</span>
-              <span>📍 Fellowship Hall &amp; Live Stream</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="event-card">
-          <div class="event-calendar-badge">
-            <span class="event-month">FRI</span>
-            <span class="event-day">06</span>
-          </div>
-          <div class="event-details">
-            <h4>Youth Fellowship Night</h4>
-            <div class="event-meta">
-              <span>⏰ 07:00 PM – 08:30 PM</span>
-              <span>📍 Youth Center</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. MINISTRIES SECTION -->
-    <section id="ministries">
-      <div class="section-header">
-        <span class="section-eyebrow">Get Involved</span>
-        <h2 class="section-title">Church Ministries</h2>
-        <p class="section-desc">Find your calling, connect with fellow believers, and grow spiritually through our active ministries.</p>
-      </div>
-
-      <div class="ministries-grid">
-        <div class="ministry-box">
-          <h4>👶 Kids for Christ (Sunday School)</h4>
-          <p>Nurturing young hearts with scripture memorization, joyful hymns, and creative biblical learning.</p>
-        </div>
-
-        <div class="ministry-box">
-          <h4>🔥 Ignite Youth &amp; Young Adults</h4>
-          <p>Empowering the next generation to stand firm in faith, character, and purposeful Christian leadership.</p>
-        </div>
-
-        <div class="ministry-box">
-          <h4>🌸 Women of Grace Fellowship</h4>
-          <p>Gathering women for intercessory prayer, biblical mentorship, family encouragement, and mutual support.</p>
-        </div>
-
-        <div class="ministry-box">
-          <h4>🛡️ Men's Brotherhood &amp; Prayer Band</h4>
-          <p>Encouraging men to lead with godly integrity in their homes, workplaces, and spiritual walk.</p>
-        </div>
-
-        <div class="ministry-box">
-          <h4>🎵 Zion Voices Choir &amp; Worship</h4>
-          <p>Leading the congregation into deep, Christ-honoring praise and worship every service.</p>
-        </div>
-
-        <div class="ministry-box">
-          <h4>🌍 Community Outreach &amp; Missions</h4>
-          <p>Extending Christ's hands to the needy through food drives, medical camps, and global mission support.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. GALLERY SECTION -->
-    <section id="gallery">
-      <div class="section-header">
-        <span class="section-eyebrow">Community Life</span>
-        <h2 class="section-title">Fellowship Moments</h2>
-        <p class="section-desc">Glimpses of worship, prayer, fellowship celebrations, and church community life.</p>
-      </div>
-
-      <div class="gallery-grid">
-        <!-- Gallery Item 1 -->
-        <div class="gallery-card">
-          <div class="gallery-image-wrapper">
-            <img src="home/assets/worship_service.jpg" alt="Sunday Morning Praise and Worship Service" loading="lazy">
-          </div>
-          <div class="gallery-card-content">
-            <h4 class="gallery-card-title">Sunday Morning Praise &amp; Worship</h4>
-            <p class="gallery-card-desc">Congregational worship lifting up the name of Jesus Christ.</p>
-          </div>
-        </div>
-
-        <!-- Gallery Item 2 -->
-        <div class="gallery-card">
-          <div class="gallery-image-wrapper">
-            <img src="home/assets/fellowship_service.jpg" alt="Church Community and Fellowship Gathering" loading="lazy">
-          </div>
-          <div class="gallery-card-content">
-            <h4 class="gallery-card-title">Community &amp; Family Fellowship</h4>
-            <p class="gallery-card-desc">Believers connecting in love, joy, and mutual encouragement.</p>
-          </div>
-        </div>
-
-        <!-- Gallery Item 3 -->
-        <div class="gallery-card">
-          <div class="gallery-image-wrapper">
-            <img src="home/assets/church_building.jpg" alt="Grace Church Sanctuary and Campus" loading="lazy">
-          </div>
-          <div class="gallery-card-content">
-            <h4 class="gallery-card-title">Church Sanctuary &amp; Campus</h4>
-            <p class="gallery-card-desc">A peaceful house of prayer welcoming all individuals and families.</p>
-          </div>
-        </div>
-
-        <!-- Gallery Item 4 -->
-        <div class="gallery-card">
-          <div class="gallery-image-wrapper">
-            <img src="home/assets/open_bible_banner.jpg" alt="Open Holy Bible Scripture Study" loading="lazy">
-          </div>
-          <div class="gallery-card-content">
-            <h4 class="gallery-card-title">Holy Scripture Devotional Study</h4>
-            <p class="gallery-card-desc">Deep biblical discipleship rooted in the eternal Word of God.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. CONTACT & PRAYER REQUEST SECTION -->
-    <section id="contact">
-      <div class="section-header">
-        <span class="section-eyebrow">Connect With Us</span>
-        <h2 class="section-title">Contact &amp; Prayer Requests</h2>
-        <p class="section-desc">We are here to pray with you, answer questions, and welcome you into our family.</p>
-      </div>
-
-      <div class="contact-container">
-        <!-- Contact Details -->
-        <div class="contact-card">
-          <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">Church Office &amp; Sanctuary</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Feel free to reach out anytime or visit our services.</p>
-
-          <ul class="contact-list">
-            <li>
-              <span class="contact-icon">📍</span>
-              <div>
-                <strong>Location:</strong><br>
-                Grace Church &amp; Ministries Sanctuary,<br>
-                Church Road, Hyderabad, Telangana, India
-              </div>
-            </li>
-            <li>
-              <span class="contact-icon">📞</span>
-              <div>
-                <strong>Phone &amp; Pastoral Care:</strong><br>
-                +91 98765 43210 / +91 40 1234 5678
-              </div>
-            </li>
-            <li>
-              <span class="contact-icon">✉️</span>
-              <div>
-                <strong>Email:</strong><br>
-                contact@gracechurch.org
-              </div>
-            </li>
-            <li>
-              <span class="contact-icon">⏰</span>
-              <div>
-                <strong>Office Hours:</strong><br>
-                Tuesday – Saturday: 09:00 AM – 05:00 PM
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Prayer Request Form connected to FastAPI Backend -->
-        <div class="prayer-card">
-          <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">Submit a Prayer Request</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Our pastoral prayer team intercedes for every request submitted.</p>
-
-          <form class="prayer-form" id="prayer-form" novalidate>
-            <input type="text" id="prayer-name" class="form-input" placeholder="Your Name (Optional)" aria-label="Your Name">
-            <input type="text" id="prayer-contact" class="form-input" placeholder="Email or Phone Number" required aria-label="Contact information" aria-required="true">
-            <textarea id="prayer-request" class="form-textarea" rows="4" placeholder="How can we pray for you today?" required aria-label="Prayer request details" aria-required="true"></textarea>
-            
-            <button type="submit" class="btn-submit-prayer" id="btn-submit-prayer">
-              <span id="prayer-submit-text">Send Prayer Request 🙏</span>
-            </button>
-          </form>
-
-          <!-- Dynamic Feedback Banner -->
-          <div class="prayer-feedback-banner" id="prayer-feedback" role="alert" aria-live="polite"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 8. DONATE & GIVING SECTION -->
-    <section id="donate">
-      <div class="donate-card">
-        <span class="section-eyebrow">TITHES &amp; OFFERINGS</span>
-        <h2 class="section-title">Support the Ministry</h2>
-        <p class="donate-quote">
-          "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver."
-          <br><strong style="font-style: normal; font-size: 0.88rem; color: var(--accent-gold);">— 2 Corinthians 9:7</strong>
-        </p>
-
-        <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 640px; margin: 0 auto; line-height: 1.65;">
-          Your faithful contributions support the proclamation of the Gospel, local church ministry, missionary evangelism, and community compassion relief work.
-        </p>
-
-        <div class="donate-options-grid">
-          <!-- Verified Channel 1 -->
-          <div class="donate-box">
-            <h4>⛪ In-Person Giving</h4>
-            <p>
-              Tithes and offerings can be given during Sunday Worship services and midweek prayer gatherings via offering envelopes at the sanctuary entrance.
-            </p>
-          </div>
-
-          <!-- Verified Channel 2 -->
-          <div class="donate-box">
-            <h4>🏦 Official Ministry Bank Transfer</h4>
-            <p>
-              To contribute directly via NEFT/IMPS or receive an official tax donation receipt, please contact the Church Administration or Treasurer for verified banking details.
-            </p>
-          </div>
-
-          <!-- Verified Channel 3 -->
-          <div class="donate-box">
-            <h4>🤝 Designated Missions &amp; Outreach</h4>
-            <p>
-              Contributions for church food pantry relief, orphan care, and youth ministry initiatives can be coordinated directly with our pastoral office.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ========================================================================
-       Footer
-       ======================================================================== -->
-  <footer class="church-footer">
-    <div class="footer-inner">
-      <p style="font-weight: 700; font-size: 1rem; color: var(--text-primary);">Grace Church &amp; Ministries</p>
-      <p>All Scripture text from verified public domain sources (King James Version &amp; Telugu పరిశుద్ధ గ్రంథము, MIT License Arul John).</p>
-      <nav class="footer-links" aria-label="Footer Navigation">
-        <a href="#home">Home</a> • 
-        <a href="#about">About</a> • 
-        <a href="bible/index.html">Online Bible</a> • 
-        <a href="#sermons">Sermons</a> • 
-        <a href="#events">Events</a> • 
-        <a href="#ministries">Ministries</a> • 
-        <a href="#gallery">Gallery</a> • 
-        <a href="#contact">Contact</a> • 
-        <a href="#donate">Donate</a> • 
-        <a href="/BIBLE_SOURCES_AND_LICENSING.md" target="_blank">Licensing Documentation</a>
-      </nav>
-      <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem;">
-        &copy; 2026 Grace Church &amp; Ministries. All rights reserved.
-      </p>
-    </div>
-  </footer>
-
-  <!-- ========================================================================
-       JavaScript Controller: Navigation, Theme Toggle, Sermons & Prayer API
-       ======================================================================== -->
-  <script>
-    // 1. Theme Switcher (Light / Dark mode persisted in localStorage)
-    const themeBtn = document.getElementById('btn-theme-switcher');
-    const htmlElement = document.documentElement;
-
-    function applyTheme(theme) {
-      htmlElement.setAttribute('data-theme', theme);
-      if (themeBtn) {
-        themeBtn.textContent = theme === 'dark' ? '🌙' : '☀️';
-      }
-      try {
-        localStorage.setItem('church_theme', theme);
-      } catch (e) {}
-    }
-
-    const savedTheme = localStorage.getItem('church_theme') || 'light';
-    applyTheme(savedTheme);
-
-    if (themeBtn) {
-      themeBtn.addEventListener('click', () => {
-        const currentTheme = htmlElement.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        applyTheme(newTheme);
-      });
-    }
-
-    // 2. Mobile Drawer Navigation Controller
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const mobileDrawer = document.getElementById('mobile-drawer');
-
-    function toggleMenu() {
-      const isOpen = hamburgerBtn.classList.toggle('is-active');
-      mobileDrawer.classList.toggle('is-open', isOpen);
-      hamburgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      mobileDrawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-    }
-
-    if (hamburgerBtn) {
-      hamburgerBtn.addEventListener('click', toggleMenu);
-    }
-
-    // Auto-close menu on link click
-    document.querySelectorAll('.mobile-nav-link, .btn-mobile-donate').forEach(link => {
-      link.addEventListener('click', () => {
-        if (hamburgerBtn && mobileDrawer) {
-          hamburgerBtn.classList.remove('is-active');
-          mobileDrawer.classList.remove('is-open');
-          hamburgerBtn.setAttribute('aria-expanded', 'false');
-          mobileDrawer.setAttribute('aria-hidden', 'true');
-        }
-      });
-    });
-
-    // Close when tapping outside
-    document.addEventListener('click', (e) => {
-      if (mobileDrawer && !e.target.closest('#floating-navbar') && mobileDrawer.classList.contains('is-open')) {
-        hamburgerBtn.classList.remove('is-active');
-        mobileDrawer.classList.remove('is-open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-        mobileDrawer.setAttribute('aria-hidden', 'true');
-      }
-    });
-
-    // 3. Scrollspy & Dynamic Floating Navbar Shadow
-    const navItems = document.querySelectorAll('.nav-item[href^="#"], .mobile-nav-link[href^="#"]');
-    const trackedSections = document.querySelectorAll('section[id]');
-    const navbar = document.getElementById('floating-navbar');
-
-    function onScrollUpdate() {
-      if (navbar) {
-        if (window.scrollY > 20) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-      }
-
-      const scrollPos = window.scrollY + 120;
-      let currentSection = 'home';
-
-      trackedSections.forEach(section => {
-        const top = section.offsetTop;
-        const height = section.offsetHeight;
-        if (scrollPos >= top && scrollPos < top + height) {
-          currentSection = section.getAttribute('id');
-        }
-      });
-
-      navItems.forEach(item => {
-        const targetId = item.getAttribute('href');
-        if (targetId === `#${currentSection}`) {
-          item.classList.add('active');
-        } else if (targetId && targetId.startsWith('#')) {
-          item.classList.remove('active');
-        }
-      });
-    }
-
-    window.addEventListener('scroll', onScrollUpdate, { passive: true });
-    window.addEventListener('load', onScrollUpdate);
-
-    // 4. Sermon Playback Helper
-    function playSermonAudio(playerId) {
-      const audio = document.getElementById(playerId);
-      if (audio) {
-        if (audio.paused) {
-          // Pause all other audio players
-          document.querySelectorAll('audio').forEach(a => {
-            if (a !== audio) a.pause();
-          });
-          audio.play().catch(err => {
-            console.log('Audio playback info:', err);
-          });
-        } else {
-          audio.pause();
-        }
-      }
-    }
-
-    // 5. Prayer Request Form Submission connected to Backend API
-    const prayerForm = document.getElementById('prayer-form');
-    const feedbackBanner = document.getElementById('prayer-feedback');
-    const submitBtn = document.getElementById('btn-submit-prayer');
-    const submitText = document.getElementById('prayer-submit-text');
-
-    if (prayerForm) {
-      prayerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const nameInput = document.getElementById('prayer-name');
-        const contactInput = document.getElementById('prayer-contact');
-        const requestInput = document.getElementById('prayer-request');
-
-        const name = nameInput ? nameInput.value.trim() : '';
-        const contact = contactInput ? contactInput.value.trim() : '';
-        const request = requestInput ? requestInput.value.trim() : '';
-
-        // Frontend validation
-        if (!contact || contact.length < 3) {
-          showFeedback('Please provide a valid email or phone number for pastoral follow-up.', 'error');
-          if (contactInput) contactInput.focus();
-          return;
-        }
-
-        if (!request || request.length < 5) {
-          showFeedback('Please write a brief description of your prayer request.', 'error');
-          if (requestInput) requestInput.focus();
-          return;
-        }
-
-        // Show loading state
-        submitBtn.disabled = true;
-        submitText.textContent = 'Submitting Request... ⏳';
-        hideFeedback();
-
-        try {
-          const apiBase = window.API_BASE_URL || (window.location.protocol === 'file:' ? 'http://localhost:8000' : '');
-          const response = await fetch(`${apiBase}/api/prayer-request`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              name: name || undefined,
-              contact: contact,
-              request: request
-            })
-          });
-
-          if (!response.ok) {
-            let errorMsg = 'Unable to send your request. Please try again or call the church office.';
-            try {
-              const errData = await response.json();
-              if (errData && errData.detail) {
-                errorMsg = Array.isArray(errData.detail)
-                  ? errData.detail.map(d => d.msg).join(', ')
-                  : errData.detail;
-              }
-            } catch (_) {}
-            throw new Error(errorMsg);
+  </div>
+
+  <!-- React Components & Main Application -->
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useCallback } = React;
+
+    /* ==========================================================================
+       1. Navbar Component
+       ========================================================================== */
+    function Navbar({ activeSection = "home", onNavigate }) {
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          if (window.scrollY > 20) {
+            setIsScrolled(true);
+          } else {
+            setIsScrolled(false);
           }
+        };
 
-          const result = await response.json();
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
 
-          // ONLY SHOW SUCCESS UPON ACTUAL 200 SUCCESSFUL RESPONSE
-          const displayName = name ? name : 'Beloved';
-          showFeedback(`✓ Thank you, ${displayName}! Your prayer request (Ref: ${result.request_id || 'Received'}) has been sent to our pastoral prayer team. We will intercede for you in prayer.`, 'success');
+      const navItems = [
+        { id: "home", label: "Home", href: "#home" },
+        { id: "about", label: "About", href: "#service-timings" },
+        { id: "bible", label: "Bible", href: "bible/index.html" },
+        { id: "sermons", label: "Sermons", href: "#sermons" },
+        { id: "events", label: "Events", href: "#events" },
+        { id: "ministries", label: "Ministries", href: "#ministries" },
+        { id: "gallery", label: "Gallery", href: "#announcements" },
+        { id: "contact", label: "Contact", href: "#contact" }
+      ];
 
-          // Reset form fields
-          prayerForm.reset();
-        } catch (err) {
-          // NEVER show success on failure
-          showFeedback(`⚠️ ${err.message || 'Network error: could not submit prayer request. Please check your connection.'}`, 'error');
-        } finally {
-          submitBtn.disabled = false;
-          submitText.textContent = 'Send Prayer Request 🙏';
+      const handleLinkClick = (id, href, e) => {
+        if (href.startsWith("#")) {
+          e.preventDefault();
+          setMobileMenuOpen(false);
+          if (onNavigate) onNavigate(id);
+          const target = document.getElementById(href.substring(1));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
         }
+      };
+
+      return (
+        <header className={`church-navbar ${isScrolled ? "scrolled" : ""}`}>
+          <div className="navbar-inner">
+            {/* Brand */}
+            <a href="#home" className="nav-brand" onClick={(e) => handleLinkClick("home", "#home", e)}>
+              <div className="nav-brand-logo">
+                <span className="nav-cross-icon">✝</span>
+              </div>
+              <div className="nav-brand-text">
+                <span className="nav-church-name">Grace Fellowship Church</span>
+                <span className="nav-church-tagline">Worship • Grow • Serve • Share</span>
+              </div>
+            </a>
+
+            {/* Desktop Navigation */}
+            <nav className="nav-links-desktop" aria-label="Main Navigation">
+              {navItems.map((item) => (
+                <li key={item.id} className="nav-link-item">
+                  <a
+                    href={item.href}
+                    className={`nav-link-btn ${activeSection === item.id ? "active" : ""}`}
+                    onClick={(e) => handleLinkClick(item.id, item.href, e)}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+
+              {/* Search Icon */}
+              <button
+                type="button"
+                className="nav-search-btn"
+                title="Search Scripture or Sermons"
+                aria-label="Search"
+                onClick={() => {
+                  window.location.href = "bible/index.html";
+                }}
+              >
+                🔍
+              </button>
+
+              {/* Donate Button */}
+              <a
+                href="#contact"
+                className="btn-nav-donate"
+                onClick={(e) => handleLinkClick("contact", "#contact", e)}
+              >
+                Donate
+              </a>
+            </nav>
+
+            {/* Mobile Hamburger Toggle */}
+            <button
+              type="button"
+              className="hamburger-toggle"
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <span className="hamburger-bar" />
+              <span className="hamburger-bar" />
+              <span className="hamburger-bar" />
+            </button>
+          </div>
+
+          {/* Mobile Drawer Menu */}
+          <div className={`mobile-nav-drawer ${mobileMenuOpen ? "open" : ""}`} aria-hidden={!mobileMenuOpen}>
+            <ul className="mobile-nav-list">
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    className={activeSection === item.id ? "active" : ""}
+                    onClick={(e) => handleLinkClick(item.id, item.href, e)}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+              <li style={{ marginTop: "8px" }}>
+                <a
+                  href="#contact"
+                  className="btn-nav-donate"
+                  style={{ display: "inline-block", textAlign: "center", width: "100%" }}
+                  onClick={(e) => handleLinkClick("contact", "#contact", e)}
+                >
+                  Donate Online 💝
+                </a>
+              </li>
+            </ul>
+          </div>
+        </header>
+      );
+    }
+
+    /* ==========================================================================
+       2. Hero Component
+       ========================================================================== */
+    function Hero() {
+      const handleScrollTo = (sectionId, e) => {
+        e.preventDefault();
+        const elem = document.getElementById(sectionId);
+        if (elem) {
+          elem.scrollIntoView({ behavior: "smooth" });
+        }
+      };
+
+      return (
+        <section
+          id="home"
+          className="hero-section"
+          style={{
+            backgroundImage: "url('home/assets/hero_cross_sunset.jpg')"
+          }}
+        >
+          <div className="hero-overlay" />
+          <div className="home-container" style={{ width: "100%" }}>
+            <div className="hero-content">
+              <p className="hero-welcome">Welcome to</p>
+              <h1 className="hero-title">Grace Fellowship Church</h1>
+              <p className="hero-subtitle">
+                A family of believers growing together in Christ's love.
+              </p>
+              <p className="hero-verse">
+                “For where two or three gather in my name, there am I with them.” — Matthew 18:20
+              </p>
+
+              <div className="hero-actions">
+                <a
+                  href="#service-timings"
+                  className="btn-hero-primary"
+                  onClick={(e) => handleScrollTo("service-timings", e)}
+                >
+                  Join Us This Sunday
+                </a>
+                <a
+                  href="#sermons"
+                  className="btn-hero-secondary"
+                  onClick={(e) => handleScrollTo("sermons", e)}
+                >
+                  <span>▶</span>
+                  <span>Watch Sermons</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       3. Announcements Component
+       ========================================================================== */
+    function Announcements() {
+      const [startIndex, setStartIndex] = useState(0);
+
+      const announcementsData = [
+        {
+          id: 1,
+          title: "YOUTH CONFERENCE 2024",
+          subtitle: "Rise Up & Shine Forth - Ignite Your Faith",
+          date: "Aug 15 – 17, 2024",
+          time: "10:00 AM Daily",
+          location: "Sanctuary & Youth Hall",
+          image: "home/assets/youth_conference.jpg",
+          actionText: "Register Now",
+          btnClass: "btn-yellow"
+        },
+        {
+          id: 2,
+          title: "WOMEN'S FELLOWSHIP",
+          subtitle: "A Time of Prayer, Worship & Sisterhood",
+          date: "Sat, Aug 24, 2024",
+          time: "10:00 AM – 11:30 AM",
+          location: "Church Main Hall",
+          image: "home/assets/womens_fellowship.jpg",
+          actionText: "Register Now",
+          btnClass: "btn-rose"
+        },
+        {
+          id: 3,
+          title: "Special Prayer Meeting",
+          subtitle: "Intercessory Prayer for Families & Nation",
+          date: "Aug 30, 2024",
+          time: "6:30 PM – 8:00 PM",
+          location: "Church Sanctuary",
+          image: "home/assets/open_bible_banner.jpg",
+          actionText: "Join In-Person",
+          btnClass: "btn-navy"
+        }
+      ];
+
+      const handlePrev = () => {
+        setStartIndex((prev) => (prev === 0 ? announcementsData.length - 1 : prev - 1));
+      };
+
+      const handleNext = () => {
+        setStartIndex((prev) => (prev === announcementsData.length - 1 ? 0 : prev + 1));
+      };
+
+      return (
+        <section id="announcements" className="home-container" style={{ marginTop: "24px" }}>
+          <div className="announcements-box">
+            {/* Header */}
+            <div className="announcements-header">
+              <div className="section-title-wrap">
+                <span className="section-title-icon" style={{ color: "#e11d48" }}>📢</span>
+                <h2 className="section-title-text">Announcements</h2>
+              </div>
+              <a href="#events" className="section-view-all">
+                <span>View All</span>
+                <span>&gt;</span>
+              </a>
+            </div>
+
+            {/* Carousel Grid with Controls */}
+            <div className="announcements-carousel-wrapper">
+              <button
+                type="button"
+                className="carousel-arrow-btn"
+                onClick={handlePrev}
+                aria-label="Previous announcement"
+              >
+                &#8249;
+              </button>
+
+              <div className="announcements-grid">
+                {announcementsData.map((item) => (
+                  <div key={item.id} className="announcement-card">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="announcement-banner-img"
+                      loading="eager"
+                    />
+                    <div className="announcement-body">
+                      <h3 className="announcement-card-title">{item.title}</h3>
+                      <div className="announcement-meta">
+                        <span>📅 {item.date} {item.time ? `• ${item.time}` : ""}</span>
+                        <span>📍 {item.location}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className={`announcement-btn ${item.btnClass}`}
+                        onClick={() => {
+                          alert(`Thank you for your interest in ${item.title}! Registration is available at the church office.`);
+                        }}
+                      >
+                        {item.actionText}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                className="carousel-arrow-btn"
+                onClick={handleNext}
+                aria-label="Next announcement"
+              >
+                &#8250;
+              </button>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       4. VerseOfTheDay Component
+       ========================================================================== */
+    function VerseOfTheDay() {
+      const [verse, setVerse] = useState({
+        text: "The Lord is my shepherd; I shall not want.",
+        reference: "Psalm 23:1 (KJV)",
+        book: "psalms",
+        chapter: 23,
+        verseNum: 1
       });
+
+      useEffect(() => {
+        let isMounted = true;
+        const fetchDailyVerse = async () => {
+          try {
+            const apiBase = window.API_BASE_URL || (window.location.protocol === "file:" ? "http://localhost:8000" : "");
+            const res = await fetch(`${apiBase}/api/bible/daily-verse`);
+            if (res.ok && isMounted) {
+              const data = await res.json();
+              if (data && data.kjvText) {
+                setVerse({
+                  text: data.kjvText,
+                  reference: `${data.bookName || data.book} ${data.chapter}:${data.verse} (KJV)`,
+                  book: data.book,
+                  chapter: data.chapter,
+                  verseNum: data.verse
+                });
+              }
+            }
+          } catch (err) {
+            console.log("Verse of the day fallback active");
+          }
+        };
+
+        fetchDailyVerse();
+        return () => {
+          isMounted = false;
+        };
+      }, []);
+
+      return (
+        <section id="verse-of-the-day" className="home-container" style={{ marginTop: "24px" }}>
+          <div className="votd-card">
+            {/* Left Visual: Open Bible Photo */}
+            <div className="votd-left-visual">
+              <img
+                src="home/assets/open_bible_banner.jpg"
+                alt="Holy Bible Open Scripture"
+                className="votd-bible-img"
+                loading="eager"
+              />
+            </div>
+
+            {/* Center Content */}
+            <div className="votd-content">
+              <div className="votd-header">
+                <span className="votd-header-icon">📖</span>
+                <span className="votd-header-title">Verse of the Day</span>
+              </div>
+              <p className="votd-text">
+                “{verse.text}”
+              </p>
+              <p className="votd-reference">{verse.reference}</p>
+            </div>
+
+            {/* Right CTA Button */}
+            <a
+              href="bible/index.html"
+              className="btn-votd-read"
+              title="Study this verse in the Online Bible reader"
+            >
+              <span>Read in Bible</span>
+              <span>➔</span>
+            </a>
+          </div>
+        </section>
+      );
     }
 
-    function showFeedback(message, type) {
-      if (feedbackBanner) {
-        feedbackBanner.textContent = message;
-        feedbackBanner.className = `prayer-feedback-banner ${type}`;
-      }
+    /* ==========================================================================
+       5. ServiceTimings Component
+       ========================================================================== */
+    function ServiceTimings() {
+      const serviceSchedules = [
+        {
+          id: 1,
+          cardClass: "card-blue",
+          iconClass: "timing-icon-blue",
+          icon: "⛪",
+          title: "Sunday Worship",
+          hours: "10:00 AM – 12:00 PM",
+          subtitle: "English & Telugu"
+        },
+        {
+          id: 2,
+          cardClass: "card-peach",
+          iconClass: "timing-icon-peach",
+          icon: "👥",
+          title: "Sunday School",
+          hours: "10:00 AM – 11:00 AM",
+          subtitle: "Children & Youth"
+        },
+        {
+          id: 3,
+          cardClass: "card-purple",
+          iconClass: "timing-icon-purple",
+          icon: "🙏",
+          title: "Wednesday Prayer",
+          hours: "7:00 PM – 8:00 PM",
+          subtitle: "Online & In-Person"
+        },
+        {
+          id: 4,
+          cardClass: "card-green",
+          iconClass: "timing-icon-green",
+          icon: "📖",
+          title: "Friday Bible Study",
+          hours: "7:00 PM – 8:00 PM",
+          subtitle: "English & Telugu"
+        }
+      ];
+
+      return (
+        <section id="service-timings" className="home-container home-section">
+          <div className="section-header-row">
+            <div className="section-title-wrap">
+              <span className="section-title-icon" style={{ color: "#0066cc" }}>🕒</span>
+              <h2 className="section-title-text">Service Timings</h2>
+            </div>
+            <a href="#contact" className="section-view-all">
+              <span>View Details</span>
+              <span>&gt;</span>
+            </a>
+          </div>
+
+          <div className="timings-grid">
+            {serviceSchedules.map((schedule) => (
+              <div key={schedule.id} className={`timing-card ${schedule.cardClass}`}>
+                <div className={`timing-icon-badge ${schedule.iconClass}`}>
+                  {schedule.icon}
+                </div>
+                <div className="timing-info">
+                  <h3 className="timing-title">{schedule.title}</h3>
+                  <p className="timing-hours">{schedule.hours}</p>
+                  <p className="timing-subtitle">{schedule.subtitle}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
     }
 
-    function hideFeedback() {
-      if (feedbackBanner) {
-        feedbackBanner.className = 'prayer-feedback-banner';
-        feedbackBanner.textContent = '';
-      }
+    /* ==========================================================================
+       6. LatestSermons Component
+       ========================================================================== */
+    function LatestSermons() {
+      const [activeSermon, setActiveSermon] = useState(null);
+
+      const sermons = [
+        {
+          id: 1,
+          title: "Walking in Faith",
+          speaker: "Ps. John Samuel",
+          date: "• Aug 11, 2024",
+          duration: "45:20",
+          thumbnail: "home/assets/sermon_pastor.jpg",
+          passage: "Hebrews 11:1–6"
+        },
+        {
+          id: 2,
+          title: "The Power of Prayer",
+          speaker: "Ps. John Samuel",
+          date: "• Aug 4, 2024",
+          duration: "38:15",
+          thumbnail: "home/assets/hero_cross_sunset.jpg",
+          passage: "James 5:16"
+        },
+        {
+          id: 3,
+          title: "A Heart of Gratitude",
+          speaker: "Ps. John Samuel",
+          date: "• Jul 28, 2024",
+          duration: "42:10",
+          thumbnail: "home/assets/prayer_hands.jpg",
+          passage: "1 Thessalonians 5:16–18"
+        },
+        {
+          id: 4,
+          title: "Growing in God's Word",
+          speaker: "Ps. John Samuel",
+          date: "• Jul 21, 2024",
+          duration: "50:05",
+          thumbnail: "home/assets/open_bible_banner.jpg",
+          passage: "2 Timothy 3:16–17"
+        }
+      ];
+
+      return (
+        <section id="sermons" className="home-container home-section">
+          <div className="section-header-row">
+            <div className="section-title-wrap">
+              <span className="section-title-icon" style={{ color: "#0066cc" }}>▶</span>
+              <h2 className="section-title-text">Latest Sermons</h2>
+            </div>
+            <a href="#sermons" className="section-view-all">
+              <span>View All</span>
+              <span>&gt;</span>
+            </a>
+          </div>
+
+          <div className="sermons-grid">
+            {sermons.map((sermon) => (
+              <article
+                key={sermon.id}
+                className="sermon-video-card"
+                onClick={() => setActiveSermon(sermon)}
+                title={`Listen to ${sermon.title}`}
+              >
+                <div className="sermon-thumb-box">
+                  <img
+                    src={sermon.thumbnail}
+                    alt={sermon.title}
+                    className="sermon-thumb-img"
+                    loading="eager"
+                  />
+                  <span className="sermon-duration-tag">{sermon.duration}</span>
+                  <div className="sermon-play-overlay">
+                    <div className="sermon-play-icon">▶</div>
+                  </div>
+                </div>
+
+                <div className="sermon-info-box">
+                  <h3 className="sermon-card-title">{sermon.title}</h3>
+                  <p className="sermon-card-speaker">{sermon.speaker}</p>
+                  <p className="sermon-card-date">{sermon.date}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* Active Audio Playback Modal */}
+          {activeSermon && (
+            <div
+              style={{
+                marginTop: "20px",
+                padding: "16px 20px",
+                background: "#0f1e36",
+                borderRadius: "12px",
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "12px"
+              }}
+            >
+              <div>
+                <span style={{ fontSize: "0.8rem", color: "#c59b27", fontWeight: 700, textTransform: "uppercase" }}>
+                  Now Playing
+                </span>
+                <h4 style={{ margin: "2px 0", fontSize: "1.05rem" }}>
+                  {activeSermon.title} — {activeSermon.speaker}
+                </h4>
+                <span style={{ fontSize: "0.85rem", color: "#94a3b8" }}>
+                  Scripture: {activeSermon.passage}
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <audio controls autoPlay style={{ height: "36px" }}>
+                  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav" />
+                  Your browser does not support audio playback.
+                </audio>
+                <button
+                  type="button"
+                  onClick={() => setActiveSermon(null)}
+                  style={{ color: "#ffffff", fontSize: "1.2rem", padding: "4px 8px" }}
+                  title="Close player"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+      );
     }
+
+    /* ==========================================================================
+       7. UpcomingEvents Component
+       ========================================================================== */
+    function UpcomingEvents() {
+      const events = [
+        {
+          id: 1,
+          title: "Church Picnic",
+          date: "Sep 14, 2024",
+          location: "Riverside Park",
+          image: "home/assets/church_picnic.jpg",
+          actionText: "Register Now"
+        },
+        {
+          id: 2,
+          title: "BIBLE CAMP",
+          date: "Oct 5 – 7, 2024",
+          location: "Camp Grace",
+          image: "home/assets/bible_camp.jpg",
+          actionText: "Register Now"
+        },
+        {
+          id: 3,
+          title: "Christmas Celebration",
+          date: "Dec 25, 2024",
+          location: "Church Main Hall",
+          image: "home/assets/christmas_celebration.jpg",
+          actionText: "Learn More"
+        }
+      ];
+
+      return (
+        <section id="events" className="home-container home-section">
+          <div className="section-header-row">
+            <div className="section-title-wrap">
+              <span className="section-title-icon" style={{ color: "#0066cc" }}>📅</span>
+              <h2 className="section-title-text">Upcoming Events</h2>
+            </div>
+            <a href="#events" className="section-view-all">
+              <span>View All</span>
+              <span>&gt;</span>
+            </a>
+          </div>
+
+          <div className="events-grid">
+            {events.map((event) => (
+              <div key={event.id} className="event-item-card">
+                <div className="event-thumb-wrapper">
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="event-thumb-img"
+                    loading="eager"
+                  />
+                </div>
+                <div className="event-card-details">
+                  <h3 className="event-heading">{event.title}</h3>
+                  <p className="event-meta-line">
+                    <span>📅</span>
+                    <span>{event.date}</span>
+                  </p>
+                  <p className="event-meta-line">
+                    <span>📍</span>
+                    <span>{event.location}</span>
+                  </p>
+                  <button
+                    type="button"
+                    className="btn-event-action"
+                    onClick={() => {
+                      alert(`Registration for "${event.title}" is open. Please contact the church office or visit the sanctuary entrance.`);
+                    }}
+                  >
+                    {event.actionText}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       8. Ministries Component
+       ========================================================================== */
+    function Ministries() {
+      const ministryList = [
+        {
+          id: 1,
+          name: "Children's Ministry",
+          photo: "home/assets/children_ministry.jpg"
+        },
+        {
+          id: 2,
+          name: "Youth Ministry",
+          photo: "home/assets/youth_conference.jpg"
+        },
+        {
+          id: 3,
+          name: "Women's Ministry",
+          photo: "home/assets/womens_fellowship.jpg"
+        },
+        {
+          id: 4,
+          name: "Men's Ministry",
+          photo: "home/assets/fellowship_service.jpg"
+        },
+        {
+          id: 5,
+          name: "Prayer Ministry",
+          photo: "home/assets/prayer_hands.jpg"
+        },
+        {
+          id: 6,
+          name: "Outreach Ministry",
+          photo: "home/assets/worship_service.jpg"
+        }
+      ];
+
+      return (
+        <section id="ministries" className="home-container home-section">
+          <div className="section-header-row">
+            <div className="section-title-wrap">
+              <span className="section-title-icon" style={{ color: "#0066cc" }}>👥</span>
+              <h2 className="section-title-text">Our Ministries</h2>
+            </div>
+            <a href="#ministries" className="section-view-all">
+              <span>View All</span>
+              <span>&gt;</span>
+            </a>
+          </div>
+
+          <div className="ministries-row">
+            {ministryList.map((m) => (
+              <div
+                key={m.id}
+                className="ministry-unit-card"
+                onClick={() => {
+                  alert(`Learn more about ${m.name} by contacting our pastoral team or joining our fellowship groups.`);
+                }}
+              >
+                <div className="ministry-photo-frame">
+                  <img
+                    src={m.photo}
+                    alt={m.name}
+                    className="ministry-photo"
+                    loading="eager"
+                  />
+                </div>
+                <h3 className="ministry-label">{m.name}</h3>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       9. ChurchLocation Component (Visit Our Church)
+       ========================================================================== */
+    function ChurchLocation() {
+      const [zoomLevel, setZoomLevel] = useState(14);
+
+      const handleZoomIn = () => setZoomLevel((z) => Math.min(z + 1, 18));
+      const handleZoomOut = () => setZoomLevel((z) => Math.max(z - 1, 10));
+
+      return (
+        <section id="contact" className="home-container home-section">
+          <div className="section-header-row">
+            <div className="section-title-wrap">
+              <span className="section-title-icon" style={{ color: "#0066cc" }}>📍</span>
+              <h2 className="section-title-text">Visit Our Church</h2>
+            </div>
+          </div>
+
+          <div className="visit-church-grid">
+            {/* Column 1: Church Exterior Photo */}
+            <div className="church-exterior-card">
+              <img
+                src="home/assets/church_building.jpg"
+                alt="Grace Fellowship Church Sanctuary Campus"
+                className="church-exterior-img"
+                loading="eager"
+              />
+            </div>
+
+            {/* Column 2: Contact Information & Socials */}
+            <div className="church-contact-info">
+              <div className="contact-info-row">
+                <span className="contact-info-icon">📍</span>
+                <div>
+                  <strong>123 Faith Avenue,</strong><br />
+                  Hyderabad, Telangana 500001
+                </div>
+              </div>
+
+              <div className="contact-info-row">
+                <span className="contact-info-icon">📞</span>
+                <div>+91 98765 43210</div>
+              </div>
+
+              <div className="contact-info-row">
+                <span className="contact-info-icon">✉️</span>
+                <div>info@gracefellowship.org</div>
+              </div>
+
+              {/* Social Media Circular Buttons */}
+              <div className="church-social-icons">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-circle-btn fb"
+                  title="Facebook"
+                  aria-label="Facebook"
+                >
+                  f
+                </a>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-circle-btn yt"
+                  title="YouTube"
+                  aria-label="YouTube"
+                >
+                  ▶
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-circle-btn ig"
+                  title="Instagram"
+                  aria-label="Instagram"
+                >
+                  📸
+                </a>
+                <a
+                  href="https://whatsapp.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-circle-btn wa"
+                  title="WhatsApp"
+                  aria-label="WhatsApp"
+                >
+                  💬
+                </a>
+              </div>
+            </div>
+
+            {/* Column 3: Styled Interactive Map Card */}
+            <div className="church-map-card">
+              {/* Stylized SVG Map Canvas */}
+              <svg
+                className="map-svg-canvas"
+                viewBox="0 0 360 200"
+                preserveAspectRatio="none"
+                aria-label="Church Map Location"
+              >
+                {/* Background land */}
+                <rect width="360" height="200" fill="#e8edf2" />
+
+                {/* River / Waterway */}
+                <path
+                  d="M-10,120 C80,100 120,150 220,110 C280,80 340,90 380,75 L380,105 C340,120 280,110 220,140 C120,180 80,130 -10,150 Z"
+                  fill="#cbe0f4"
+                />
+
+                {/* Streets / Roads */}
+                <path d="M0,40 L360,60" stroke="#ffffff" strokeWidth="6" />
+                <path d="M0,170 L360,150" stroke="#ffffff" strokeWidth="5" />
+                <path d="M110,0 L130,200" stroke="#ffffff" strokeWidth="7" />
+                <path d="M260,0 L240,200" stroke="#ffffff" strokeWidth="5" />
+                <path d="M40,0 L180,200" stroke="#fdfbf7" strokeWidth="3" />
+                <path d="M120,70 L360,70" stroke="#ffffff" strokeWidth="4" />
+
+                {/* Minor streets */}
+                <path d="M140,40 L160,120" stroke="#ffffff" strokeWidth="2.5" />
+                <path d="M220,140 L300,160" stroke="#ffffff" strokeWidth="2.5" />
+                <path d="M60,90 L110,90" stroke="#ffffff" strokeWidth="2.5" />
+
+                {/* Compass / Location icon on top left */}
+                <circle cx="22" cy="22" r="12" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1" />
+                <path d="M22,14 L25,22 L22,20 L19,22 Z" fill="#64748b" />
+                <path d="M22,30 L25,22 L22,24 L19,22 Z" fill="#94a3b8" />
+
+                {/* Red Church Pin Marker */}
+                <g transform="translate(195, 80)">
+                  {/* Pulse circle */}
+                  <circle cx="0" cy="0" r="14" fill="rgba(225, 29, 72, 0.2)" />
+                  {/* Pin body */}
+                  <path
+                    d="M0,-16 C-8,-16 -12,-10 -12,-2 C-12,8 0,20 0,20 C0,20 12,8 12,-2 C12,-10 8,-16 0,-16 Z"
+                    fill="#e11d48"
+                    stroke="#be123c"
+                    strokeWidth="1.5"
+                  />
+                  <circle cx="0" cy="-4" r="4.5" fill="#ffffff" />
+
+                  {/* Pin Label Tooltip */}
+                  <rect x="14" y="-14" width="136" height="24" rx="4" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" />
+                  <text x="22" y="3" fontSize="10" fontWeight="700" fill="#0f1e36" fontFamily="sans-serif">
+                    Grace Fellowship Church
+                  </text>
+                </g>
+              </svg>
+
+              {/* View on Maps Button */}
+              <a
+                href="https://maps.google.com/?q=Grace+Fellowship+Church+Hyderabad"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-view-maps"
+              >
+                View on Maps
+              </a>
+
+              {/* Zoom Controls (+ / -) */}
+              <div className="map-zoom-controls">
+                <button
+                  type="button"
+                  className="map-zoom-btn"
+                  onClick={handleZoomIn}
+                  title="Zoom In"
+                  aria-label="Zoom In"
+                >
+                  +
+                </button>
+                <button
+                  type="button"
+                  className="map-zoom-btn"
+                  onClick={handleZoomOut}
+                  title="Zoom Out"
+                  aria-label="Zoom Out"
+                >
+                  −
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       10. Footer Component
+       ========================================================================== */
+    function Footer() {
+      const footerLinks = [
+        { label: "Home", href: "#home" },
+        { label: "About", href: "#service-timings" },
+        { label: "Bible", href: "bible/index.html" },
+        { label: "Sermons", href: "#sermons" },
+        { label: "Events", href: "#events" },
+        { label: "Ministries", href: "#ministries" },
+        { label: "Gallery", href: "#announcements" },
+        { label: "Contact", href: "#contact" }
+      ];
+
+      const handleLinkClick = (href, e) => {
+        if (href.startsWith("#")) {
+          e.preventDefault();
+          const target = document.getElementById(href.substring(1));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      };
+
+      return (
+        <footer className="church-footer">
+          <div className="home-container">
+            <div className="footer-top-row">
+              {/* Left: Church Brand */}
+              <div className="footer-brand">
+                <span className="footer-cross">✝</span>
+                <div>
+                  <div className="footer-church-name">Grace Fellowship Church</div>
+                  <div className="footer-tagline">Worship • Grow • Serve • Share</div>
+                </div>
+              </div>
+
+              {/* Center: Navigation Links */}
+              <nav className="footer-nav-links" aria-label="Footer Navigation">
+                {footerLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="footer-nav-link"
+                    onClick={(e) => handleLinkClick(link.href, e)}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+
+              {/* Right: Social Media Links */}
+              <div className="footer-social-links">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-icon"
+                  title="Facebook"
+                  aria-label="Facebook"
+                >
+                  f
+                </a>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-icon"
+                  title="YouTube"
+                  aria-label="YouTube"
+                >
+                  ▶
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-icon"
+                  title="Instagram"
+                  aria-label="Instagram"
+                >
+                  📸
+                </a>
+                <a
+                  href="https://whatsapp.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-icon"
+                  title="WhatsApp"
+                  aria-label="WhatsApp"
+                >
+                  💬
+                </a>
+              </div>
+            </div>
+
+            {/* Bottom Copyright */}
+            <div className="footer-bottom-copy">
+              &copy; 2024 Grace Fellowship Church. All rights reserved.
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    /* ==========================================================================
+       Master HomePage Component
+       ========================================================================== */
+    function HomePage() {
+      const [activeSection, setActiveSection] = useState("home");
+
+      useEffect(() => {
+        const sectionIds = [
+          "home",
+          "announcements",
+          "verse-of-the-day",
+          "service-timings",
+          "sermons",
+          "events",
+          "ministries",
+          "contact"
+        ];
+
+        const handleScroll = () => {
+          const scrollPos = window.scrollY + 160;
+          for (const id of sectionIds) {
+            const el = document.getElementById(id);
+            if (el) {
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPos >= top && scrollPos < top + height) {
+                if (id === "service-timings") {
+                  setActiveSection("about");
+                } else if (id === "verse-of-the-day") {
+                  setActiveSection("home");
+                } else {
+                  setActiveSection(id);
+                }
+                break;
+              }
+            }
+          }
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
+
+      return (
+        <div className="church-app-root">
+          <Navbar
+            activeSection={activeSection}
+            onNavigate={(sec) => setActiveSection(sec)}
+          />
+          <main>
+            <Hero />
+            <Announcements />
+            <VerseOfTheDay />
+            <ServiceTimings />
+            <LatestSermons />
+            <UpcomingEvents />
+            <Ministries />
+            <ChurchLocation />
+          </main>
+          <Footer />
+        </div>
+      );
+    }
+
+    // Render the React Home Page to #root
+    const rootElement = document.getElementById("root");
+    const reactRoot = ReactDOM.createRoot(rootElement);
+    reactRoot.render(<HomePage />);
   </script>
 
 </body>
