@@ -13,17 +13,23 @@ function ScriptureReader({
   bookmarkedVerses = [],
   onToggleBookmark,
   onCopyVerse,
-  onSearchVerse
+  onSearchVerse,
+  isLoading = false
 }) {
-  if (!chapterData) {
+  if (isLoading) {
     return (
-      <div className="reader-loading-card">
-        <p>Loading Scripture passage...</p>
+      <div className="scripture-reader-card reader-loading-card" style={{ padding: "48px 24px", textAlign: "center" }}>
+        <p style={{ fontSize: "1.1rem", color: "var(--navy-600)" }}>Loading Scripture passage...</p>
       </div>
     );
   }
 
-  const { book, chapter, verses = [], totalVerses = 31 } = chapterData;
+  if (!chapterData) {
+    return null;
+  }
+
+  const { book = {}, chapter = 1, verses = [], totalVerses: dataTotalVerses, versesCount } = chapterData;
+  const totalVerses = dataTotalVerses || versesCount || verses.length || 0;
   const isTelugu = selectedLang === "telugu";
 
   // Filter verses if a specific verse is selected in dropdown
@@ -31,6 +37,9 @@ function ScriptureReader({
     if (selectedVerse === "all" || !selectedVerse) return verses;
     return verses.filter((v) => String(v.verse) === String(selectedVerse));
   }, [verses, selectedVerse]);
+
+  const bookName = typeof book === "object" ? (book.name || "Bible") : book;
+  const bookTelugu = typeof book === "object" ? (book.teluguName || "") : "";
 
   return (
     <article 
@@ -51,11 +60,11 @@ function ScriptureReader({
 
           <div className="chapter-names-meta">
             <h1 className="chapter-primary-heading">
-              {book.name} {chapter}
+              {bookName} {chapter}
             </h1>
             <p className="chapter-secondary-subheading">
-              <span className="telugu-subname">{book.teluguName}</span>
-              <span className="subheading-bullet">•</span>
+              {bookTelugu && <span className="telugu-subname">{bookTelugu}</span>}
+              {bookTelugu && <span className="subheading-bullet">•</span>}
               <span className="subheading-chapter-label">Chapter {chapter}</span>
             </p>
           </div>
@@ -75,9 +84,9 @@ function ScriptureReader({
       {/* Verses List */}
       <div className="reader-verses-list">
         {displayedVerses.map((v) => {
-          const verseNumber = v.verse;
-          const isBookmarked = bookmarkedVerses.includes(verseNumber);
-          const verseText = isTelugu ? v.telugu : v.kjv;
+          const verseNumber = Number(v.verse) || v.verse;
+          const isBookmarked = bookmarkedVerses.includes(verseNumber) || bookmarkedVerses.includes(String(verseNumber));
+          const verseText = v.text || (isTelugu ? (v.telugu || v.kjv) : (v.kjv || v.telugu)) || "";
 
           return (
             <div 

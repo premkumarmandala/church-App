@@ -423,8 +423,10 @@
       onNextChapter
     }) {
       const filteredBooks = useMemo(() => {
-        if (testamentFilter === "all") return booksList;
-        return booksList.filter((b) => b.testament === testamentFilter);
+        if (!testamentFilter || testamentFilter === "all") return booksList;
+        return booksList.filter(
+          (b) => (b.testament || "").toUpperCase() === (testamentFilter || "").toUpperCase()
+        );
       }, [booksList, testamentFilter]);
 
       const chaptersArray = useMemo(() => {
@@ -557,17 +559,30 @@
       bookmarkedVerses = [],
       onToggleBookmark,
       onCopyVerse,
-      onSearchVerse
+      onSearchVerse,
+      isLoading = false
     }) {
+      if (isLoading) {
+        return (
+          <div className="scripture-reader-card reader-loading-card" style={{ padding: "48px 24px", textAlign: "center" }}>
+            <p style={{ fontSize: "1.1rem", color: "var(--navy-600)" }}>Loading Scripture passage...</p>
+          </div>
+        );
+      }
+
       if (!chapterData) return null;
 
-      const { book, chapter, verses = [], totalVerses = 31 } = chapterData;
+      const { book = {}, chapter = 1, verses = [], totalVerses: dataTotalVerses, versesCount } = chapterData;
+      const totalVerses = dataTotalVerses || versesCount || verses.length || 0;
       const isTelugu = selectedLang === "telugu";
 
       const displayedVerses = useMemo(() => {
         if (selectedVerse === "all" || !selectedVerse) return verses;
         return verses.filter((v) => String(v.verse) === String(selectedVerse));
       }, [verses, selectedVerse]);
+
+      const bookName = typeof book === "object" ? (book.name || "Bible") : book;
+      const bookTelugu = typeof book === "object" ? (book.teluguName || "") : "";
 
       return (
         <article 
@@ -587,11 +602,11 @@
 
               <div className="chapter-names-meta">
                 <h1 className="chapter-primary-heading">
-                  {book.name} {chapter}
+                  {bookName} {chapter}
                 </h1>
                 <p className="chapter-secondary-subheading">
-                  <span className="telugu-subname">{book.teluguName}</span>
-                  <span className="subheading-bullet">•</span>
+                  {bookTelugu && <span className="telugu-subname">{bookTelugu}</span>}
+                  {bookTelugu && <span className="subheading-bullet">•</span>}
                   <span className="subheading-chapter-label">Chapter {chapter}</span>
                 </p>
               </div>
@@ -610,9 +625,9 @@
           {/* Verses List */}
           <div className="reader-verses-list">
             {displayedVerses.map((v) => {
-              const verseNumber = v.verse;
-              const isBookmarked = bookmarkedVerses.includes(verseNumber);
-              const verseText = isTelugu ? v.telugu : v.kjv;
+              const verseNumber = Number(v.verse) || v.verse;
+              const isBookmarked = bookmarkedVerses.includes(verseNumber) || bookmarkedVerses.includes(String(verseNumber));
+              const verseText = v.text || (isTelugu ? (v.telugu || v.kjv) : (v.kjv || v.telugu)) || "";
 
               return (
                 <div 
@@ -668,7 +683,7 @@
                       type="button"
                       className="btn-verse-control btn-verse-copy"
                       onClick={() => onCopyVerse && onCopyVerse({
-                        book,
+                        book: typeof book === "object" ? book : { name: book },
                         chapter,
                         verse: verseNumber,
                         text: verseText
@@ -697,16 +712,38 @@
       const [query, setQuery] = useState(initialQuery || "beginning");
       const [testament, setTestament] = useState("all");
       const [results, setResults] = useState(window.MOCK_SEARCH_RESULTS || []);
+      const [isSearching, setIsSearching] = useState(false);
 
-      const handleSearch = (e) => {
+      const handleSearch = async (e) => {
         if (e) e.preventDefault();
-        if (!query.trim()) {
+        const trimmed = query.trim();
+        if (!trimmed) {
           setResults([]);
           return;
         }
+
+        setIsSearching(true);
+        try {
+          const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+          const res = await fetch(`${apiBase}/api/bible/search?q=${encodeURIComponent(trimmed)}&translation=kjv&testament=${testament}&limit=30`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && Array.isArray(data.results)) {
+              setResults(data.results);
+              setIsSearching(false);
+              return;
+            }
+          }
+        } catch (err) {
+          // Fall back gracefully to mock results
+        }
+        setIsSearching(false);
+
+        const qLower = trimmed.toLowerCase();
         const filtered = (window.MOCK_SEARCH_RESULTS || []).filter((r) =>
-          r.text.toLowerCase().includes(query.toLowerCase()) ||
-          r.reference.toLowerCase().includes(query.toLowerCase())
+          (r.text && r.text.toLowerCase().includes(qLower)) ||
+          (r.reference && r.reference.toLowerCase().includes(qLower)) ||
+          (r.referenceEn && r.referenceEn.toLowerCase().includes(qLower))
         );
         setResults(filtered.length > 0 ? filtered : window.MOCK_SEARCH_RESULTS || []);
       };
@@ -750,8 +787,8 @@
                 <span className="select-arrow-icon">▼</span>
               </div>
 
-              <button type="submit" className="btn-search-action">
-                <span>Search</span>
+              <button type="submit" className="btn-search-action" disabled={isSearching}>
+                <span>{isSearching ? "Searching..." : "Search"}</span>
               </button>
             </form>
           </div>
@@ -764,25 +801,33 @@
             </div>
 
             <div className="search-cards-grid">
-              {results.map((item, index) => (
-                <div key={index} className="search-result-card">
-                  <div className="search-result-header">
-                    <span className="result-ref-title">{item.reference}</span>
-                    <span className="result-telugu-ref">({item.teluguReference})</span>
-                    <span className="result-trans-badge">{item.translation}</span>
+              {results.map((item, index) => {
+                const refTitle = item.referenceEn || item.reference;
+                const teluguRef = item.referenceTe || item.teluguReference || "";
+                const bSlug = item.bookSlug || "genesis";
+                const chNum = Number(item.chapter) || 1;
+                const vNum = Number(item.verse) || 1;
+
+                return (
+                  <div key={index} className="search-result-card">
+                    <div className="search-result-header">
+                      <span className="result-ref-title">{refTitle}</span>
+                      {teluguRef && <span className="result-telugu-ref">({teluguRef})</span>}
+                      <span className="result-trans-badge">{(item.translation || "KJV").toUpperCase()}</span>
+                    </div>
+                    <p className="result-verse-text">&ldquo;{item.text}&rdquo;</p>
+                    <div className="search-result-actions">
+                      <button
+                        type="button"
+                        className="btn-result-navigate"
+                        onClick={() => onNavigateToVerse && onNavigateToVerse(bSlug, chNum, vNum)}
+                      >
+                        Read Chapter &gt;
+                      </button>
+                    </div>
                   </div>
-                  <p className="result-verse-text">&ldquo;{item.text}&rdquo;</p>
-                  <div className="search-result-actions">
-                    <button
-                      type="button"
-                      className="btn-result-navigate"
-                      onClick={() => onNavigateToVerse && onNavigateToVerse("genesis", 1, 1)}
-                    >
-                      Read Chapter &gt;
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -949,6 +994,11 @@
       const [selectedChapter, setSelectedChapter] = useState(1);
       const [selectedVerse, setSelectedVerse] = useState("all");
 
+      const [books, setBooks] = useState(window.MOCK_BOOKS || []);
+      const [chapterData, setChapterData] = useState(window.MOCK_GENESIS_CHAPTER_1);
+      const [isLoadingChapter, setIsLoadingChapter] = useState(false);
+      const [dailyVerse, setDailyVerse] = useState(window.MOCK_DAILY_VERSE);
+
       const [fontSize, setFontSize] = useState(18);
       const [theme, setTheme] = useState("light");
       const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -961,10 +1011,119 @@
         document.documentElement.setAttribute("data-theme", theme);
       }, [theme]);
 
+      // Load all 66 canonical books from backend API if available
+      useEffect(() => {
+        const loadBooks = async () => {
+          try {
+            const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+            const res = await fetch(`${apiBase}/api/bible/books`);
+            if (res.ok) {
+              const data = await res.json();
+              if (Array.isArray(data) && data.length > 0) {
+                setBooks(data);
+              }
+            }
+          } catch (e) {
+            // Keep window.MOCK_BOOKS
+          }
+        };
+        loadBooks();
+      }, []);
+
+      // Load Verse of the Day from backend API
+      useEffect(() => {
+        const loadDailyVerse = async () => {
+          try {
+            const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+            const res = await fetch(`${apiBase}/api/bible/daily-verse`);
+            if (res.ok) {
+              const data = await res.json();
+              if (data && data.referenceEn) {
+                setDailyVerse(data);
+              }
+            }
+          } catch (e) {}
+        };
+        loadDailyVerse();
+      }, []);
+
+      // Current active book object
+      const currentBook = useMemo(() => {
+        return books.find((b) => b.slug === selectedBook) || books[0] || {
+          id: 1,
+          slug: "genesis",
+          name: "Genesis",
+          teluguName: "ఆదికాండము",
+          testament: "OT",
+          chaptersCount: 50
+        };
+      }, [books, selectedBook]);
+
+      const totalChapters = useMemo(() => {
+        return currentBook?.chaptersCount || 50;
+      }, [currentBook]);
+
+      // Dynamic chapter loading from backend API or offline mock
+      useEffect(() => {
+        let isCancelled = false;
+        const loadChapter = async () => {
+          setIsLoadingChapter(true);
+          try {
+            const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+            const res = await fetch(`${apiBase}/api/bible/chapter?translation=${selectedLang}&book=${selectedBook}&chapter=${selectedChapter}&parallel=true`);
+            if (res.ok) {
+              const data = await res.json();
+              if (!isCancelled && data && data.verses) {
+                setChapterData(data);
+                setIsLoadingChapter(false);
+                return;
+              }
+            }
+          } catch (e) {
+            // API not available, proceed to fallback
+          }
+
+          if (!isCancelled) {
+            if (selectedBook === "genesis" && selectedChapter === 1) {
+              setChapterData(window.MOCK_GENESIS_CHAPTER_1);
+            } else {
+              setChapterData({
+                book: currentBook,
+                chapter: selectedChapter,
+                translation: selectedLang,
+                versesCount: 1,
+                verses: [
+                  {
+                    verse: 1,
+                    text: selectedLang === "telugu"
+                      ? `${currentBook.teluguName || currentBook.name} అధ్యాయము ${selectedChapter}. (పూర్తి గ్రంథ వచనాలు అందుబాటులో ఉన్నాయి)`
+                      : `${currentBook.name} Chapter ${selectedChapter}. (Full scripture text available from backend API)`
+                  }
+                ]
+              });
+            }
+            setIsLoadingChapter(false);
+          }
+        };
+
+        loadChapter();
+        return () => { isCancelled = true; };
+      }, [selectedBook, selectedChapter, selectedLang, currentBook]);
+
+      const totalVerses = useMemo(() => {
+        if (chapterData && Array.isArray(chapterData.verses) && chapterData.verses.length > 0) {
+          return chapterData.verses.length;
+        }
+        if (currentBook && Array.isArray(currentBook.chapterVerseCounts)) {
+          return currentBook.chapterVerseCounts[selectedChapter - 1] || 31;
+        }
+        return 31;
+      }, [chapterData, currentBook, selectedChapter]);
+
       const bookmarkedVerses = useMemo(() => {
         return bookmarks
-          .filter((b) => b.bookSlug === selectedBook && b.chapter === selectedChapter)
-          .map((b) => b.verse);
+          .filter((b) => b.bookSlug === selectedBook && Number(b.chapter) === Number(selectedChapter))
+          .map((b) => Number(b.verse) || b.verse);
       }, [bookmarks, selectedBook, selectedChapter]);
 
       const showToast = (msg) => {
@@ -986,57 +1145,105 @@
         setTheme((prev) => (prev === "light" ? "dark" : "light"));
       };
 
+      const handleSelectTestament = (filter) => {
+        setTestamentFilter(filter);
+        if (filter !== "all") {
+          const match = books.filter((b) => (b.testament || "").toUpperCase() === filter.toUpperCase());
+          const isCurrentInTestament = match.some((b) => b.slug === selectedBook);
+          if (!isCurrentInTestament && match.length > 0) {
+            setSelectedBook(match[0].slug);
+            setSelectedChapter(1);
+            setSelectedVerse("all");
+          }
+        }
+      };
+
+      const handleSelectBook = (newSlug) => {
+        setSelectedBook(newSlug);
+        const target = books.find((b) => b.slug === newSlug);
+        const maxCh = target?.chaptersCount || 50;
+        if (selectedChapter > maxCh) {
+          setSelectedChapter(1);
+        }
+        setSelectedVerse("all");
+      };
+
       const handlePrevChapter = () => {
         if (selectedChapter > 1) {
           setSelectedChapter((prev) => prev - 1);
           setSelectedVerse("all");
+        } else {
+          const curIndex = books.findIndex((b) => b.slug === selectedBook);
+          if (curIndex > 0) {
+            const prevBook = books[curIndex - 1];
+            setSelectedBook(prevBook.slug);
+            setSelectedChapter(prevBook.chaptersCount || 1);
+            setSelectedVerse("all");
+          }
         }
       };
 
       const handleNextChapter = () => {
-        setSelectedChapter((prev) => prev + 1);
-        setSelectedVerse("all");
+        if (selectedChapter < totalChapters) {
+          setSelectedChapter((prev) => prev + 1);
+          setSelectedVerse("all");
+        } else {
+          const curIndex = books.findIndex((b) => b.slug === selectedBook);
+          if (curIndex >= 0 && curIndex < books.length - 1) {
+            setSelectedBook(books[curIndex + 1].slug);
+            setSelectedChapter(1);
+            setSelectedVerse("all");
+          }
+        }
       };
 
       const handleToggleBookmark = (verseNum) => {
-        const isBookmarked = bookmarkedVerses.includes(verseNum);
+        const num = Number(verseNum) || verseNum;
+        const isBookmarked = bookmarkedVerses.includes(num) || bookmarkedVerses.includes(String(num));
         if (isBookmarked) {
           setBookmarks((prev) =>
-            prev.filter((b) => !(b.bookSlug === selectedBook && b.chapter === selectedChapter && b.verse === verseNum))
+            prev.filter((b) => !(b.bookSlug === selectedBook && Number(b.chapter) === Number(selectedChapter) && (Number(b.verse) === num || b.verse === verseNum)))
           );
-          showToast(`Removed bookmark for Verse ${verseNum}`);
+          showToast(`Removed bookmark for Verse ${num}`);
         } else {
-          const verseObj = (window.MOCK_GENESIS_CHAPTER_1.verses || []).find((v) => v.verse === verseNum);
+          const versesList = chapterData?.verses || window.MOCK_GENESIS_CHAPTER_1.verses || [];
+          const verseObj = versesList.find((v) => Number(v.verse) === num || String(v.verse) === String(num));
+          const verseText = verseObj ? (verseObj.text || (selectedLang === "telugu" ? verseObj.telugu : verseObj.kjv)) : "";
+          const bName = currentBook?.name || "Genesis";
+          const bTelugu = currentBook?.teluguName || "ఆదికాండము";
+
           const newBm = {
-            id: `${selectedBook}-${selectedChapter}-${verseNum}`,
+            id: `${selectedBook}-${selectedChapter}-${num}`,
             bookSlug: selectedBook,
-            bookName: "Genesis",
-            bookTeluguName: "ఆదికాండము",
+            bookName: bName,
+            bookTeluguName: bTelugu,
             chapter: selectedChapter,
-            verse: verseNum,
+            verse: num,
             translation: selectedLang.toUpperCase(),
-            text: selectedLang === "telugu" ? (verseObj?.telugu || "") : (verseObj?.kjv || ""),
+            text: verseText || `${bName} ${selectedChapter}:${num}`,
             savedAt: "Just now"
           };
           setBookmarks((prev) => [newBm, ...prev]);
-          showToast(`★ Bookmarked Genesis ${selectedChapter}:${verseNum}`);
+          showToast(`★ Bookmarked ${bName} ${selectedChapter}:${num}`);
         }
       };
 
       const handleRemoveBookmark = (verseNum) => {
+        const num = Number(verseNum) || verseNum;
         setBookmarks((prev) =>
-          prev.filter((b) => !(b.bookSlug === selectedBook && b.chapter === selectedChapter && b.verse === verseNum))
+          prev.filter((b) => !(b.bookSlug === selectedBook && Number(b.chapter) === Number(selectedChapter) && (Number(b.verse) === num || b.verse === verseNum)))
         );
         showToast(`Bookmark removed`);
       };
 
       const handleCopyVerse = (item) => {
-        const textToCopy = `“${item.text}” — ${item.book.name} ${item.chapter}:${item.verse} (${selectedLang.toUpperCase()})`;
+        const bName = typeof item.book === "object" ? (item.book.name || currentBook.name) : (item.book || currentBook.name);
+        const textToCopy = `“${item.text}” — ${bName} ${item.chapter}:${item.verse} (${selectedLang.toUpperCase()})`;
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(textToCopy).then(() => {
             showToast("✓ Copied verse to clipboard!");
           }).catch(() => {
-            showToast("Copied: " + item.book.name + " " + item.chapter + ":" + item.verse);
+            showToast("Copied: " + bName + " " + item.chapter + ":" + item.verse);
           });
         } else {
           showToast("✓ Copied verse to clipboard!");
@@ -1044,14 +1251,14 @@
       };
 
       const handleSearchVerse = (item) => {
-        setSearchQuery(item.text.slice(0, 30));
+        setSearchQuery((item.text || "").slice(0, 30));
         setActiveTab("search");
       };
 
       const handleNavigateToPassage = (bookSlug, chapter, verse = "all") => {
         setSelectedBook(bookSlug || "genesis");
-        setSelectedChapter(chapter || 1);
-        setSelectedVerse(verse || "all");
+        setSelectedChapter(Number(chapter) || 1);
+        setSelectedVerse(verse === "all" ? "all" : (Number(verse) || "all"));
         setActiveTab("reader");
         window.scrollTo({ top: 380, behavior: "smooth" });
       };
@@ -1087,7 +1294,7 @@
             />
 
             <DailyVerseHero
-              dailyVerse={window.MOCK_DAILY_VERSE}
+              dailyVerse={dailyVerse}
               selectedLang={selectedLang}
               onReadChapter={handleNavigateToPassage}
             />
@@ -1103,22 +1310,22 @@
               <React.Fragment>
                 <PassageNavigation
                   testamentFilter={testamentFilter}
-                  onSelectTestament={setTestamentFilter}
-                  booksList={window.MOCK_BOOKS || []}
+                  onSelectTestament={handleSelectTestament}
+                  booksList={books}
                   selectedBook={selectedBook}
-                  onSelectBook={setSelectedBook}
+                  onSelectBook={handleSelectBook}
                   selectedChapter={selectedChapter}
                   onChangeChapter={setSelectedChapter}
                   selectedVerse={selectedVerse}
                   onChangeVerse={setSelectedVerse}
-                  totalChapters={50}
-                  totalVerses={31}
+                  totalChapters={totalChapters}
+                  totalVerses={totalVerses}
                   onPrevChapter={handlePrevChapter}
                   onNextChapter={handleNextChapter}
                 />
 
                 <ScriptureReader
-                  chapterData={window.MOCK_GENESIS_CHAPTER_1}
+                  chapterData={chapterData}
                   selectedLang={selectedLang}
                   fontSize={fontSize}
                   selectedVerse={selectedVerse}
@@ -1126,6 +1333,7 @@
                   onToggleBookmark={handleToggleBookmark}
                   onCopyVerse={handleCopyVerse}
                   onSearchVerse={handleSearchVerse}
+                  isLoading={isLoadingChapter}
                 />
               </React.Fragment>
             )}

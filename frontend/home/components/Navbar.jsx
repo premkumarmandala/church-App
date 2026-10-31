@@ -24,10 +24,7 @@ function Navbar({ activeSection = "home", onNavigate }) {
     { id: "home", label: "Home", href: "#home" },
     { id: "about", label: "About", href: "#about" },
     { id: "bible", label: "Bible", href: "bible/index.html" },
-    { id: "sermons", label: "Sermons", href: "#sermons" },
-    { id: "events", label: "Events", href: "#events" },
-    { id: "ministries", label: "Ministries", href: "#ministries" },
-    { id: "gallery", label: "Gallery", href: "#gallery" },
+    { id: "prayer", label: "Prayer", href: "prayer-request/index.html" },
     { id: "contact", label: "Contact", href: "#contact" }
   ];
 
@@ -70,19 +67,6 @@ function Navbar({ activeSection = "home", onNavigate }) {
               </a>
             </li>
           ))}
-
-          {/* Search Icon */}
-          <button
-            type="button"
-            className="nav-search-btn"
-            title="Search Scripture or Sermons"
-            aria-label="Search"
-            onClick={() => {
-              window.location.href = "bible/index.html";
-            }}
-          >
-            🔍
-          </button>
 
           {/* Donate Button */}
           <a

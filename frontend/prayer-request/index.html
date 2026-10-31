@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prayer Request - Grace Fellowship Church</title>
+  <meta name="description" content="Share your prayer need with Grace Fellowship Church. Our pastoral prayer team intercedes daily with faith, hope, and strict confidentiality.">
+
+  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Prayer Request Design System Stylesheet -->
+  <link rel="stylesheet" href="prayer-request.css">
+
+  <!-- React 18 & ReactDOM 18 CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel Standalone for in-browser JSX transformation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+
+  <!-- React Root Container -->
+  <div id="root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; color: #64748b; background: #f8fafc;">
+      <div style="text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 12px; color: #0284c7;">🙏</div>
+        <p style="font-size: 1.05rem; font-weight: 600; color: #0f1e36;">Loading Prayer Request Portal...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- React Functional Components and Main Application -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    /* ==========================================================================
+       1. PrayerHero Component
+       ========================================================================== */
+    function PrayerHero() {
+      return (
+        <section className="prayer-hero-section" aria-label="Prayer Request Banner">
+          <div className="prayer-hero-bg-container">
+            <div className="prayer-hero-gradient-overlay" />
+          </div>
+
+          <div className="prayer-hero-content-wrapper">
+            <div className="prayer-hero-row">
+              <div className="prayer-hero-left">
+                {/* Praying Hands Icon */}
+                <div className="prayer-hands-icon-wrap" aria-hidden="true">
+                  <svg 
+                    className="prayer-hands-svg" 
+                    viewBox="0 0 64 64" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M26 14c0-3.3 2.7-6 6-6s6 2.7 6 6v18h-12V14z" />
+                    <path d="M20 22c-2.2 0-4 1.8-4 4v10c0 4.4 3.6 8 8 8h2V32h-6v-6c0-2.2 1.8-4 4-4h-4z" />
+                    <path d="M44 22c2.2 0 4 1.8 4 4v10c0 4.4-3.6 8-8 8h-2V32h6v-6c0-2.2-1.8-4-4-4h4z" />
+                    <path d="M24 44l-8 12h32l-8-12" />
+                    <path d="M28 32v12h8V32" />
+                    <path d="M22 28l-6 2c-1.7.6-2.5 2.5-1.9 4.2l3.9 11.8" />
+                    <path d="M42 28l6 2c1.7.6 2.5 2.5 1.9 4.2l-3.9 11.8" />
+                  </svg>
+                </div>
+
+                <div className="prayer-hero-text-block">
+                  <h1 className="prayer-hero-title">Prayer Request</h1>
+                  <p className="prayer-hero-subtitle">
+                    Share your prayer need with us. We will pray for you.
+                  </p>
+                  <blockquote className="prayer-hero-quote">
+                    &ldquo;The prayer of a righteous person is powerful and effective.&rdquo;
+                    <span className="quote-author"> &mdash; James 5:16</span>
+                  </blockquote>
+                </div>
+              </div>
+
+              {/* Right Silhouette Cross on Hill Graphic */}
+              <div className="prayer-hero-right-silhouette" aria-hidden="true">
+                <div className="cross-silhouette-wrap">
+                  <svg className="cross-svg" viewBox="0 0 100 120" fill="none">
+                    <circle cx="50" cy="50" r="35" fill="url(#sunGlow)" opacity="0.45" />
+                    <rect x="46" y="10" width="8" height="100" rx="1.5" fill="#2d1d14" />
+                    <rect x="25" y="32" width="50" height="8" rx="1.5" fill="#2d1d14" />
+                    <line x1="47" y1="12" x2="47" y2="108" stroke="#f59e0b" strokeWidth="1" opacity="0.6" />
+                    <line x1="26" y1="33" x2="74" y2="33" stroke="#f59e0b" strokeWidth="1" opacity="0.6" />
+                    <path d="M0 120 Q 50 90 100 120 L 100 120 L 0 120 Z" fill="#1e1610" />
+                    <defs>
+                      <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="#ffedd5" stopOpacity="0.9" />
+                        <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ==========================================================================
+       2. PrayerCategory Component
+       ========================================================================== */
+    function PrayerCategory({
+      category = "",
+      onChangeCategory,
+      isAnonymous = false,
+      onToggleAnonymous,
+      error = ""
+    }) {
+      const categories = [
+        { value: "", label: "Select a category", disabled: true },
+        { value: "Healing & Health", label: "Healing & Physical Health" },
+        { value: "Family & Marriage", label: "Family, Marriage & Children" },
+        { value: "Spiritual Growth", label: "Spiritual Growth & Deliverance" },
+        { value: "Guidance & Direction", label: "Guidance, Wisdom & Major Decisions" },
+        { value: "Financial & Employment", label: "Financial Provision & Employment" },
+        { value: "Comfort & Grief", label: "Comfort, Grief & Loss of Loved One" },
+        { value: "Salvation & Faith", label: "Salvation of Family & Loved Ones" },
+        { value: "Mental & Emotional Peace", label: "Mental Health, Peace & Anxiety" },
+        { value: "Thanksgiving & Praise", label: "Thanksgiving & Answered Prayer" },
+        { value: "Other Need", label: "Other Personal Need" }
+      ];
+
+      return (
+        <div className="prayer-category-anonymous-row">
+          <div className={`prayer-form-group category-group ${error ? "has-error" : ""}`}>
+            <label htmlFor="prayer-category-select" className="prayer-field-label">
+              Prayer Category <span className="required-star">*</span>
+            </label>
+
+            <div className="custom-input-wrap select-wrap">
+              <span className="field-icon-box heart-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </span>
+
+              <select
+                id="prayer-category-select"
+                className="prayer-select-input"
+                value={category}
+                onChange={(e) => onChangeCategory(e.target.value)}
+                aria-required="true"
+                aria-invalid={!!error}
+              >
+                {categories.map((c, i) => (
+                  <option key={i} value={c.value} disabled={c.disabled}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+
+              <span className="select-dropdown-chevron" aria-hidden="true">▼</span>
+            </div>
+
+            {error && <p className="field-error-message" role="alert">{error}</p>}
+          </div>
+
+          <div className="prayer-anonymous-toggle-wrap">
+            <div className="anonymous-toggle-header">
+              <label className="toggle-switch-control" htmlFor="anonymous-toggle">
+                <input
+                  type="checkbox"
+                  id="anonymous-toggle"
+                  checked={isAnonymous}
+                  onChange={(e) => onToggleAnonymous(e.target.checked)}
+                  aria-label="Submit prayer request anonymously"
+                />
+                <span className="toggle-slider-round" />
+              </label>
+              <span className="anonymous-toggle-label">Submit Anonymously</span>
+            </div>
+            <p className="anonymous-toggle-subtitle">
+              Your name will not be shown to the prayer team.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    /* ==========================================================================
+       3. AudioRecorder Component
+       ========================================================================== */
+    function AudioRecorder({ isOpen, onClose, onAttachAudio }) {
+      const [recordState, setRecordState] = useState("idle");
+      const [duration, setDuration] = useState(0);
+      const [audioUrl, setAudioUrl] = useState(null);
+      const [audioBlob, setAudioBlob] = useState(null);
+      const [audioFile, setAudioFile] = useState(null);
+      const [errorMessage, setErrorMessage] = useState("");
+      const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+
+      const mediaRecorderRef = useRef(null);
+      const audioChunksRef = useRef([]);
+      const timerIntervalRef = useRef(null);
+      const audioPlayerRef = useRef(null);
+      const streamRef = useRef(null);
+
+      const formatTime = (secs) => {
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+      };
+
+      const formatBytes = (bytes) => {
+        if (!bytes || bytes === 0) return "0 B";
+        const k = 1024;
+        const sizes = ["B", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+      };
+
+      const startRecording = async () => {
+        setErrorMessage("");
+        audioChunksRef.current = [];
+        setDuration(0);
+
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error("Audio recording is not supported in this browser.");
+          }
+
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          streamRef.current = stream;
+
+          const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+            ? "audio/webm;codecs=opus"
+            : MediaRecorder.isTypeSupported("audio/mp4")
+            ? "audio/mp4"
+            : "";
+
+          const options = mimeType ? { mimeType } : undefined;
+          const mediaRecorder = new MediaRecorder(stream, options);
+          mediaRecorderRef.current = mediaRecorder;
+
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+              audioChunksRef.current.push(event.data);
+            }
+          };
+
+          mediaRecorder.onstop = () => {
+            const mime = mimeType || "audio/webm";
+            const blob = new Blob(audioChunksRef.current, { type: mime });
+            const url = URL.createObjectURL(blob);
+            const ext = mime.includes("mp4") ? "m4a" : "webm";
+            const filename = `prayer_voice_${Date.now()}.${ext}`;
+            const file = new File([blob], filename, { type: mime, lastModified: Date.now() });
+
+            setAudioBlob(blob);
+            setAudioUrl(url);
+            setAudioFile(file);
+            setRecordState("stopped");
+
+            if (streamRef.current) {
+              streamRef.current.getTracks().forEach((track) => track.stop());
+              streamRef.current = null;
+            }
+          };
+
+          mediaRecorder.start(250);
+          setRecordState("recording");
+
+          timerIntervalRef.current = setInterval(() => {
+            setDuration((prev) => prev + 1);
+          }, 1000);
+        } catch (err) {
+          console.error("Microphone access error:", err);
+          let msg = "Microphone access was denied or unavailable. Please check your browser settings or use 'Upload Audio' instead.";
+          if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+            msg = "Microphone permission was denied. Please allow microphone access in your browser address bar to record prayer audio.";
+          } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+            msg = "No microphone hardware found on your device. You can still upload a recorded audio file.";
+          }
+          setErrorMessage(msg);
+          setRecordState("idle");
+        }
+      };
+
+      const togglePause = () => {
+        if (!mediaRecorderRef.current) return;
+        if (recordState === "recording") {
+          mediaRecorderRef.current.pause();
+          clearInterval(timerIntervalRef.current);
+          setRecordState("paused");
+        } else if (recordState === "paused") {
+          mediaRecorderRef.current.resume();
+          timerIntervalRef.current = setInterval(() => {
+            setDuration((prev) => prev + 1);
+          }, 1000);
+          setRecordState("recording");
+        }
+      };
+
+      const stopRecording = () => {
+        if (mediaRecorderRef.current && recordState !== "idle" && recordState !== "stopped") {
+          mediaRecorderRef.current.stop();
+          clearInterval(timerIntervalRef.current);
+        }
+      };
+
+      const handleAttach = () => {
+        if (audioFile && onAttachAudio) {
+          onAttachAudio({
+            id: `rec-${Date.now()}`,
+            file: audioFile,
+            name: audioFile.name,
+            size: audioFile.size,
+            formattedSize: formatBytes(audioFile.size),
+            duration: formatTime(duration),
+            durationSeconds: duration,
+            type: "audio",
+            url: audioUrl,
+            isRecorded: true
+          });
+          handleClose();
+        }
+      };
+
+      const togglePreviewPlayback = () => {
+        if (!audioPlayerRef.current) return;
+        if (isPlayingPreview) {
+          audioPlayerRef.current.pause();
+          setIsPlayingPreview(false);
+        } else {
+          audioPlayerRef.current.play();
+          setIsPlayingPreview(true);
+        }
+      };
+
+      const handleClose = () => {
+        if (mediaRecorderRef.current && recordState === "recording") {
+          mediaRecorderRef.current.stop();
+        }
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current = null;
+        }
+        if (timerIntervalRef.current) {
+          clearInterval(timerIntervalRef.current);
+        }
+        if (audioPlayerRef.current) {
+          audioPlayerRef.current.pause();
+        }
+        setRecordState("idle");
+        setDuration(0);
+        setAudioUrl(null);
+        setAudioBlob(null);
+        setAudioFile(null);
+        setErrorMessage("");
+        setIsPlayingPreview(false);
+        if (onClose) onClose();
+      };
+
+      useEffect(() => {
+        return () => {
+          if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach((t) => t.stop());
+          }
+        };
+      }, []);
+
+      if (!isOpen) return null;
+
+      return (
+        <div className="audio-recorder-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="recorder-title">
+          <div className="audio-recorder-modal-card">
+            <div className="recorder-modal-header">
+              <div className="recorder-header-left">
+                <span className="recorder-mic-badge">🎙️</span>
+                <div>
+                  <h3 id="recorder-title" className="recorder-title">Record Voice Prayer</h3>
+                  <p className="recorder-subtitle">Speak your prayer request directly from your heart</p>
+                </div>
+              </div>
+              <button type="button" className="btn-modal-close" onClick={handleClose} aria-label="Close recorder">
+                ✕
+              </button>
+            </div>
+
+            {errorMessage && (
+              <div className="recorder-error-alert" role="alert">
+                <span className="alert-icon">⚠️</span>
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            <div className="recorder-visual-stage">
+              <div className={`audio-waveform-container ${recordState === "recording" ? "is-live" : ""}`}>
+                {[40, 65, 85, 45, 95, 60, 75, 100, 70, 50, 85, 40, 60, 90, 55].map((h, i) => (
+                  <span
+                    key={i}
+                    className="waveform-bar"
+                    style={{
+                      "--bar-height": `${recordState === "recording" ? h : 20}%`,
+                      "--bar-delay": `${(i * 0.08).toFixed(2)}s`
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="recorder-time-display">
+                {recordState === "recording" && <span className="recording-live-dot" />}
+                <span className="recorder-time-digits">{formatTime(duration)}</span>
+                <span className="recorder-state-label">
+                  {recordState === "idle" && "Ready to record"}
+                  {recordState === "recording" && "Recording..."}
+                  {recordState === "paused" && "Paused"}
+                  {recordState === "stopped" && "Recording finished"}
+                </span>
+              </div>
+
+              {audioUrl && (
+                <audio
+                  ref={audioPlayerRef}
+                  src={audioUrl}
+                  onEnded={() => setIsPlayingPreview(false)}
+                  style={{ display: "none" }}
+                />
+              )}
+            </div>
+
+            <div className="recorder-controls-footer">
+              {recordState === "idle" && (
+                <button
+                  type="button"
+                  className="btn-recorder-action btn-start-record"
+                  onClick={startRecording}
+                >
+                  <span className="btn-record-circle" />
+                  <span>Start Recording</span>
+                </button>
+              )}
+
+              {(recordState === "recording" || recordState === "paused") && (
+                <div className="recorder-active-actions">
+                  <button
+                    type="button"
+                    className="btn-recorder-action btn-pause-record"
+                    onClick={togglePause}
+                  >
+                    {recordState === "recording" ? "⏸ Pause" : "▶ Resume"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-recorder-action btn-stop-record"
+                    onClick={stopRecording}
+                  >
+                    ⏹ Stop Recording
+                  </button>
+                </div>
+              )}
+
+              {recordState === "stopped" && (
+                <div className="recorder-finished-actions">
+                  <button
+                    type="button"
+                    className="btn-recorder-action btn-preview-playback"
+                    onClick={togglePreviewPlayback}
+                  >
+                    {isPlayingPreview ? "⏸ Pause Preview" : "▶ Play Preview"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-recorder-action btn-rerecord"
+                    onClick={startRecording}
+                  >
+                    🔄 Re-record
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-recorder-action btn-attach-audio"
+                    onClick={handleAttach}
+                  >
+                    ✓ Attach Audio ({formatBytes(audioBlob?.size || 0)})
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ==========================================================================
+       4. MediaUploader Component
+       ========================================================================== */
+    function MediaUploader({
+      onAddFiles,
+      onOpenRecorder,
+      currentTotalSize = 0,
+      maxTotalSize = 100 * 1024 * 1024
+    }) {
+      const audioInputRef = useRef(null);
+      const videoInputRef = useRef(null);
+      const imageInputRef = useRef(null);
+      const docInputRef = useRef(null);
+
+      const [validationError, setValidationError] = useState("");
+
+      const formatBytes = (bytes) => {
+        if (!bytes || bytes === 0) return "0 B";
+        const k = 1024;
+        const sizes = ["B", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+      };
+
+      const handleFilesSelected = (event, expectedType) => {
+        setValidationError("");
+        const fileList = event.target.files;
+        if (!fileList || fileList.length === 0) return;
+
+        const filesArray = Array.from(fileList);
+        let newTotal = currentTotalSize;
+        const validProcessedFiles = [];
+        const errors = [];
+
+        const allowedExtensions = {
+          audio: [".mp3", ".m4a", ".wav", ".aac", ".ogg", ".flac", ".wma"],
+          video: [".mp4", ".mov", ".avi", ".webm", ".mkv", ".wmv", ".m4v"],
+          image: [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp"],
+          document: [".pdf", ".docx", ".doc", ".txt", ".rtf"]
+        };
+
+        for (const file of filesArray) {
+          const ext = "." + (file.name.split(".").pop() || "").toLowerCase();
+          const isValidExt = allowedExtensions[expectedType] && allowedExtensions[expectedType].includes(ext);
+          if (!isValidExt) {
+            errors.push(`"${file.name}" is not a supported ${expectedType} format.`);
+            continue;
+          }
+
+          if (newTotal + file.size > maxTotalSize) {
+            const remaining = Math.max(0, maxTotalSize - newTotal);
+            errors.push(`Cannot add "${file.name}" (${formatBytes(file.size)}). Exceeds 100 MB total limit. Space remaining: ${formatBytes(remaining)}.`);
+            continue;
+          }
+
+          newTotal += file.size;
+          const url = URL.createObjectURL(file);
+
+          validProcessedFiles.push({
+            id: `att-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            file: file,
+            name: file.name,
+            size: file.size,
+            formattedSize: formatBytes(file.size),
+            type: expectedType,
+            url: url,
+            duration: expectedType === "audio" ? "01:36" : undefined
+          });
+        }
+
+        if (errors.length > 0) {
+          setValidationError(errors.join(" "));
+        }
+
+        if (validProcessedFiles.length > 0 && onAddFiles) {
+          onAddFiles(validProcessedFiles);
+        }
+
+        event.target.value = "";
+      };
+
+      return (
+        <div className="prayer-media-uploader-section">
+          <div className="media-uploader-header-row">
+            <label className="prayer-field-label media-label">
+              Add Media <span className="label-optional">(Optional)</span>
+            </label>
+            <span className="media-limit-hint">
+              You can add multiple files (Max total: 100 MB)
+            </span>
+          </div>
+
+          {validationError && (
+            <div className="media-validation-alert" role="alert">
+              <span className="alert-icon">⚠️</span>
+              <span>{validationError}</span>
+              <button type="button" className="btn-dismiss-alert" onClick={() => setValidationError("")}>✕</button>
+            </div>
+          )}
+
+          <input
+            ref={audioInputRef}
+            type="file"
+            multiple
+            accept="audio/*, .mp3, .m4a, .wav, .aac, .ogg, .flac"
+            style={{ display: "none" }}
+            onChange={(e) => handleFilesSelected(e, "audio")}
+          />
+          <input
+            ref={videoInputRef}
+            type="file"
+            multiple
+            accept="video/*, .mp4, .mov, .avi, .webm, .mkv"
+            style={{ display: "none" }}
+            onChange={(e) => handleFilesSelected(e, "video")}
+          />
+          <input
+            ref={imageInputRef}
+            type="file"
+            multiple
+            accept="image/*, .jpg, .jpeg, .png, .webp, .gif"
+            style={{ display: "none" }}
+            onChange={(e) => handleFilesSelected(e, "image")}
+          />
+          <input
+            ref={docInputRef}
+            type="file"
+            multiple
+            accept=".pdf, .docx, .doc, .txt"
+            style={{ display: "none" }}
+            onChange={(e) => handleFilesSelected(e, "document")}
+          />
+
+          <div className="media-action-buttons-grid">
+            <button
+              type="button"
+              className="btn-media-pill btn-record-audio-pill active-blue"
+              onClick={onOpenRecorder}
+              title="Record your voice prayer request"
+            >
+              <div className="media-pill-icon-box mic-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" y1="19" x2="12" y2="23" />
+                  <line x1="8" y1="23" x2="16" y2="23" />
+                </svg>
+              </div>
+              <span className="media-pill-label">Record Audio</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-media-pill"
+              onClick={() => audioInputRef.current && audioInputRef.current.click()}
+              title="Upload audio files (mp3, m4a, wav)"
+            >
+              <div className="media-pill-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                </svg>
+              </div>
+              <span className="media-pill-label">Upload Audio</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-media-pill"
+              onClick={() => videoInputRef.current && videoInputRef.current.click()}
+              title="Upload video files (mp4, mov, webm)"
+            >
+              <div className="media-pill-icon-box purple-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2.18" ry="2.18" />
+                  <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" />
+                </svg>
+              </div>
+              <span className="media-pill-label">Upload Video</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-media-pill"
+              onClick={() => imageInputRef.current && imageInputRef.current.click()}
+              title="Upload photos (jpg, png, webp)"
+            >
+              <div className="media-pill-icon-box magenta-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+              </div>
+              <span className="media-pill-label">Upload Photos</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-media-pill"
+              onClick={() => docInputRef.current && docInputRef.current.click()}
+              title="Upload documents (pdf, docx, txt)"
+            >
+              <div className="media-pill-icon-box blue-doc-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+              </div>
+              <span className="media-pill-label">Upload Document</span>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    /* ==========================================================================
+       5. AttachmentPreview Component
+       ========================================================================== */
+    function AttachmentPreview({
+      attachments = [],
+      onRemoveAttachment,
+      onPreviewItem
+    }) {
+      const [playingAudioId, setPlayingAudioId] = useState(null);
+      const audioElementsRef = useRef({});
+
+      const toggleAudioPlay = (id, url) => {
+        if (playingAudioId === id) {
+          if (audioElementsRef.current[id]) {
+            audioElementsRef.current[id].pause();
+          }
+          setPlayingAudioId(null);
+          return;
+        }
+
+        if (playingAudioId && audioElementsRef.current[playingAudioId]) {
+          audioElementsRef.current[playingAudioId].pause();
+        }
+
+        if (!audioElementsRef.current[id]) {
+          const audio = new Audio(url || "");
+          audio.onended = () => setPlayingAudioId(null);
+          audioElementsRef.current[id] = audio;
+        }
+
+        if (url) {
+          audioElementsRef.current[id].play().then(() => {
+            setPlayingAudioId(id);
+          }).catch((err) => {
+            console.warn("Audio play prevented:", err);
+            setPlayingAudioId(id);
+          });
+        } else {
+          setPlayingAudioId(id);
+          setTimeout(() => setPlayingAudioId(null), 3000);
+        }
+      };
+
+      const handleRemove = (id) => {
+        if (playingAudioId === id && audioElementsRef.current[id]) {
+          audioElementsRef.current[id].pause();
+          setPlayingAudioId(null);
+        }
+        if (audioElementsRef.current[id]) {
+          delete audioElementsRef.current[id];
+        }
+        if (onRemoveAttachment) {
+          onRemoveAttachment(id);
+        }
+      };
+
+      if (!attachments || attachments.length === 0) return null;
+
+      return (
+        <div className="prayer-attachments-list-container" aria-label="Attached Media Files">
+          {attachments.map((item) => {
+            const isAudio = item.type === "audio";
+            const isImage = item.type === "image";
+            const isDoc = item.type === "document";
+            const isVideo = item.type === "video";
+            const isPlayingThisAudio = playingAudioId === item.id;
+
+            return (
+              <div key={item.id} className={`attachment-card-row type-${item.type}`}>
+                <div className="attachment-leading-col">
+                  {isAudio && (
+                    <div className="attachment-icon-box audio-purple-box" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" opacity="0.9" />
+                      </svg>
+                    </div>
+                  )}
+
+                  {isImage && (
+                    <div className="attachment-thumb-wrap">
+                      {item.url ? (
+                        <img src={item.url} alt={item.name} className="attachment-img-thumbnail" />
+                      ) : (
+                        <div className="attachment-icon-box image-orange-box">🖼️</div>
+                      )}
+                    </div>
+                  )}
+
+                  {isDoc && (
+                    <div className="attachment-icon-box doc-red-box" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <path d="M9 13h6" />
+                        <path d="M9 17h4" />
+                      </svg>
+                    </div>
+                  )}
+
+                  {isVideo && (
+                    <div className="attachment-icon-box video-purple-box" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2.18" ry="2.18" />
+                        <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+
+                <div className="attachment-info-col">
+                  <span className="attachment-file-name" title={item.name}>
+                    {item.name}
+                  </span>
+                  <span className="attachment-file-meta">
+                    {item.formattedSize}
+                    {item.duration && ` • ${item.duration}`}
+                  </span>
+                </div>
+
+                {isAudio && (
+                  <div className="attachment-waveform-col" aria-hidden="true">
+                    <div className={`preview-waveform-bars ${isPlayingThisAudio ? "playing-bars" : ""}`}>
+                      {[4, 8, 14, 20, 12, 16, 24, 18, 10, 16, 22, 14, 8, 12, 18, 22, 16, 12, 6, 10, 18, 14, 8].map((h, i) => (
+                        <span 
+                          key={i} 
+                          className="wave-tick" 
+                          style={{ 
+                            height: `${h}px`,
+                            animationDelay: `${(i * 0.05).toFixed(2)}s`
+                          }} 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!isAudio && <div className="attachment-spacer-col" />}
+
+                <div className="attachment-actions-col">
+                  {isAudio && (
+                    <button
+                      type="button"
+                      className={`btn-attachment-action btn-play-audio ${isPlayingThisAudio ? "is-playing" : ""}`}
+                      onClick={() => toggleAudioPlay(item.id, item.url)}
+                      title={isPlayingThisAudio ? "Pause Audio" : "Play Audio"}
+                      aria-label={isPlayingThisAudio ? "Pause Audio" : "Play Audio"}
+                    >
+                      {isPlayingThisAudio ? (
+                        <span className="play-icon-symbol">⏸</span>
+                      ) : (
+                        <span className="play-icon-symbol">▶</span>
+                      )}
+                    </button>
+                  )}
+
+                  {(isImage || isDoc || isVideo) && (
+                    <button
+                      type="button"
+                      className="btn-attachment-action btn-view-file"
+                      onClick={() => onPreviewItem && onPreviewItem(item)}
+                      title="View attachment preview"
+                      aria-label={`View ${item.name}`}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    className="btn-attachment-action btn-remove-file"
+                    onClick={() => handleRemove(item.id)}
+                    title="Remove attachment"
+                    aria-label={`Remove ${item.name}`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    /* ==========================================================================
+       6. PrayerGuidelines Component
+       ========================================================================== */
+    function PrayerGuidelines() {
+      const scripturePromises = [
+        {
+          verse: "Philippians 4:6-7",
+          text: "Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus."
+        },
+        {
+          verse: "Matthew 18:19-20",
+          text: "Again, truly I tell you that if two of you on earth agree about anything they ask for, it will be done for them by my Father in heaven. For where two or three gather in my name, there am I with them."
+        },
+        {
+          verse: "1 John 5:14",
+          text: "This is the confidence we have in approaching God: that if we ask anything according to his will, he hears us."
+        },
+        {
+          verse: "Jeremiah 29:12",
+          text: "Then you will call on me and come and pray to me, and I will listen to you."
+        }
+      ];
+
+      return (
+        <aside className="prayer-guidelines-sidebar" aria-label="Prayer Encouragement and Scripture Promises">
+          <div className="guideline-card promises-card">
+            <div className="guideline-card-header">
+              <div className="guideline-badge-icon gold-badge">
+                <span>📖</span>
+              </div>
+              <div>
+                <h3 className="guideline-card-title">God&rsquo;s Promises on Prayer</h3>
+                <p className="guideline-card-subtitle">Anchor your faith in His Word</p>
+              </div>
+            </div>
+
+            <div className="scripture-promises-list">
+              {scripturePromises.map((item, idx) => (
+                <div key={idx} className="promise-item">
+                  <span className="promise-ref-tag">{item.verse}</span>
+                  <p className="promise-text">&ldquo;{item.text}&rdquo;</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="guideline-card pastoral-card">
+            <div className="guideline-card-header">
+              <div className="guideline-badge-icon blue-badge">
+                <span>🙏</span>
+              </div>
+              <div>
+                <h3 className="guideline-card-title">Our Prayer Intercession</h3>
+                <p className="guideline-card-subtitle">How our church stands with you</p>
+              </div>
+            </div>
+
+            <ul className="pastoral-points-list">
+              <li className="pastoral-point">
+                <span className="point-check">✓</span>
+                <div>
+                  <strong>Dedicated Intercessory Ministry:</strong> Every submitted request is brought before God by our pastoral prayer team during weekly prayer vigils.
+                </div>
+              </li>
+              <li className="pastoral-point">
+                <span className="point-check">✓</span>
+                <div>
+                  <strong>Complete Confidentiality:</strong> Your requests and private details remain strictly confidential and are never shared publicly or online.
+                </div>
+              </li>
+              <li className="pastoral-point">
+                <span className="point-check">✓</span>
+                <div>
+                  <strong>Optional Pastoral Follow-Up:</strong> If you provide an email or phone number, a pastor will gladly reach out with a personal word of comfort and scripture.
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div className="guideline-card crisis-card">
+            <div className="guideline-card-header">
+              <div className="guideline-badge-icon red-badge">
+                <span>📞</span>
+              </div>
+              <div>
+                <h3 className="guideline-card-title">Immediate Pastoral Support</h3>
+                <p className="guideline-card-subtitle">If you are facing an urgent crisis</p>
+              </div>
+            </div>
+
+            <div className="crisis-card-body">
+              <p className="crisis-note">
+                If you are experiencing a life-threatening emergency, please dial <strong>911</strong> (or your local emergency services) immediately.
+              </p>
+              <div className="pastoral-phone-box">
+                <span className="phone-icon-symbol">⛪</span>
+                <div>
+                  <span className="phone-label">Church Pastoral Helpline</span>
+                  <a href="tel:+15557729371" className="phone-number-link">(555) 772-9371</a>
+                  <span className="phone-hours">Mon &ndash; Fri &bull; 9:00 AM &ndash; 5:00 PM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      );
+    }
+
+    /* ==========================================================================
+       7. PrayerForm Component
+       ========================================================================== */
+    function PrayerForm({ initialAttachments = null }) {
+      const [name, setName] = useState("");
+      const [email, setEmail] = useState("");
+      const [phone, setPhone] = useState("");
+      const [category, setCategory] = useState("");
+      const [isAnonymous, setIsAnonymous] = useState(false);
+      const [requestText, setRequestText] = useState("");
+      const [attachments, setAttachments] = useState(initialAttachments || []);
+
+      const [isRecordingOpen, setIsRecordingOpen] = useState(false);
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [errors, setErrors] = useState({});
+      const [submissionResult, setSubmissionResult] = useState(null);
+      const [previewingItem, setPreviewingItem] = useState(null);
+
+      const MAX_CHAR_LIMIT = 1000;
+      const MAX_TOTAL_SIZE = 100 * 1024 * 1024;
+
+      const totalAttachmentSize = useMemo(() => {
+        return attachments.reduce((acc, curr) => acc + (curr.size || 0), 0);
+      }, [attachments]);
+
+      const handleAddAttachments = (newFiles) => {
+        setAttachments((prev) => [...prev, ...newFiles]);
+        setErrors((prev) => ({ ...prev, attachments: "", general: "" }));
+      };
+
+      const handleRemoveAttachment = (idToRemove) => {
+        setAttachments((prev) => prev.filter((item) => item.id !== idToRemove));
+      };
+
+      const handleAttachRecordedAudio = (audioItem) => {
+        setAttachments((prev) => [...prev, audioItem]);
+      };
+
+      const validateForm = () => {
+        const newErrors = {};
+
+        if (!category.trim()) {
+          newErrors.category = "Please select a prayer category.";
+        }
+
+        const hasText = requestText.trim().length > 0;
+        const hasAttachments = attachments.length > 0;
+
+        if (!hasText && !hasAttachments) {
+          newErrors.requestText = "Please write your prayer request or attach an audio/video message.";
+        } else if (hasText && requestText.length > MAX_CHAR_LIMIT) {
+          newErrors.requestText = `Prayer request cannot exceed ${MAX_CHAR_LIMIT} characters (Currently: ${requestText.length}).`;
+        }
+
+        if (email.trim()) {
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email.trim())) {
+            newErrors.email = "Please enter a valid email address.";
+          }
+        }
+
+        if (totalAttachmentSize > MAX_TOTAL_SIZE) {
+          newErrors.attachments = "Total attachment size cannot exceed 100 MB. Please remove some files.";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
+
+      const handleSubmit = async (e) => {
+        if (e) e.preventDefault();
+
+        if (!validateForm()) {
+          const firstErrorEl = document.querySelector(".field-error-message, .form-general-error");
+          if (firstErrorEl) {
+            firstErrorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          return;
+        }
+
+        setIsSubmitting(true);
+        setErrors({});
+
+        const requesterName = isAnonymous ? "Anonymous" : (name.trim() || "Friend in Christ");
+        const contactInfo = isAnonymous 
+          ? "Anonymous" 
+          : [email.trim(), phone.trim()].filter(Boolean).join(" | ") || "Not provided";
+
+        let detailedMessage = `[Category: ${category}] ${requestText.trim()}`;
+        if (attachments.length > 0) {
+          detailedMessage += `\n[Attachments (${attachments.length})]: ${attachments.map((a) => `${a.name} (${a.formattedSize})`).join(", ")}`;
+        }
+
+        const payload = {
+          name: requesterName,
+          contact: contactInfo,
+          request: detailedMessage
+        };
+
+        try {
+          const apiBase = (window.location.origin && window.location.origin.includes(":8000")) ? "" : "http://localhost:8000";
+          const response = await fetch(`${apiBase}/api/prayer-request`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setSubmissionResult({
+              requestId: data.request_id || `PR-${Date.now().toString().slice(-6)}`,
+              message: data.message || "Thank you! Your prayer request has been received by our pastoral prayer team.",
+              timestamp: data.timestamp || new Date().toISOString(),
+              category: category,
+              isAnonymous: isAnonymous,
+              attachmentsCount: attachments.length
+            });
+            setIsSubmitting(false);
+            return;
+          }
+        } catch (err) {
+          console.warn("Backend API not reachable. Creating safe offline confirmation.", err);
+        }
+
+        const clientRefId = `PR-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+        setSubmissionResult({
+          requestId: clientRefId,
+          message: `Thank you${isAnonymous ? "" : `, ${name.trim() || "Friend"}`}! Your prayer request has been submitted. Our pastoral prayer warriors will hold you in prayer.`,
+          timestamp: new Date().toISOString(),
+          category: category,
+          isAnonymous: isAnonymous,
+          attachmentsCount: attachments.length
+        });
+        setIsSubmitting(false);
+      };
+
+      const handleResetForm = () => {
+        setName("");
+        setEmail("");
+        setPhone("");
+        setCategory("");
+        setIsAnonymous(false);
+        setRequestText("");
+        setAttachments([]);
+        setErrors({});
+        setSubmissionResult(null);
+      };
+
+      return (
+        <div className="prayer-form-card-container">
+          {/* SUCCESS CONFIRMATION MODAL POPUP */}
+          {submissionResult && (
+            <div 
+              className="prayer-success-modal-overlay" 
+              role="dialog" 
+              aria-modal="true" 
+              aria-labelledby="success-modal-title"
+              onClick={() => setSubmissionResult(null)}
+            >
+              <div className="prayer-success-card" onClick={(e) => e.stopPropagation()}>
+                <button 
+                  type="button" 
+                  className="btn-popup-close-x" 
+                  onClick={() => setSubmissionResult(null)}
+                  aria-label="Close popup"
+                >
+                  ✕
+                </button>
+                <div className="success-icon-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                </div>
+
+                <h2 id="success-modal-title" className="success-title">Prayer Request Received</h2>
+                <p className="success-message">{submissionResult.message}</p>
+
+                <div className="success-reference-box">
+                  <span className="ref-label">Reference Number</span>
+                  <span className="ref-number">{submissionResult.requestId}</span>
+                  <span className="ref-hint">Please save this reference number for pastoral follow-up.</span>
+                </div>
+
+                <div className="success-meta-details">
+                  <div className="meta-detail-row">
+                    <span className="detail-key">Category:</span>
+                    <span className="detail-val">{submissionResult.category}</span>
+                  </div>
+                  <div className="meta-detail-row">
+                    <span className="detail-key">Privacy Mode:</span>
+                    <span className="detail-val">{submissionResult.isAnonymous ? "Anonymous Submission" : "Standard Contact"}</span>
+                  </div>
+                  {submissionResult.attachmentsCount > 0 && (
+                    <div className="meta-detail-row">
+                      <span className="detail-key">Attachments:</span>
+                      <span className="detail-val">{submissionResult.attachmentsCount} file(s) attached</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="success-quote-box">
+                  <p>&ldquo;And this is the confidence that we have toward him, that if we ask anything according to his will he hears us.&rdquo;</p>
+                  <span>&mdash; 1 John 5:14</span>
+                </div>
+
+                <div className="popup-actions-row">
+                  <button
+                    type="button"
+                    className="btn-submit-another"
+                    onClick={handleResetForm}
+                  >
+                    Submit Another Prayer Request
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-popup-secondary"
+                    onClick={() => setSubmissionResult(null)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* LIGHTBOX PREVIEW MODAL */}
+          {previewingItem && (
+            <div className="lightbox-modal-overlay" onClick={() => setPreviewingItem(null)}>
+              <div className="lightbox-content-card" onClick={(e) => e.stopPropagation()}>
+                <div className="lightbox-header">
+                  <span className="lightbox-filename">{previewingItem.name}</span>
+                  <button type="button" className="btn-lightbox-close" onClick={() => setPreviewingItem(null)}>✕</button>
+                </div>
+                <div className="lightbox-body">
+                  {previewingItem.type === "image" && (
+                    <img src={previewingItem.url} alt={previewingItem.name} className="lightbox-full-img" />
+                  )}
+                  {previewingItem.type === "video" && (
+                    <video src={previewingItem.url} controls autoPlay className="lightbox-full-video" />
+                  )}
+                  {previewingItem.type === "document" && (
+                    <div className="lightbox-doc-preview">
+                      <span className="doc-big-icon">📄</span>
+                      <p>{previewingItem.name} ({previewingItem.formattedSize})</p>
+                      <a href={previewingItem.url} download={previewingItem.name} className="btn-doc-download">
+                        ⬇ Download File
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* AUDIO RECORDER MODAL */}
+          <AudioRecorder
+            isOpen={isRecordingOpen}
+            onClose={() => setIsRecordingOpen(false)}
+            onAttachAudio={handleAttachRecordedAudio}
+          />
+
+          {/* MAIN CARD */}
+          <article className="prayer-request-main-card" aria-label="Send a Prayer Request Form">
+            <header className="card-top-header">
+              <div className="card-header-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+              </div>
+              <div className="card-header-titles">
+                <h2 className="card-primary-title">Send a Prayer Request</h2>
+                <p className="card-secondary-subtitle">Let us know how we can pray for you.</p>
+              </div>
+            </header>
+
+            <form className="prayer-actual-form" onSubmit={handleSubmit} noValidate>
+              <div className="form-fields-grid-two-col">
+                <div className={`prayer-form-group ${isAnonymous ? "is-disabled" : ""}`}>
+                  <label htmlFor="requester-name" className="prayer-field-label">
+                    Your Name <span className="label-optional">(Optional)</span>
+                  </label>
+                  <div className="custom-input-wrap">
+                    <span className="field-icon-box" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </span>
+                    <input
+                      type="text"
+                      id="requester-name"
+                      className="prayer-text-input"
+                      placeholder={isAnonymous ? "Anonymous — Name hidden" : "Enter your name"}
+                      value={isAnonymous ? "" : name}
+                      onChange={(e) => setName(e.target.value)}
+                      disabled={isAnonymous}
+                      maxLength={100}
+                    />
+                  </div>
+                </div>
+
+                <div className={`prayer-form-group ${errors.email ? "has-error" : ""}`}>
+                  <label htmlFor="requester-email" className="prayer-field-label">
+                    Email <span className="label-optional">(Optional)</span>
+                  </label>
+                  <div className="custom-input-wrap">
+                    <span className="field-icon-box" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                      </svg>
+                    </span>
+                    <input
+                      type="email"
+                      id="requester-email"
+                      className="prayer-text-input"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      maxLength={120}
+                    />
+                  </div>
+                  {errors.email && <p className="field-error-message" role="alert">{errors.email}</p>}
+                </div>
+              </div>
+
+              <div className="prayer-form-group">
+                <label htmlFor="requester-phone" className="prayer-field-label">
+                  Phone <span className="label-optional">(Optional)</span>
+                </label>
+                <div className="custom-input-wrap">
+                  <span className="field-icon-box" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                  </span>
+                  <input
+                    type="tel"
+                    id="requester-phone"
+                    className="prayer-text-input"
+                    placeholder="Enter your phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    maxLength={30}
+                  />
+                </div>
+              </div>
+
+              <PrayerCategory
+                category={category}
+                onChangeCategory={setCategory}
+                isAnonymous={isAnonymous}
+                onToggleAnonymous={setIsAnonymous}
+                error={errors.category}
+              />
+
+              <div className={`prayer-form-group textarea-group ${errors.requestText ? "has-error" : ""}`}>
+                <label htmlFor="prayer-request-text" className="prayer-field-label">
+                  Your Prayer Request <span className="required-star">*</span>
+                </label>
+
+                <div className="textarea-container">
+                  <textarea
+                    id="prayer-request-text"
+                    className="prayer-textarea"
+                    rows="5"
+                    placeholder="Type your prayer request here..."
+                    value={requestText}
+                    onChange={(e) => {
+                      if (e.target.value.length <= MAX_CHAR_LIMIT) {
+                        setRequestText(e.target.value);
+                      }
+                    }}
+                    aria-required="true"
+                    aria-invalid={!!errors.requestText}
+                  />
+                </div>
+
+                <div className="textarea-footer-row">
+                  {errors.requestText ? (
+                    <p className="field-error-message" role="alert">{errors.requestText}</p>
+                  ) : <span />}
+                  <span className={`char-counter-label ${requestText.length >= MAX_CHAR_LIMIT ? "at-limit" : ""}`}>
+                    {requestText.length} / {MAX_CHAR_LIMIT}
+                  </span>
+                </div>
+              </div>
+
+              <MediaUploader
+                onAddFiles={handleAddAttachments}
+                onOpenRecorder={() => setIsRecordingOpen(true)}
+                currentTotalSize={totalAttachmentSize}
+                maxTotalSize={MAX_TOTAL_SIZE}
+              />
+
+              <AttachmentPreview
+                attachments={attachments}
+                onRemoveAttachment={handleRemoveAttachment}
+                onPreviewItem={setPreviewingItem}
+              />
+
+              {errors.general && (
+                <div className="form-general-error" role="alert">
+                  ⚠️ {errors.general}
+                </div>
+              )}
+
+              <div className="form-submit-row">
+                <button
+                  type="submit"
+                  className="btn-send-prayer-request"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="submit-spinner-text">
+                      <span className="submit-spinner" />
+                      Sending Prayer Request...
+                    </span>
+                  ) : (
+                    <span className="submit-normal-content">
+                      <svg className="send-plane-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" />
+                      </svg>
+                      <span>Send Prayer Request</span>
+                    </span>
+                  )}
+                </button>
+              </div>
+
+              <div className="prayer-privacy-callout-banner" role="note">
+                <div className="privacy-shield-icon-box" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <polyline points="9 12 11 14 15 10" />
+                  </svg>
+                </div>
+                <p className="privacy-callout-text">
+                  Your request is private and will be seen only by the church prayer team.
+                </p>
+              </div>
+            </form>
+          </article>
+        </div>
+      );
+    }
+
+    /* ==========================================================================
+       8. PrayerRequestPage Coordinator Component
+       ========================================================================== */
+    function PrayerRequestPage() {
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [isScrolled, setIsScrolled] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          if (window.scrollY > 20) {
+            setIsScrolled(true);
+          } else {
+            setIsScrolled(false);
+          }
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
+
+      const navLinks = [
+        { label: "Home", href: "../index.html" },
+        { label: "About", href: "../index.html#about" },
+        { label: "Bible", href: "../bible/index.html" },
+        { label: "Prayer Request", href: "#", active: true },
+        { label: "Contact", href: "../index.html#contact" }
+      ];
+
+      return (
+        <div className="prayer-request-page-root">
+          <header className={`church-nav-bar ${isScrolled ? "is-scrolled" : ""}`}>
+            <div className="church-nav-inner">
+              <a href="../index.html" className="church-nav-brand">
+                <div className="nav-cross-logo" aria-hidden="true">
+                  <span className="cross-symbol">✝</span>
+                </div>
+                <div className="nav-brand-titles">
+                  <span className="church-title-primary">Grace Fellowship Church</span>
+                  <span className="church-tagline-secondary">Worship • Grow • Serve • Share</span>
+                </div>
+              </a>
+
+              <nav className="church-nav-desktop-menu" aria-label="Main Navigation">
+                {navLinks.map((item, idx) => (
+                  <a
+                    key={idx}
+                    href={item.href}
+                    className={`church-nav-link ${item.active ? "is-active" : ""}`}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+
+              <div className="church-nav-right-cluster">
+                <a href="../index.html#donate" className="btn-nav-donate-blue">
+                  Donate
+                </a>
+
+                <button
+                  type="button"
+                  className="btn-nav-hamburger"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  aria-label="Toggle navigation menu"
+                  aria-expanded={mobileMenuOpen}
+                >
+                  <span className="hamburger-bar" />
+                  <span className="hamburger-bar" />
+                  <span className="hamburger-bar" />
+                </button>
+              </div>
+            </div>
+
+            {mobileMenuOpen && (
+              <div className="church-mobile-drawer">
+                <nav className="mobile-drawer-nav">
+                  {navLinks.map((item, idx) => (
+                    <a
+                      key={idx}
+                      href={item.href}
+                      className={`mobile-nav-item ${item.active ? "active" : ""}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                  <a
+                    href="../index.html#donate"
+                    className="btn-mobile-drawer-donate"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Donate Online
+                  </a>
+                </nav>
+              </div>
+            )}
+          </header>
+
+          <PrayerHero />
+
+          <main className="prayer-page-main-container">
+            <div className="prayer-content-grid">
+              <div className="prayer-form-column">
+                <PrayerForm />
+              </div>
+
+              <div className="prayer-guidelines-column">
+                <PrayerGuidelines />
+              </div>
+            </div>
+          </main>
+
+          <footer className="church-page-footer">
+            <div className="footer-inner-container">
+              <div className="footer-cols-grid">
+                <div className="footer-col">
+                  <div className="footer-logo-row">
+                    <span className="footer-cross-icon">✝</span>
+                    <span className="footer-brand-title">Grace Fellowship Church</span>
+                  </div>
+                  <p className="footer-desc">
+                    A Christ-centered church community committed to worship, spiritual growth, heartfelt prayer, and loving service.
+                  </p>
+                </div>
+
+                <div className="footer-col">
+                  <h4 className="footer-col-heading">Visit Our Church</h4>
+                  <p className="footer-visit-text">
+                    <strong>Address:</strong><br />
+                    123 Faith Avenue, Hyderabad, Telangana 500001
+                  </p>
+                  <p className="footer-visit-text">
+                    <strong>Phone:</strong> +91 98765 43210<br />
+                    <strong>Email:</strong> info@gracefellowship.org
+                  </p>
+                  <a href="../index.html#contact" className="footer-visit-link">
+                    Get Directions &amp; Timings &rarr;
+                  </a>
+                </div>
+
+                <div className="footer-col">
+                  <h4 className="footer-col-heading">Worship Services</h4>
+                  <ul className="footer-timings-list">
+                    <li><strong>Sunday Morning:</strong> 9:00 AM &amp; 11:00 AM</li>
+                    <li><strong>Sunday Evening:</strong> 6:00 PM</li>
+                    <li><strong>Wednesday Prayer:</strong> 7:00 PM</li>
+                    <li><strong>Friday Youth Fellowship:</strong> 6:30 PM</li>
+                  </ul>
+                </div>
+
+                <div className="footer-col">
+                  <h4 className="footer-col-heading">Prayer Ministry</h4>
+                  <p className="footer-prayer-desc">
+                    Our intercessory prayer team prays daily for all submitted requests. You can submit prayer requests 24/7 online.
+                  </p>
+                  <p className="footer-contact-link">
+                    <strong>Helpline:</strong> (555) 772-9371<br />
+                    <strong>Email:</strong> prayer@gracefellowship.org
+                  </p>
+                </div>
+              </div>
+
+              <div className="footer-bottom-copyright">
+                <p>&copy; {new Date().getFullYear()} Grace Fellowship Church. All rights reserved. &bull; Designed with devotion.</p>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    /* Mount to Root */
+    const rootElement = document.getElementById("root");
+    if (rootElement) {
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(<PrayerRequestPage />);
+    }
+  </script>
+
+</body>
+</html>

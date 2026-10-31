@@ -1166,17 +1166,15 @@ img {
 .church-footer {
   background-color: var(--navy-900);
   color: #ffffff;
-  padding: 36px 0 24px 0;
+  padding: 48px 0 24px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.footer-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  padding-bottom: 24px;
+.footer-main-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1.2fr 0.9fr 1fr;
+  gap: 36px;
+  padding-bottom: 32px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -1184,6 +1182,7 @@ img {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 12px;
 }
 
 .footer-cross {
@@ -1192,7 +1191,7 @@ img {
 }
 
 .footer-church-name {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #ffffff;
 }
@@ -1202,11 +1201,65 @@ img {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.footer-nav-links {
+.footer-brand-desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+.footer-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 14px;
+  letter-spacing: 0.3px;
+}
+
+.footer-visit-info {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.visit-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.visit-info-item strong {
+  color: #ffffff;
+}
+
+.visit-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.footer-directions-btn {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--blue-sky);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-directions-btn:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.footer-nav-links-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .footer-nav-link {
@@ -1214,29 +1267,45 @@ img {
   font-weight: 500;
   color: rgba(255, 255, 255, 0.75);
   transition: color 0.2s ease;
+  text-decoration: none;
 }
 
 .footer-nav-link:hover {
+  color: #ffffff;
+  padding-left: 2px;
+}
+
+.footer-hours-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-hours-list li strong {
   color: #ffffff;
 }
 
 .footer-social-links {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .footer-social-icon {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   background: rgba(255, 255, 255, 0.12);
   transition: background 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
 }
 
 .footer-social-icon:hover {
@@ -1245,10 +1314,24 @@ img {
 }
 
 .footer-bottom-copy {
-  margin-top: 20px;
+  margin-top: 24px;
   text-align: center;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 1024px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }
 
 /* ==========================================================================

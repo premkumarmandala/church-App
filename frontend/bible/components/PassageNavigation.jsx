@@ -21,8 +21,10 @@ function PassageNavigation({
 }) {
   // Filter books list according to testament filter
   const filteredBooks = React.useMemo(() => {
-    if (testamentFilter === "all") return booksList;
-    return booksList.filter((b) => b.testament === testamentFilter);
+    if (!testamentFilter || testamentFilter === "all") return booksList;
+    return booksList.filter(
+      (b) => (b.testament || "").toUpperCase() === (testamentFilter || "").toUpperCase()
+    );
   }, [booksList, testamentFilter]);
 
   // Generate array for chapters

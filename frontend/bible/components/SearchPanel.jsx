@@ -1,23 +1,45 @@
 /**
  * SearchPanel Component
- * Provides full-text keyword search UI, testament filter, and mock search results cards.
+ * Provides full-text keyword search UI, testament filter, and search results cards
+ * with backend API integration and graceful fallback.
  */
 
 function SearchPanel({ onNavigateToVerse, initialQuery = "" }) {
   const [query, setQuery] = React.useState(initialQuery || "beginning");
   const [testament, setTestament] = React.useState("all");
   const [results, setResults] = React.useState(window.MOCK_SEARCH_RESULTS || []);
+  const [isSearching, setIsSearching] = React.useState(false);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     if (e) e.preventDefault();
-    if (!query.trim()) {
+    const trimmed = query.trim();
+    if (!trimmed) {
       setResults([]);
       return;
     }
-    // Filter mock results for UI demonstration
+
+    setIsSearching(true);
+    try {
+      const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+      const res = await fetch(`${apiBase}/api/bible/search?q=${encodeURIComponent(trimmed)}&translation=kjv&testament=${testament}&limit=30`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.results)) {
+          setResults(data.results);
+          setIsSearching(false);
+          return;
+        }
+      }
+    } catch (err) {
+      // Fall back gracefully to mock results
+    }
+    setIsSearching(false);
+
+    const qLower = trimmed.toLowerCase();
     const filtered = (window.MOCK_SEARCH_RESULTS || []).filter((r) =>
-      r.text.toLowerCase().includes(query.toLowerCase()) ||
-      r.reference.toLowerCase().includes(query.toLowerCase())
+      (r.text && r.text.toLowerCase().includes(qLower)) ||
+      (r.reference && r.reference.toLowerCase().includes(qLower)) ||
+      (r.referenceEn && r.referenceEn.toLowerCase().includes(qLower))
     );
     setResults(filtered.length > 0 ? filtered : window.MOCK_SEARCH_RESULTS || []);
   };
@@ -61,8 +83,8 @@ function SearchPanel({ onNavigateToVerse, initialQuery = "" }) {
             <span className="select-arrow-icon">▼</span>
           </div>
 
-          <button type="submit" className="btn-search-action">
-            <span>Search</span>
+          <button type="submit" className="btn-search-action" disabled={isSearching}>
+            <span>{isSearching ? "Searching..." : "Search"}</span>
           </button>
         </form>
       </div>
@@ -76,25 +98,33 @@ function SearchPanel({ onNavigateToVerse, initialQuery = "" }) {
         </div>
 
         <div className="search-cards-grid">
-          {results.map((item, index) => (
-            <div key={index} className="search-result-card">
-              <div className="search-result-header">
-                <span className="result-ref-title">{item.reference}</span>
-                <span className="result-telugu-ref">({item.teluguReference})</span>
-                <span className="result-trans-badge">{item.translation}</span>
+          {results.map((item, index) => {
+            const refTitle = item.referenceEn || item.reference;
+            const teluguRef = item.referenceTe || item.teluguReference || "";
+            const bSlug = item.bookSlug || "genesis";
+            const chNum = Number(item.chapter) || 1;
+            const vNum = Number(item.verse) || 1;
+
+            return (
+              <div key={index} className="search-result-card">
+                <div className="search-result-header">
+                  <span className="result-ref-title">{refTitle}</span>
+                  {teluguRef && <span className="result-telugu-ref">({teluguRef})</span>}
+                  <span className="result-trans-badge">{(item.translation || "KJV").toUpperCase()}</span>
+                </div>
+                <p className="result-verse-text">&ldquo;{item.text}&rdquo;</p>
+                <div className="search-result-actions">
+                  <button
+                    type="button"
+                    className="btn-result-navigate"
+                    onClick={() => onNavigateToVerse && onNavigateToVerse(bSlug, chNum, vNum)}
+                  >
+                    Read Chapter &gt;
+                  </button>
+                </div>
               </div>
-              <p className="result-verse-text">&ldquo;{item.text}&rdquo;</p>
-              <div className="search-result-actions">
-                <button
-                  type="button"
-                  className="btn-result-navigate"
-                  onClick={() => onNavigateToVerse && onNavigateToVerse("genesis", 1, 1)}
-                >
-                  Read Chapter &gt;
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
