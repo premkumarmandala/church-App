@@ -1,0 +1,119 @@
+review my bible front end back end . i noticed it not displaying all the books.
+
+---
+
+## Task: Implement Prayer Request Feature in React
+
+Implement only the **Prayer Request user-side feature** in my existing church website. Use the uploaded screenshot as the UI reference and recreate the design as closely as possible.
+
+### 1. UI Implementation
+Create a responsive Prayer Request page with:
+
+- Church navigation bar and branding.
+- Sunrise and cross hero banner.
+- Prayer Request heading and James 5:16 Bible verse.
+- Prayer submission form.
+- Right-side prayer encouragement and Bible promise cards on desktop.
+- Mobile-friendly layout.
+
+### 2. Prayer Request Form
+
+Include:
+
+- Name (optional).
+- Email (optional).
+- Phone number (optional).
+- Prayer category selection.
+- Anonymous submission toggle.
+- Prayer request text area with a 1,000-character limit.
+- Record Audio using the microphone.
+- Upload Audio.
+- Upload Video.
+- Upload Photos.
+- Upload Documents (PDF/DOCX).
+- Multiple attachment support.
+- Attachment preview, file size, playback, and remove options.
+- Send Prayer Request button.
+
+Allow users to submit text or media without forcing them to provide every type of attachment.
+
+### 3. Validation and Privacy
+- Validate file types and file sizes.
+- Maximum total attachment size: 100 MB.
+- Show upload progress and validation errors.
+- Make contact information optional.
+- Keep anonymous submissions possible.
+- Display a privacy notice explaining that requests are accessible only to authorized church prayer-team members.
+- Do not include the three consent checkboxes shown in the earlier design.
+- Show a submission confirmation and reference number after successful submission.
+
+### 4. React Folder Structure
+
+Create a dedicated `prayer-request/` folder and keep all related frontend code inside it.
+
+```text
+prayer-request/
+├── components/
+│   ├── PrayerHero.jsx
+│   ├── PrayerForm.jsx
+│   ├── PrayerCategory.jsx
+│   ├── AudioRecorder.jsx
+│   ├── MediaUploader.jsx
+│   ├── AttachmentPreview.jsx
+│   └── PrayerGuidelines.jsx
+├── PrayerRequestPage.jsx
+└── prayer-request.css
+```
+
+### 5. Technical Requirements
+- Use React with JavaScript (JSX), not TypeScript.
+- Use functional components and React Hooks.
+- Reuse existing project styling, routing, and shared components where appropriate.
+- Connect to existing backend APIs if available.
+- If APIs are unavailable, prepare a clean API integration service without pretending submissions are saved.
+- Do not build the admin dashboard or modify backend functionality in this task.
+- Do not modify unrelated website features.
+
+### 6. Acceptance Criteria
+- The page closely matches the uploaded screenshot.
+- All form fields and media controls work correctly on the frontend.
+- Audio recording requests microphone permission and handles denial.
+- Users can preview and remove attachments before submission.
+- Anonymous submission works.
+- Invalid files and oversized uploads are rejected.
+- The layout works on desktop, tablet, and mobile.
+- Existing website functionality remains unchanged.
+
+### 7. Test Cases
+1. Submit a text-only prayer request.
+2. Record and preview audio.
+3. Upload audio, video, photos, and documents.
+4. Upload multiple attachments.
+5. Remove an attachment before submission.
+6. Test invalid file formats and oversized files.
+7. Submit anonymously.
+8. Test optional contact fields.
+9. Test empty prayer request validation.
+10. Test microphone permission denial.
+11. Verify mobile responsiveness.
+12. Verify successful submission handling when the backend is connected.
+
+Implement the feature directly in the existing project. Run tests, fix errors, and report all files created or modified.
+
+**Scope: Only the Prayer Request user-side React UI. Do not create admin pages or implement unrelated features.**
+
+---
+
+1) Remove the following media files from the prayer request form. By default, when users open the page, these three media files are displayed. If a user adds files, show only that user's respective data.
+
+2) After a user submits the prayer request, display a popup page.
+
+3) Remove the Home page attributes from the menu bar so the menu bar is clear and contains only the main attributes.
+
+4) Add "Visit Our Church" in the footer section.
+
+5) Remove the search option from the Home page.
+
+---
+
+what is the commit message.
