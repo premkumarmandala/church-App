@@ -104,3 +104,19 @@ class ErrorResponse(BaseModel):
     """Descriptive error response."""
     error: str
     validRange: Optional[dict[str, int]] = None
+
+
+class PrayerRequestInput(BaseModel):
+    """Payload for submitting a prayer request."""
+    name: Optional[str] = Field(None, max_length=100, description="Requester's name (optional)")
+    contact: str = Field(..., min_length=3, max_length=150, description="Email or phone number for follow-up")
+    request: str = Field(..., min_length=5, max_length=2000, description="Prayer request details")
+
+
+class PrayerRequestResponse(BaseModel):
+    """Confirmation response after prayer request submission."""
+    status: str
+    message: str
+    request_id: str
+    timestamp: str
+

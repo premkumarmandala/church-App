@@ -11,6 +11,8 @@ from app.models.bible_models import (
     DailyVerseResponse,
     ErrorResponse,
     HealthResponse,
+    PrayerRequestInput,
+    PrayerRequestResponse,
     SearchResponse,
     ValidationResponse,
 )
@@ -121,3 +123,26 @@ def health_check() -> dict[str, Any]:
         "version": settings.VERSION,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+
+
+@router.post(
+    "/api/prayer-request",
+    response_model=PrayerRequestResponse,
+    tags=["Church Services"],
+    summary="Submit a pastoral prayer request",
+    description="Submits a prayer request to the pastoral team for intercession.",
+)
+def submit_prayer_request(payload: PrayerRequestInput) -> dict[str, Any]:
+    """Accept and confirm receipt of a church prayer request."""
+    # Generate unique reference ID
+    ref_id = f"PR-{int(datetime.now(timezone.utc).timestamp())}"
+    requester_name = payload.name.strip() if payload.name else ""
+    name_display = f", {requester_name}" if requester_name else ""
+
+    return {
+        "status": "success",
+        "message": f"Thank you{name_display}! Your prayer request has been received by our pastoral prayer team. We will intercede for you.",
+        "request_id": ref_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }
+

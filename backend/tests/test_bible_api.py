@@ -235,3 +235,26 @@ def test_service_worker_headers():
     assert response.headers.get("service-worker-allowed") == "/"
 
 
+def test_submit_prayer_request():
+    """Verify POST /api/prayer-request accepts valid prayer request."""
+    payload = {
+        "name": "Sarah Matthew",
+        "contact": "sarah@example.com",
+        "request": "Please pray for healing and peace for my family.",
+    }
+    response = client.post("/api/prayer-request", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "success"
+    assert "Sarah Matthew" in data["message"]
+    assert "request_id" in data
+    assert data["request_id"].startswith("PR-")
+
+
+def test_submit_prayer_request_validation():
+    """Verify POST /api/prayer-request validates missing required fields."""
+    response = client.post("/api/prayer-request", json={"name": "Only Name"})
+    assert response.status_code == 422
+
+
+

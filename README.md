@@ -44,17 +44,22 @@ Church App/
 │   └── README.md               # Backend documentation
 │
 ├── frontend/                   # Frontend Web Applications
-│   ├── bible/                  # Online Bible web application module
-│   │   ├── index.html          # Bible reader UI (with Book, Chapter & Verse selectors)
-│   │   ├── bible-app.js        # Main coordinator, state management & verse selector
-│   │   ├── bible-reader.js     # Typography & passage renderer (Single & Parallel views)
-│   │   ├── bible-navigation.js # Book, chapter & verse routing with URL hash sync
-│   │   ├── bible-search.js     # Scripture keyword search engine (online & offline)
-│   │   ├── bible-daily-verse.js# Daily verse devotional widget
-│   │   ├── bible-bookmarks.js  # Account-free local bookmarks manager (localStorage)
-│   │   ├── bible-offline.js    # Offline storage & caching manager (Cache API)
-│   │   ├── bible-styles.css    # Minimalist design system (Warm White, Navy, Antique Gold)
-│   │   ├── sw.js               # Service Worker for offline PWA caching
+│   ├── bible/                  # Online Bible React Web Application Module
+│   │   ├── index.html          # React entry point mounting to #root
+│   │   ├── BibleApp.jsx        # Main React container coordinating state & Hooks
+│   │   ├── bible-react.css     # Minimalist design system (Light & Dark themes)
+│   │   ├── mockData.js         # Canonical books index, Genesis 1 verses & Daily Verse
+│   │   ├── assets/             # Photography assets (hero_cross_sunset.jpg)
+│   │   ├── components/         # Reusable React Functional Components (JSX)
+│   │   │   ├── Sidebar.jsx     # Left sidebar with logo, navigation & scripture quote
+│   │   │   ├── TopBar.jsx      # Language selectors, font controls, theme & Online status
+│   │   │   ├── DailyVerseHero.jsx # Verse of the Day banner with sunrise backdrop
+│   │   │   ├── ViewTabs.jsx    # Read Scripture, Search, Bookmarks & Offline Reading tabs
+│   │   │   ├── PassageNavigation.jsx # Testament filter, Book/Chapter/Verse dropdowns
+│   │   │   ├── ScriptureReader.jsx   # Scripture reader with verse numbers & actions
+│   │   │   ├── SearchPanel.jsx # Scripture keyword search interface
+│   │   │   ├── BookmarksPanel.jsx    # Saved bookmarks management panel
+│   │   │   └── OfflinePanel.jsx      # Offline storage management panel
 │   │   └── README.md           # Module documentation
 │   ├── index.html              # Grace Church website main landing page
 │   └── README.md               # Frontend documentation
