@@ -11,6 +11,8 @@ function ScriptureReader({
   fontSize = 18,
   selectedVerse = "all",
   bookmarkedVerses = [],
+  viewMode = "single",
+  onViewModeChange,
   onToggleBookmark,
   onCopyVerse,
   onSearchVerse,
@@ -28,7 +30,15 @@ function ScriptureReader({
     return null;
   }
 
-  const { book = {}, chapter = 1, verses = [], totalVerses: dataTotalVerses, versesCount } = chapterData;
+  const {
+    book = {},
+    chapter = 1,
+    verses = [],
+    totalVerses: dataTotalVerses,
+    versesCount,
+    parallelTranslation,
+    parallelVerses
+  } = chapterData;
   const totalVerses = dataTotalVerses || versesCount || verses.length || 0;
   const isTelugu = selectedLang === "telugu";
 
@@ -70,10 +80,30 @@ function ScriptureReader({
           </div>
         </div>
 
-        {/* Translation & Count Badges */}
+        {/* Translation & View Mode Badges */}
         <div className="reader-meta-badges">
+          {onViewModeChange && (
+            <div className="reader-view-toggle-pill" role="group" aria-label="Reading Mode">
+              <button
+                type="button"
+                className={`btn-mode-toggle ${viewMode === "single" ? "active" : ""}`}
+                onClick={() => onViewModeChange("single")}
+                title="Single language reading view"
+              >
+                Single
+              </button>
+              <button
+                type="button"
+                className={`btn-mode-toggle ${viewMode === "parallel" ? "active" : ""}`}
+                onClick={() => onViewModeChange("parallel")}
+                title="Parallel bilingual comparison (English + Telugu)"
+              >
+                Parallel
+              </button>
+            </div>
+          )}
           <span className="badge-navy-translation">
-            {selectedLang.toUpperCase()}
+            {viewMode === "parallel" ? "KJV + TELUGU" : selectedLang.toUpperCase()}
           </span>
           <span className="badge-verse-total">
             {totalVerses} verses
@@ -88,23 +118,55 @@ function ScriptureReader({
           const isBookmarked = bookmarkedVerses.includes(verseNumber) || bookmarkedVerses.includes(String(verseNumber));
           const verseText = v.text || (isTelugu ? (v.telugu || v.kjv) : (v.kjv || v.telugu)) || "";
 
+          // In parallel view, find matching verse from the other translation
+          let parallelText = "";
+          if (viewMode === "parallel") {
+            const pVerse = (parallelVerses || []).find((pv) => String(pv.verse) === String(verseNumber));
+            if (pVerse) {
+              parallelText = pVerse.text || (isTelugu ? pVerse.kjv : pVerse.telugu) || "";
+            } else if (v.kjv && v.telugu) {
+              parallelText = isTelugu ? v.kjv : v.telugu;
+            }
+          }
+
+          const isParallelActive = viewMode === "parallel" && Boolean(parallelText);
+
           return (
             <div 
               key={verseNumber} 
               id={`verse-${verseNumber}`}
-              className={`verse-row-container ${isBookmarked ? "bookmarked-row" : ""}`}
+              className={`verse-row-container ${isBookmarked ? "bookmarked-row" : ""} ${isParallelActive ? "parallel-mode-row" : ""}`}
             >
               {/* Circular Verse Number Badge */}
               <div className="verse-badge-col">
                 <span className="verse-number-circle">{verseNumber}</span>
               </div>
 
-              {/* Verse Text */}
-              <div className="verse-text-col">
-                <p className={`verse-text-content ${isTelugu ? "telugu-font" : ""}`}>
-                  {verseText}
-                </p>
-              </div>
+              {/* Verse Text (Single or Dual Parallel Column) */}
+              {isParallelActive ? (
+                <div className="verse-bilingual-columns">
+                  <div className="verse-lang-col primary-lang-col">
+                    <span className="bilingual-lang-tag">{selectedLang.toUpperCase()}</span>
+                    <p className={`verse-text-content ${isTelugu ? "telugu-font" : ""}`}>
+                      {verseText}
+                    </p>
+                  </div>
+                  <div className="verse-lang-col secondary-lang-col">
+                    <span className="bilingual-lang-tag">
+                      {parallelTranslation ? parallelTranslation.toUpperCase() : (isTelugu ? "KJV" : "TELUGU")}
+                    </span>
+                    <p className={`verse-text-content ${!isTelugu ? "telugu-font" : ""}`}>
+                      {parallelText}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="verse-text-col">
+                  <p className={`verse-text-content ${isTelugu ? "telugu-font" : ""}`}>
+                    {verseText}
+                  </p>
+                </div>
+              )}
 
               {/* Action Controls: Search, Bookmark, Copy */}
               <div className="verse-controls-col" aria-label={`Controls for verse ${verseNumber}`}>

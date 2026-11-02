@@ -61,7 +61,7 @@ function BookmarksPanel({ bookmarks = [], onRemoveBookmark, onNavigateToVerse, o
                 <button
                   type="button"
                   className="btn-bookmark-action btn-bm-delete"
-                  onClick={() => onRemoveBookmark && onRemoveBookmark(bm.verse)}
+                  onClick={() => onRemoveBookmark && onRemoveBookmark(bm.id || `${bm.bookSlug}-${bm.chapter}-${bm.verse}`)}
                   title="Remove from bookmarks"
                 >
                   ✕ Remove

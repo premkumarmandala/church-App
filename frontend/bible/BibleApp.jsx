@@ -8,11 +8,24 @@
 function BibleApp() {
   // Navigation & View State
   const [activeTab, setActiveTab] = React.useState("reader");
-  const [selectedLang, setSelectedLang] = React.useState("kjv");
+  const [selectedLang, setSelectedLang] = React.useState(() => {
+    try {
+      return localStorage.getItem("grace_church_bible_lang") || "kjv";
+    } catch (e) {
+      return "kjv";
+    }
+  });
   const [testamentFilter, setTestamentFilter] = React.useState("all");
   const [selectedBook, setSelectedBook] = React.useState("genesis");
   const [selectedChapter, setSelectedChapter] = React.useState(1);
   const [selectedVerse, setSelectedVerse] = React.useState("all");
+  const [viewMode, setViewMode] = React.useState(() => {
+    try {
+      return localStorage.getItem("grace_church_bible_view_mode") || "single";
+    } catch (e) {
+      return "single";
+    }
+  });
 
   // Scripture Data State
   const [books, setBooks] = React.useState(window.MOCK_BOOKS || []);
@@ -21,19 +34,69 @@ function BibleApp() {
   const [dailyVerse, setDailyVerse] = React.useState(window.MOCK_DAILY_VERSE);
 
   // Typography & Aesthetics State
-  const [fontSize, setFontSize] = React.useState(18);
-  const [theme, setTheme] = React.useState("light");
+  const [fontSize, setFontSize] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem("grace_church_bible_font_size");
+      return saved ? Number(saved) : 18;
+    } catch (e) {
+      return 18;
+    }
+  });
+  const [theme, setTheme] = React.useState(() => {
+    try {
+      return localStorage.getItem("grace_church_bible_theme") || "light";
+    } catch (e) {
+      return "light";
+    }
+  });
   const [mobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
 
   // Search & Bookmarks State
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [bookmarks, setBookmarks] = React.useState(window.MOCK_BOOKMARKS || []);
+  const [bookmarks, setBookmarks] = React.useState(() => {
+    try {
+      const stored = localStorage.getItem("grace_church_bible_bookmarks");
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return window.MOCK_BOOKMARKS || [];
+  });
   const [toastMessage, setToastMessage] = React.useState("");
 
-  // Sync theme with document element
+  // Sync theme with document element and localStorage
   React.useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem("grace_church_bible_theme", theme);
+    } catch (e) {}
   }, [theme]);
+
+  // Sync font size with localStorage
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("grace_church_bible_font_size", String(fontSize));
+    } catch (e) {}
+  }, [fontSize]);
+
+  // Sync selected language with localStorage
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("grace_church_bible_lang", selectedLang);
+    } catch (e) {}
+  }, [selectedLang]);
+
+  // Sync viewMode with localStorage
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("grace_church_bible_view_mode", viewMode);
+    } catch (e) {}
+  }, [viewMode]);
+
+  // Sync bookmarks with localStorage
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("grace_church_bible_bookmarks", JSON.stringify(bookmarks));
+    } catch (e) {}
+  }, [bookmarks]);
 
   // Load all 66 canonical books from backend API if available
   React.useEffect(() => {
@@ -257,10 +320,20 @@ function BibleApp() {
     }
   };
 
-  const handleRemoveBookmark = (verseNum) => {
-    const num = Number(verseNum) || verseNum;
+  const handleRemoveBookmark = (target) => {
+    // target can be a unique bookmark id ("genesis-1-1") or a verse number
     setBookmarks((prev) =>
-      prev.filter((b) => !(b.bookSlug === selectedBook && Number(b.chapter) === Number(selectedChapter) && (Number(b.verse) === num || b.verse === verseNum)))
+      prev.filter((b) => {
+        if (typeof target === "string" && (b.id === target || b.id === String(target))) {
+          return false;
+        }
+        if (b.bookSlug === selectedBook && Number(b.chapter) === Number(selectedChapter)) {
+          if (b.verse === target || Number(b.verse) === Number(target)) {
+            return false;
+          }
+        }
+        return true;
+      })
     );
     showToast(`Bookmark removed`);
   };
@@ -368,6 +441,8 @@ function BibleApp() {
               fontSize={fontSize}
               selectedVerse={selectedVerse}
               bookmarkedVerses={bookmarkedVerses}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
               onToggleBookmark={handleToggleBookmark}
               onCopyVerse={handleCopyVerse}
               onSearchVerse={handleSearchVerse}
@@ -380,6 +455,7 @@ function BibleApp() {
         {activeTab === "search" && (
           <window.SearchPanel
             initialQuery={searchQuery}
+            selectedLang={selectedLang}
             onNavigateToVerse={handleNavigateToPassage}
           />
         )}

@@ -257,4 +257,28 @@ def test_submit_prayer_request_validation():
     assert response.status_code == 422
 
 
+def test_book_aliases_and_fuzzy_matching():
+    """Verify alternative book titles and normalized slugs resolve correctly."""
+    # Test 'Song of Songs' alias
+    res_songs = client.get("/api/bible/chapter?translation=kjv&book=Song+of+Songs&chapter=1")
+    assert res_songs.status_code == 200
+    assert res_songs.json()["book"]["slug"] == "song-of-solomon"
+
+    # Test 'song-of-songs' slug alias
+    res_slug = client.get("/api/bible/chapter?translation=kjv&book=song-of-songs&chapter=1")
+    assert res_slug.status_code == 200
+    assert res_slug.json()["book"]["slug"] == "song-of-solomon"
+
+    # Test '1john' without spaces
+    res_1john = client.get("/api/bible/chapter?translation=kjv&book=1john&chapter=1")
+    assert res_1john.status_code == 200
+    assert res_1john.json()["book"]["slug"] == "1-john"
+
+    # Test 'psalm' singular alias
+    res_psalm = client.get("/api/bible/chapter?translation=kjv&book=psalm&chapter=23")
+    assert res_psalm.status_code == 200
+    assert res_psalm.json()["book"]["slug"] == "psalms"
+
+
+
 

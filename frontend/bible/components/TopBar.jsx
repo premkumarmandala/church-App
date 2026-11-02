@@ -13,7 +13,20 @@ function TopBar({
   onToggleTheme,
   onToggleSidebar
 }) {
-  const [langDropdownOpen, setLangDropdownOpen] = React.useState(false);
+  const [isOnline, setIsOnline] = React.useState(
+    typeof navigator !== "undefined" && typeof navigator.onLine === "boolean" ? navigator.onLine : true
+  );
+
+  React.useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   return (
     <header className="bible-topbar" aria-label="Bible Utility Header">
@@ -96,9 +109,12 @@ function TopBar({
         </button>
 
         {/* Online Status Pill */}
-        <div className="topbar-status-pill online" title="Status: Online">
+        <div 
+          className={`topbar-status-pill ${isOnline ? "online" : "offline"}`} 
+          title={isOnline ? "Status: Online" : "Status: Offline (Cached mode)"}
+        >
           <span className="status-indicator-dot">●</span>
-          <span className="status-label-text">Online</span>
+          <span className="status-label-text">{isOnline ? "Online" : "Offline"}</span>
         </div>
       </div>
     </header>

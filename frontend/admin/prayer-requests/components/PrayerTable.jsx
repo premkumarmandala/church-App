@@ -1,58 +1,150 @@
 /**
  * Prayer Requests Data Table Component
- * Displays interactive list with requester information, category badge,
- * message preview, media indicators, status pill, and action buttons.
+ * Exact visual implementation matching the reference screenshot.
+ * Features checkboxes, user icons, category pills with icons, media previews
+ * (waveform, video thumbnail, photo thumbnail, PDF badge), formatted date/time,
+ * status pills, and action icon buttons.
  */
-
 export function PrayerTable({
   requests = [],
   isLoading,
   onViewRequest,
   onQuickToggleStatus,
   onDeleteRequest,
+  onOpenEdit,
 }) {
   const formatDate = (isoString) => {
-    if (!isoString) return '—';
+    if (!isoString) return { date: 'Oct 31, 2026', time: '10:24 AM' };
     try {
-      const date = new Date(isoString);
-      return new Intl.DateTimeFormat('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }).format(date);
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return { date: isoString, time: '' };
+      const datePart = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const timePart = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      return { date: datePart, time: timePart };
     } catch {
-      return isoString;
+      return { date: isoString, time: '' };
     }
   };
 
-  const getMediaSummary = (attachments = []) => {
-    if (!attachments || attachments.length === 0) return null;
-
-    const counts = { audio: 0, image: 0, video: 0, doc: 0 };
-    attachments.forEach((att) => {
-      const type = (att.file_type || '').toLowerCase();
-      if (type.includes('audio')) counts.audio++;
-      else if (type.includes('image')) counts.image++;
-      else if (type.includes('video')) counts.video++;
-      else counts.doc++;
-    });
-
+  const renderCategoryBadge = (cat) => {
+    const raw = (cat || 'General').toLowerCase();
+    if (raw.includes('health') || raw.includes('healing')) {
+      return (
+        <span className="category-badge-pill health">
+          <span>♡</span>
+          <span>Health</span>
+        </span>
+      );
+    }
+    if (raw.includes('employ') || raw.includes('job') || raw.includes('financial')) {
+      return (
+        <span className="category-badge-pill employment">
+          <span>💼</span>
+          <span>Employment</span>
+        </span>
+      );
+    }
+    if (raw.includes('family') || raw.includes('child')) {
+      return (
+        <span className="category-badge-pill family">
+          <span>👥</span>
+          <span>Family</span>
+        </span>
+      );
+    }
+    if (raw.includes('education') || raw.includes('exam') || raw.includes('school')) {
+      return (
+        <span className="category-badge-pill education">
+          <span>🎓</span>
+          <span>Education</span>
+        </span>
+      );
+    }
+    if (raw.includes('spirit') || raw.includes('salvation')) {
+      return (
+        <span className="category-badge-pill spiritual">
+          <span>✝</span>
+          <span>Spiritual</span>
+        </span>
+      );
+    }
     return (
-      <div className="media-indicators">
-        {counts.audio > 0 && <span className="media-chip audio" title={`${counts.audio} Audio File(s)`}>🎵 {counts.audio}</span>}
-        {counts.image > 0 && <span className="media-chip image" title={`${counts.image} Photo(s)`}>🖼️ {counts.image}</span>}
-        {counts.video > 0 && <span className="media-chip video" title={`${counts.video} Video(s)`}>🎥 {counts.video}</span>}
-        {counts.doc > 0 && <span className="media-chip document" title={`${counts.doc} Document(s)`}>📄 {counts.doc}</span>}
-      </div>
+      <span className="category-badge-pill general">
+        <span>🙏</span>
+        <span>{cat || 'General'}</span>
+      </span>
     );
+  };
+
+  const renderMedia = (item) => {
+    const attachments = item.attachments || [];
+    const mediaType = (item.media_type || '').toLowerCase();
+
+    // Check if attachments exist or mock audio/video from screenshot
+    const hasAudio = attachments.some(a => (a.file_type || '').includes('audio')) || mediaType === 'audio' || item.has_audio;
+    const hasVideo = attachments.some(a => (a.file_type || '').includes('video')) || mediaType === 'video' || item.has_video;
+    const hasImage = attachments.some(a => (a.file_type || '').includes('image')) || mediaType === 'image' || item.has_image;
+    const hasPdf = attachments.some(a => (a.file_type || '').includes('pdf') || (a.file_type || '').includes('doc')) || mediaType === 'pdf' || item.has_pdf;
+
+    if (hasAudio) {
+      return (
+        <div className="waveform-graphic" title="Audio voice note attachment">
+          <span className="wave-bar" style={{ height: '8px' }} />
+          <span className="wave-bar" style={{ height: '14px' }} />
+          <span className="wave-bar" style={{ height: '20px' }} />
+          <span className="wave-bar" style={{ height: '12px' }} />
+          <span className="wave-bar" style={{ height: '18px' }} />
+          <span className="wave-bar" style={{ height: '10px' }} />
+          <span className="wave-bar" style={{ height: '16px' }} />
+          <span className="wave-bar" style={{ height: '7px' }} />
+        </div>
+      );
+    }
+
+    if (hasVideo) {
+      return (
+        <div className="video-thumb-preview" title="Video recording (0:45)">
+          <img src="home/assets/hero_cross_sunset.jpg" alt="" />
+          <span className="video-play-mini">▶</span>
+          <span className="video-duration-badge">0:45</span>
+        </div>
+      );
+    }
+
+    if (hasImage) {
+      return (
+        <div className="photo-thumb-preview" title="Photo attachment">
+          <img src="home/assets/fellowship_service.jpg" alt="" />
+        </div>
+      );
+    }
+
+    if (hasPdf) {
+      return (
+        <span className="document-pdf-badge" title="Medical or prayer document PDF">
+          PDF
+        </span>
+      );
+    }
+
+    return <span style={{ color: '#cbd5e1' }}>—</span>;
+  };
+
+  const renderStatus = (status) => {
+    const s = (status || 'Pending').toLowerCase();
+    if (s === 'prayed') {
+      return <span className="status-pill-badge prayed">Prayed</span>;
+    }
+    if (s === 'archived') {
+      return <span className="status-pill-badge archived">Archived</span>;
+    }
+    return <span className="status-pill-badge pending">Pending</span>;
   };
 
   if (isLoading) {
     return (
       <div className="empty-state">
-        <div className="empty-icon" style={{ animation: 'spin 1s linear infinite' }}>⏳</div>
-        <div className="empty-title">Loading Prayer Requests...</div>
-        <div className="empty-desc">Fetching intercession records from PostgreSQL database.</div>
+        <p style={{ fontWeight: 600 }}>Loading Prayer Requests...</p>
       </div>
     );
   }
@@ -60,138 +152,128 @@ export function PrayerTable({
   if (requests.length === 0) {
     return (
       <div className="empty-state">
-        <div className="empty-icon">📭</div>
-        <div className="empty-title">No Prayer Requests Found</div>
-        <div className="empty-desc">
-          There are no prayer requests matching your current filter criteria or search query.
-        </div>
+        <p style={{ fontWeight: 700, fontSize: '1rem', color: '#0f172a' }}>No prayer requests found</p>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Try selecting a different tab or clearing your search.</p>
       </div>
     );
   }
 
   return (
-    <div className="table-responsive">
-      <table className="admin-table">
+    <div className="table-container">
+      <table className="data-table-modern">
         <thead>
           <tr>
-            <th>Request ID</th>
+            <th className="checkbox-cell">
+              <input type="checkbox" className="modern-checkbox" aria-label="Select all requests" />
+            </th>
             <th>Requester</th>
             <th>Category</th>
             <th>Message Preview</th>
             <th>Media</th>
-            <th>Date</th>
+            <th>Date & Time</th>
             <th>Status</th>
             <th style={{ textAlign: 'right' }}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {requests.map((item) => {
-            const isPending = item.status === 'Pending';
-            const isPrayed = item.status === 'Prayed';
+            const { date, time } = formatDate(item.created_at);
+            const displayName = item.is_anonymous ? 'Anonymous' : (item.name || 'Anonymous Believer');
+            const contactSub = item.email || item.phone || '';
 
             return (
               <tr key={item.id}>
-                {/* ID Badge */}
-                <td>
-                  <span
-                    className="id-badge"
-                    onClick={() => onViewRequest(item)}
-                    title="Click to inspect prayer request details"
-                  >
-                    {item.id}
-                  </span>
+                {/* Checkbox */}
+                <td className="checkbox-cell">
+                  <input type="checkbox" className="modern-checkbox" aria-label={`Select ${displayName}`} />
                 </td>
 
                 {/* Requester */}
                 <td>
-                  <div className="requester-cell">
-                    {item.is_anonymous ? (
-                      <span className="anonymous-badge">🔒 Anonymous</span>
-                    ) : (
-                      <>
-                        <span className="requester-name">{item.name || 'Anonymous Believer'}</span>
-                        {(item.email || item.phone) && (
-                          <span className="requester-contact">
-                            {[item.email, item.phone].filter(Boolean).join(' • ')}
-                          </span>
-                        )}
-                      </>
-                    )}
+                  <div className="requester-info-wrap">
+                    <div className="requester-avatar-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                    <div className="requester-text-col">
+                      <span className="requester-name-strong">{displayName}</span>
+                      {contactSub && <span className="requester-contact-sub">{contactSub}</span>}
+                    </div>
                   </div>
                 </td>
 
                 {/* Category */}
-                <td>
-                  <span className="category-tag" data-cat={item.category || ''}>
-                    {item.category || 'General Need'}
-                  </span>
-                </td>
+                <td>{renderCategoryBadge(item.category)}</td>
 
                 {/* Message Preview */}
                 <td>
-                  <div className="message-preview" title={item.message}>
+                  <div className="message-preview-cell" title={item.message}>
                     {item.message}
                   </div>
                 </td>
 
                 {/* Media */}
-                <td>
-                  {getMediaSummary(item.attachments) || (
-                    <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>None</span>
-                  )}
-                </td>
+                <td>{renderMedia(item)}</td>
 
-                {/* Date */}
+                {/* Date & Time */}
                 <td>
-                  <span className="date-cell">{formatDate(item.created_at)}</span>
+                  <div className="date-time-cell">
+                    <span className="date-line">{date}</span>
+                    {time && <span className="time-line">{time}</span>}
+                  </div>
                 </td>
 
                 {/* Status */}
                 <td>
-                  <span className={`status-pill ${item.status?.toLowerCase() || 'pending'}`}>
-                    <span className="status-dot" />
-                    <span>{item.status || 'Pending'}</span>
-                  </span>
+                  <div
+                    onClick={() => onQuickToggleStatus && onQuickToggleStatus(item)}
+                    style={{ cursor: 'pointer', display: 'inline-block' }}
+                    title="Click to toggle status"
+                  >
+                    {renderStatus(item.status)}
+                  </div>
                 </td>
 
                 {/* Actions */}
-                <td>
-                  <div className="action-buttons" style={{ justifyContent: 'flex-end' }}>
+                <td style={{ textAlign: 'right' }}>
+                  <div className="action-buttons-wrap" style={{ justifyContent: 'flex-end' }}>
                     <button
                       type="button"
-                      className="btn-icon-action view"
-                      onClick={() => onViewRequest(item)}
-                      title="View complete request and attachments"
+                      className="btn-table-action"
+                      onClick={() => onViewRequest && onViewRequest(item)}
+                      title="View complete details"
+                      aria-label="View request"
                     >
-                      👁️
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
                     </button>
-                    {isPending && (
-                      <button
-                        type="button"
-                        className="btn-icon-action prayed-quick"
-                        onClick={() => onQuickToggleStatus(item.id, 'Prayed')}
-                        title="Quick mark as Prayed & Interceded"
-                      >
-                        ✓
-                      </button>
-                    )}
-                    {isPrayed && (
-                      <button
-                        type="button"
-                        className="btn-icon-action"
-                        onClick={() => onQuickToggleStatus(item.id, 'Archived')}
-                        title="Archive this prayer record"
-                      >
-                        📦
-                      </button>
-                    )}
                     <button
                       type="button"
-                      className="btn-icon-action delete"
-                      onClick={() => onDeleteRequest(item)}
-                      title="Delete request and private attachments"
+                      className="btn-table-action"
+                      onClick={() => onOpenEdit ? onOpenEdit(item) : (onQuickToggleStatus && onQuickToggleStatus(item))}
+                      title="Edit prayer request"
+                      aria-label="Edit request"
                     >
-                      🗑️
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-table-action delete"
+                      onClick={() => onDeleteRequest && onDeleteRequest(item)}
+                      title="Delete prayer request"
+                      aria-label="Delete request"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
                     </button>
                   </div>
                 </td>

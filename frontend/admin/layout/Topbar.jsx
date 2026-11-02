@@ -1,80 +1,115 @@
 /**
  * CMS Master Topbar Component
+ * Matches the reference screenshot with page titles, notification bell,
+ * and user profile avatar.
  */
-export function Topbar({ currentModule, onToggleSidebar, onRefresh, isLoading }) {
+export function Topbar({ currentModule, onToggleSidebar, onNotificationClick }) {
   const titles = {
-    dashboard: 'CMS Dashboard Overview',
-    home: 'Home Page Management',
-    about: 'About Us & History',
-    bible: 'Bible Reader Display Settings',
-    sermons: 'Sermons & Audio/Video Library',
-    events: 'Events & Registration',
-    ministries: 'Church Ministries',
-    gallery: 'Photo & Video Gallery',
-    'prayer-requests': 'Prayer Requests Portal',
-    'service-timings': 'Weekly Service Timings',
-    announcements: 'Announcements & Bulletins',
-    contact: 'Contact & Campus Location',
-    settings: 'Website Settings & SEO',
+    dashboard: {
+      title: 'Dashboard',
+      subtitle: 'Overview of prayer requests and church activities',
+    },
+    'prayer-requests': {
+      title: 'Prayer Requests',
+      subtitle: 'Manage, intercede, and archive church community prayer petitions',
+    },
+    sermons: {
+      title: 'Sermons Library',
+      subtitle: 'Manage recorded video messages, audio podcasts, and notes',
+    },
+    events: {
+      title: 'Events & Calendar',
+      subtitle: 'Upcoming gatherings, conferences, registrations, and posters',
+    },
+    announcements: {
+      title: 'Announcements',
+      subtitle: 'Publish church bulletins, fasting notices, and urgent alerts',
+    },
+    users: {
+      title: 'Users & Team',
+      subtitle: 'Pastoral staff, prayer coordinators, and administrator accounts',
+    },
+    settings: {
+      title: 'Website Settings',
+      subtitle: 'Church branding, SEO metadata, footer copy, and CMS configuration',
+    },
+    home: {
+      title: 'Home Page Management',
+      subtitle: 'Customize hero banner, welcome text, and calls to action',
+    },
+    about: {
+      title: 'About Us Management',
+      subtitle: 'Church history, mission, vision, doctrinal beliefs, and pastors',
+    },
+    bible: {
+      title: 'Bible Display Settings',
+      subtitle: 'Default translation and public scripture reader options',
+    },
+    ministries: {
+      title: 'Ministries Management',
+      subtitle: 'Church departments, youth, women, men, and outreach groups',
+    },
+    gallery: {
+      title: 'Photo & Video Gallery',
+      subtitle: 'Upload and organize high-resolution church event photography',
+    },
+    'service-timings': {
+      title: 'Service Timings',
+      subtitle: 'Configure weekly worship schedules and service hours',
+    },
+    contact: {
+      title: 'Contact & Location',
+      subtitle: 'Sanctuary address, telephone hotline, Google Maps, and socials',
+    },
   };
 
-  const todayFormatted = new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date());
+  const currentInfo = titles[currentModule] || {
+    title: 'Dashboard',
+    subtitle: 'Overview of prayer requests and church activities',
+  };
 
   return (
-    <header className="admin-topbar">
-      <div className="topbar-left">
-        <button
-          type="button"
-          className="btn-mobile-menu"
-          onClick={onToggleSidebar}
-          aria-label="Toggle navigation"
-        >
-          ☰
-        </button>
-        <div className="breadcrumbs">
-          <span>Church CMS</span>
-          <span>/</span>
-          <span className="breadcrumb-active">{titles[currentModule] || 'Dashboard'}</span>
+    <div className="admin-header-row">
+      <div className="admin-header-titles">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            type="button"
+            className="btn-mobile-toggle"
+            onClick={onToggleSidebar}
+            aria-label="Toggle Navigation"
+          >
+            ☰
+          </button>
+          <h1 className="admin-page-heading">{currentInfo.title}</h1>
         </div>
+        <p className="admin-page-subheading">{currentInfo.subtitle}</p>
       </div>
 
-      <div className="topbar-right">
-        <div className="live-indicator">
-          <div className="status-dot-pulse" />
-          <span>{todayFormatted}</span>
-        </div>
+      <div className="admin-header-actions">
+        {/* Notification Bell with red unread dot */}
         <button
           type="button"
-          className="btn-topbar-action"
-          onClick={onRefresh}
-          disabled={isLoading}
-          title="Refresh current data from database"
+          className="btn-bell-notification"
+          onClick={onNotificationClick}
+          title="12 Pending Prayer Requests"
+          aria-label="Notifications"
         >
-          <span style={{ display: 'inline-block', transform: isLoading ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s ease' }}>
-            🔄
-          </span>
-          <span>{isLoading ? 'Refreshing...' : 'Refresh'}</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span className="bell-unread-dot" />
         </button>
-        <a
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary"
-          style={{ textDecoration: 'none', padding: '6px 12px', fontSize: '0.8rem' }}
-        >
-          Live Site ↗
-        </a>
+
+        {/* User Profile Avatar */}
+        <div className="header-user-avatar" title="Logged in as Admin">
+          A
+        </div>
       </div>
-    </header>
+    </div>
   );
 }
 
 if (typeof window !== 'undefined') {
   window.Topbar = Topbar;
 }
-

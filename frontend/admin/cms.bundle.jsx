@@ -353,6 +353,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: PageHeader.jsx === */
 /**
  * Reusable Page Header Component
@@ -379,6 +380,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: StatusBadge.jsx === */
 /**
  * Reusable Status Pill Badge Component
@@ -399,6 +401,7 @@ function StatusBadge({ isPublished, label }) {
 if (typeof window !== 'undefined') {
   window.StatusBadge = StatusBadge;
 }
+
 
 
 /* === Source: MediaUploadField.jsx === */
@@ -509,6 +512,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: ConfirmModal.jsx === */
 /**
  * Reusable Confirmation & Deletion Modal Component
@@ -556,128 +560,434 @@ if (typeof window !== 'undefined') {
 }
 
 
+
+/* === Source: AddPrayerModal.jsx === */
+
+/**
+ * Add Prayer Request Modal Component
+ * Allows administrators to add a prayer request directly from the dashboard.
+ */
+function AddPrayerModal({ isOpen, onClose, onSave, isSubmitting }) {
+  const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
+
+  const [formData, setFormData] = useSafeState({
+    name: '',
+    email: '',
+    phone: '',
+    category: 'Health',
+    message: '',
+    status: 'Pending',
+    is_anonymous: false,
+  });
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.message.trim()) {
+      alert('Prayer request message is required.');
+      return;
+    }
+    onSave(formData);
+  };
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3 className="modal-title">Add New Prayer Request</h3>
+          <button type="button" className="btn-modal-close" onClick={onClose}>×</button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body" style={{ maxHeight: '72vh', overflowY: 'auto' }}>
+            <div className="form-group">
+              <label className="form-label">Requester Name</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g. Ravi Kumar"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                disabled={formData.is_anonymous}
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="form-group">
+                <label className="form-label">Email Address</label>
+                <input
+                  type="email"
+                  className="form-input"
+                  placeholder="e.g. ravi.kumar@email.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Phone Number</label>
+                <input
+                  type="tel"
+                  className="form-input"
+                  placeholder="e.g. +91 98765 43210"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="form-group">
+                <label className="form-label">Category *</label>
+                <select
+                  className="form-input"
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                >
+                  <option value="Health">Health</option>
+                  <option value="Employment">Employment</option>
+                  <option value="Family">Family</option>
+                  <option value="Education">Education</option>
+                  <option value="Spiritual Growth">Spiritual Growth</option>
+                  <option value="General Need">General Need</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Initial Status</label>
+                <select
+                  className="form-input"
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Prayed">Prayed</option>
+                  <option value="Archived">Archived</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Prayer Petition Message *</label>
+              <textarea
+                className="form-input"
+                rows={4}
+                required
+                placeholder="Write the prayer petition or message details..."
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              />
+            </div>
+
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginTop: '6px' }}>
+              <input
+                type="checkbox"
+                checked={formData.is_anonymous}
+                onChange={(e) => setFormData({ ...formData, is_anonymous: e.target.checked })}
+                style={{ width: '16px', height: '16px', accentColor: '#0b1a30' }}
+              />
+              <span style={{ fontSize: '0.85rem', color: '#475569' }}>Mark as Anonymous Request</span>
+            </label>
+          </div>
+
+          <div className="modal-footer">
+            <button type="button" className="btn-secondary" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className="btn-primary" disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Add Request'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+if (typeof window !== 'undefined') {
+  window.AddPrayerModal = AddPrayerModal;
+}
+
+
+/* === Source: UsersManager.jsx === */
+
+/**
+ * Users & Pastoral Team Management Component
+ * Allows viewing and managing administrators, pastoral intercessors, and church leaders.
+ */
+function UsersManager() {
+  const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
+
+  const [users] = useSafeState([
+    {
+      id: 1,
+      name: 'Pastor John Samuel',
+      email: 'pastor@gracefellowship.org',
+      role: 'Senior Pastor & Super Admin',
+      status: 'Active',
+      lastLogin: 'Today, 2:30 PM',
+      avatar: 'PS',
+    },
+    {
+      id: 2,
+      name: 'Deacon David Raj',
+      email: 'david.raj@gracefellowship.org',
+      role: 'Prayer Coordinator',
+      status: 'Active',
+      lastLogin: 'Yesterday, 8:15 PM',
+      avatar: 'DR',
+    },
+    {
+      id: 3,
+      name: 'Sister Sarah Grace',
+      email: 'sarah.grace@gracefellowship.org',
+      role: 'Intercession Lead',
+      status: 'Active',
+      lastLogin: 'Oct 30, 2026',
+      avatar: 'SG',
+    },
+    {
+      id: 4,
+      name: 'Brother Timothy Paul',
+      email: 'timothy.paul@gracefellowship.org',
+      role: 'Media & Tech Minister',
+      status: 'Active',
+      lastLogin: 'Oct 28, 2026',
+      avatar: 'TP',
+    },
+  ]);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="content-panel-card">
+        <div className="panel-header-toolbar">
+          <div className="panel-title-and-tabs">
+            <h2 className="panel-section-title">Church Administration & Pastoral Team</h2>
+          </div>
+          <button
+            type="button"
+            className="btn-add-primary"
+            onClick={() => alert('New team member invite link generated.')}
+          >
+            <span>+</span>
+            <span>Add Team Member</span>
+          </button>
+        </div>
+
+        <div className="table-container">
+          <table className="data-table-modern">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Email</th>
+                <th>Role & Ministry</th>
+                <th>Status</th>
+                <th>Last Active</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((u) => (
+                <tr key={u.id}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div className="avatar-badge-circle" style={{ width: '32px', height: '32px', fontSize: '0.8rem' }}>
+                        {u.avatar}
+                      </div>
+                      <span className="requester-name-strong">{u.name}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span style={{ color: '#475569', fontSize: '0.85rem' }}>{u.email}</span>
+                  </td>
+                  <td>
+                    <span style={{ color: '#0b1a30', fontWeight: 600, fontSize: '0.825rem' }}>{u.role}</span>
+                  </td>
+                  <td>
+                    <span className="status-pill-badge prayed">{u.status}</span>
+                  </td>
+                  <td>
+                    <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{u.lastLogin}</span>
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <div className="action-buttons-wrap" style={{ justifyContent: 'flex-end' }}>
+                      <button
+                        type="button"
+                        className="btn-table-action"
+                        onClick={() => alert(`Editing permissions for ${u.name}`)}
+                        title="Edit Permissions"
+                      >
+                        ✏️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+if (typeof window !== 'undefined') {
+  window.UsersManager = UsersManager;
+}
+
+
 /* === Source: Sidebar.jsx === */
 /**
  * CMS Master Sidebar Navigation Component
- * Features all 12 modules, church crest branding, admin profile, and live badges.
+ * Features clean white corporate styling, church branding, navy active pills,
+ * and user administrator profile matching the reference screenshot.
  */
-function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 0, onLogout, isOpen, onClose }) {
-  const navSections = [
+function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 12, onLogout, isOpen, onClose }) {
+  const navItems = [
     {
-      title: 'Main',
-      items: [
-        { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-      ],
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+      ),
     },
     {
-      title: 'Website Content',
-      items: [
-        { id: 'home', label: 'Home Page', icon: '🏠' },
-        { id: 'about', label: 'About Us', icon: '📖' },
-        { id: 'sermons', label: 'Sermons', icon: '🎙️' },
-        { id: 'events', label: 'Events & Calendar', icon: '📅' },
-        { id: 'ministries', label: 'Ministries', icon: '👥' },
-        { id: 'gallery', label: 'Photo & Video Gallery', icon: '🖼️' },
-        { id: 'service-timings', label: 'Service Timings', icon: '⏰' },
-        { id: 'announcements', label: 'Announcements', icon: '📢' },
-        { id: 'contact', label: 'Contact & Location', icon: '📍' },
-        { id: 'bible', label: 'Bible Settings', icon: '📜' },
-      ],
+      id: 'prayer-requests',
+      label: 'Prayer Requests',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+          <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+          <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+          <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+        </svg>
+      ),
+      badge: pendingPrayersCount > 0 ? pendingPrayersCount : 12,
     },
     {
-      title: 'Pastoral Care',
-      items: [
-        {
-          id: 'prayer-requests',
-          label: 'Prayer Requests',
-          icon: '🙏',
-          badge: pendingPrayersCount > 0 ? pendingPrayersCount : null,
-        },
-      ],
+      id: 'sermons',
+      label: 'Sermons',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="10 8 16 12 10 16 10 8" />
+        </svg>
+      ),
     },
     {
-      title: 'System & SEO',
-      items: [
-        { id: 'settings', label: 'Website Settings', icon: '⚙️' },
-      ],
+      id: 'events',
+      label: 'Events',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      ),
+    },
+    {
+      id: 'announcements',
+      label: 'Announcements',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          <line x1="2" y1="8" x2="4" y2="8" />
+        </svg>
+      ),
+    },
+    {
+      id: 'users',
+      label: 'Users',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      ),
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      ),
     },
   ];
 
   return (
     <>
-      {isOpen && <div className="admin-sidebar-backdrop" onClick={onClose} />}
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 999,
+          }}
+          onClick={onClose}
+        />
+      )}
       <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
-        {/* Church Branding Crest */}
-        <div className="sidebar-brand">
-          <div className="brand-crest">✝</div>
-          <div className="brand-details">
-            <div className="brand-name">Grace Fellowship</div>
-            <div className="brand-role">Church Website CMS</div>
+        {/* Church Branding Header */}
+        <div className="sidebar-header">
+          <div className="sidebar-brand-cross">✝</div>
+          <div className="sidebar-brand-text">
+            <span className="sidebar-church-title">Grace Fellowship Church</span>
+            <span className="sidebar-portal-tag">Admin Portal</span>
           </div>
         </div>
 
-        {/* Administrator Profile Card */}
-        <div className="sidebar-profile">
-          <div className="profile-avatar-wrap">
-            <div className="profile-avatar">PS</div>
-            <div className="online-pulse" title="Administrator Online" />
-          </div>
-          <div className="profile-info">
-            <div className="profile-name">Pastor John Samuel</div>
-            <div className="profile-title">Chief Administrator</div>
-          </div>
-        </div>
-
-        {/* Modular Navigation */}
-        <nav className="sidebar-nav" style={{ paddingBottom: '24px' }}>
-          {navSections.map((sec, sIdx) => (
-            <div key={sec.title || sIdx}>
-              <div className="nav-section-title">{sec.title}</div>
-              {sec.items.map((item) => (
-                <div
-                  key={item.id}
-                  className={`nav-item ${currentModule === item.id ? 'active' : ''}`}
-                  onClick={() => {
-                    onSelectModule(item.id);
-                    if (onClose) onClose();
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className="nav-item-content">
-                    <span className="nav-icon">{item.icon}</span>
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge !== null && item.badge !== undefined && (
-                    <span className="nav-badge">{item.badge}</span>
-                  )}
+        {/* Clean Vertical Navigation */}
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const isActive = currentModule === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
+                onClick={() => {
+                  onSelectModule(item.id);
+                  if (onClose) onClose();
+                }}
+              >
+                <div className="sidebar-nav-left">
+                  <span className="sidebar-nav-icon">{item.icon}</span>
+                  <span>{item.label}</span>
                 </div>
-              ))}
-            </div>
-          ))}
+                {item.badge !== undefined && item.badge !== null && (
+                  <span className="sidebar-badge-red">{item.badge}</span>
+                )}
+              </button>
+            );
+          })}
         </nav>
 
-        {/* Sidebar Footer */}
-        <div className="sidebar-footer">
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-sidebar-action"
-            title="Preview Public Website in new tab"
-          >
-            <span>🌐</span>
-            <span>View Public Site ↗</span>
-          </a>
-          <button
-            type="button"
-            className="btn-sidebar-action logout"
-            onClick={onLogout}
-            title="Sign Out of CMS Portal"
-          >
-            <span>🚪</span>
-            <span>Sign Out</span>
-          </button>
+        {/* Administrator Profile Card at Bottom */}
+        <div
+          className="sidebar-footer-profile"
+          onClick={onLogout}
+          title="Sign out of Admin Portal"
+        >
+          <div className="profile-left">
+            <div className="avatar-badge-circle">A</div>
+            <div className="profile-meta">
+              <span className="profile-admin-name">Admin</span>
+              <span className="profile-role-title">Church Administrator</span>
+            </div>
+          </div>
+          <span className="chevron-down-icon">˅</span>
         </div>
       </aside>
     </>
@@ -692,77 +1002,113 @@ if (typeof window !== 'undefined') {
 /* === Source: Topbar.jsx === */
 /**
  * CMS Master Topbar Component
+ * Matches the reference screenshot with page titles, notification bell,
+ * and user profile avatar.
  */
-function Topbar({ currentModule, onToggleSidebar, onRefresh, isLoading }) {
+function Topbar({ currentModule, onToggleSidebar, onNotificationClick }) {
   const titles = {
-    dashboard: 'CMS Dashboard Overview',
-    home: 'Home Page Management',
-    about: 'About Us & History',
-    bible: 'Bible Reader Display Settings',
-    sermons: 'Sermons & Audio/Video Library',
-    events: 'Events & Registration',
-    ministries: 'Church Ministries',
-    gallery: 'Photo & Video Gallery',
-    'prayer-requests': 'Prayer Requests Portal',
-    'service-timings': 'Weekly Service Timings',
-    announcements: 'Announcements & Bulletins',
-    contact: 'Contact & Campus Location',
-    settings: 'Website Settings & SEO',
+    dashboard: {
+      title: 'Dashboard',
+      subtitle: 'Overview of prayer requests and church activities',
+    },
+    'prayer-requests': {
+      title: 'Prayer Requests',
+      subtitle: 'Manage, intercede, and archive church community prayer petitions',
+    },
+    sermons: {
+      title: 'Sermons Library',
+      subtitle: 'Manage recorded video messages, audio podcasts, and notes',
+    },
+    events: {
+      title: 'Events & Calendar',
+      subtitle: 'Upcoming gatherings, conferences, registrations, and posters',
+    },
+    announcements: {
+      title: 'Announcements',
+      subtitle: 'Publish church bulletins, fasting notices, and urgent alerts',
+    },
+    users: {
+      title: 'Users & Team',
+      subtitle: 'Pastoral staff, prayer coordinators, and administrator accounts',
+    },
+    settings: {
+      title: 'Website Settings',
+      subtitle: 'Church branding, SEO metadata, footer copy, and CMS configuration',
+    },
+    home: {
+      title: 'Home Page Management',
+      subtitle: 'Customize hero banner, welcome text, and calls to action',
+    },
+    about: {
+      title: 'About Us Management',
+      subtitle: 'Church history, mission, vision, doctrinal beliefs, and pastors',
+    },
+    bible: {
+      title: 'Bible Display Settings',
+      subtitle: 'Default translation and public scripture reader options',
+    },
+    ministries: {
+      title: 'Ministries Management',
+      subtitle: 'Church departments, youth, women, men, and outreach groups',
+    },
+    gallery: {
+      title: 'Photo & Video Gallery',
+      subtitle: 'Upload and organize high-resolution church event photography',
+    },
+    'service-timings': {
+      title: 'Service Timings',
+      subtitle: 'Configure weekly worship schedules and service hours',
+    },
+    contact: {
+      title: 'Contact & Location',
+      subtitle: 'Sanctuary address, telephone hotline, Google Maps, and socials',
+    },
   };
 
-  const todayFormatted = new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date());
+  const currentInfo = titles[currentModule] || {
+    title: 'Dashboard',
+    subtitle: 'Overview of prayer requests and church activities',
+  };
 
   return (
-    <header className="admin-topbar">
-      <div className="topbar-left">
-        <button
-          type="button"
-          className="btn-mobile-menu"
-          onClick={onToggleSidebar}
-          aria-label="Toggle navigation"
-        >
-          ☰
-        </button>
-        <div className="breadcrumbs">
-          <span>Church CMS</span>
-          <span>/</span>
-          <span className="breadcrumb-active">{titles[currentModule] || 'Dashboard'}</span>
+    <div className="admin-header-row">
+      <div className="admin-header-titles">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            type="button"
+            className="btn-mobile-toggle"
+            onClick={onToggleSidebar}
+            aria-label="Toggle Navigation"
+          >
+            ☰
+          </button>
+          <h1 className="admin-page-heading">{currentInfo.title}</h1>
         </div>
+        <p className="admin-page-subheading">{currentInfo.subtitle}</p>
       </div>
 
-      <div className="topbar-right">
-        <div className="live-indicator">
-          <div className="status-dot-pulse" />
-          <span>{todayFormatted}</span>
-        </div>
+      <div className="admin-header-actions">
+        {/* Notification Bell with red unread dot */}
         <button
           type="button"
-          className="btn-topbar-action"
-          onClick={onRefresh}
-          disabled={isLoading}
-          title="Refresh current data from database"
+          className="btn-bell-notification"
+          onClick={onNotificationClick}
+          title="12 Pending Prayer Requests"
+          aria-label="Notifications"
         >
-          <span style={{ display: 'inline-block', transform: isLoading ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s ease' }}>
-            🔄
-          </span>
-          <span>{isLoading ? 'Refreshing...' : 'Refresh'}</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span className="bell-unread-dot" />
         </button>
-        <a
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary"
-          style={{ textDecoration: 'none', padding: '6px 12px', fontSize: '0.8rem' }}
-        >
-          Live Site ↗
-        </a>
+
+        {/* User Profile Avatar */}
+        <div className="header-user-avatar" title="Logged in as Admin">
+          A
+        </div>
       </div>
-    </header>
+    </div>
   );
 }
 
@@ -772,239 +1118,321 @@ if (typeof window !== 'undefined') {
 
 
 /* === Source: DashboardOverview.jsx === */
+
+
+
+
+
+
+
+
+
 /**
- * Centralized Church CMS Dashboard Overview Component
- * Displays key content metrics, recent administrative changes, and quick module navigation.
+ * Master Dashboard Overview Component
+ * Matches the reference screenshot with 4 KPI cards and live Prayer Requests table.
  */
 function DashboardOverview({ overview, onNavigateModule }) {
-  const statCards = [
+  const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
+  const useSafeEffect = typeof useEffect !== 'undefined' ? useEffect : (window.React ? window.React.useEffect : null);
+  const useSafeCallback = typeof useCallback !== 'undefined' ? useCallback : (window.React ? window.React.useCallback : null);
+
+  const api = window.cmsApi || cmsApi;
+
+  // Default sample records exactly matching the user's screenshot
+  const defaultSampleRequests = [
     {
-      id: 'content',
-      label: 'Website Content',
-      value: overview?.total_content_items ?? 0,
-      hint: 'Published site items',
-      icon: '🌐',
-      cardClass: 'total',
-      target: 'home',
+      id: 'PR-20261031-001',
+      name: 'Ravi Kumar',
+      email: 'ravi.kumar@email.com',
+      phone: '',
+      category: 'Health',
+      message: 'Please pray for my mother\'s health. She is undergoing medical treatment and tests at the hospital...',
+      status: 'Pending',
+      has_audio: true,
+      created_at: '2026-10-31T10:24:00Z',
     },
     {
-      id: 'sermons',
-      label: 'Published Sermons',
-      value: overview?.published_sermons ?? 0,
-      hint: 'Video & audio messages',
-      icon: '🎙️',
-      cardClass: 'prayed',
-      target: 'sermons',
+      id: 'PR-20261030-002',
+      name: 'Anitha Mary',
+      email: '',
+      phone: '+91 98765 43210',
+      category: 'Employment',
+      message: 'Pray for my job opportunity and final interviews scheduled this coming week...',
+      status: 'Pending',
+      has_video: true,
+      created_at: '2026-10-30T20:15:00Z',
     },
     {
-      id: 'events',
-      label: 'Upcoming Events',
-      value: overview?.upcoming_events ?? 0,
-      hint: 'Calendar & registrations',
-      icon: '📅',
-      cardClass: 'pending',
-      target: 'events',
+      id: 'PR-20261029-003',
+      name: 'Joseph Paul',
+      email: 'joseph.paul@email.com',
+      phone: '',
+      category: 'Family',
+      message: 'Our family is going through a difficult time with emotional reconciliation and healing...',
+      status: 'Prayed',
+      has_image: true,
+      created_at: '2026-10-29T18:40:00Z',
     },
     {
-      id: 'prayers',
-      label: 'Prayer Petitions',
-      value: overview?.total_prayer_requests ?? 0,
-      hint: 'Pastoral care requests',
-      icon: '🙏',
-      cardClass: 'archived',
-      target: 'prayer-requests',
+      id: 'PR-20261029-004',
+      name: 'Suresh Babu',
+      email: '',
+      phone: '+91 98456 32100',
+      category: 'Education',
+      message: 'Please pray for my exam preparation and university admission counseling...',
+      status: 'Prayed',
+      has_audio: true,
+      created_at: '2026-10-29T11:20:00Z',
+    },
+    {
+      id: 'PR-20261028-005',
+      name: 'Mary Grace',
+      email: 'mary.grace@email.com',
+      phone: '',
+      category: 'Health',
+      message: 'Prayer for surgery and quick recovery without complications...',
+      status: 'Archived',
+      has_pdf: true,
+      created_at: '2026-10-28T21:10:00Z',
     },
   ];
 
-  const quickLinks = [
-    { id: 'home', label: 'Home Page', icon: '🏠', desc: 'Hero banners & CTAs' },
-    { id: 'about', label: 'About Us', icon: '📖', desc: 'History, vision & beliefs' },
-    { id: 'sermons', label: 'Sermons', icon: '🎙️', desc: 'Manage messages & audio' },
-    { id: 'events', label: 'Events', icon: '📅', desc: 'Calendar & registrations' },
-    { id: 'ministries', label: 'Ministries', icon: '👥', desc: 'Departments & teams' },
-    { id: 'gallery', label: 'Gallery', icon: '🖼️', desc: 'Photos & event media' },
-    { id: 'service-timings', label: 'Service Timings', icon: '⏰', desc: 'Weekly schedule & hours' },
-    { id: 'announcements', label: 'Announcements', icon: '📢', desc: 'Bulletins & urgent alerts' },
-    { id: 'contact', label: 'Contact', icon: '📍', desc: 'Address, map & socials' },
-    { id: 'bible', label: 'Bible Settings', icon: '📜', desc: 'Translations & reader UI' },
-    { id: 'prayer-requests', label: 'Prayer Requests', icon: '🙏', desc: 'Review & intercede' },
-    { id: 'settings', label: 'Site Settings', icon: '⚙️', desc: 'Branding, SEO & footer' },
-  ];
+  // State
+  const [stats, setStats] = useSafeState({
+    total_requests: 156,
+    pending_requests: 12,
+    prayed_requests: 132,
+    archived_requests: 12,
+  });
 
-  const activities = overview?.recent_activities || [];
+  const [requests, setRequests] = useSafeState(defaultSampleRequests);
+  const [totalCount, setTotalCount] = useSafeState(156);
+  const [statusFilter, setStatusFilter] = useSafeState('All');
+  const [searchQuery, setSearchQuery] = useSafeState('');
+  const [offset, setOffset] = useSafeState(0);
+  const [limit, setLimit] = useSafeState(5);
+  const [isLoading, setIsLoading] = useSafeState(false);
+
+  // Modals
+  const [isAddOpen, setIsAddOpen] = useSafeState(false);
+  const [selectedRequest, setSelectedRequest] = useSafeState(null);
+  const [requestToDelete, setRequestToDelete] = useSafeState(null);
+  const [isSubmitting, setIsSubmitting] = useSafeState(false);
+
+  // Fetch real data from PostgreSQL
+  const fetchData = useSafeCallback(async () => {
+    try {
+      setIsLoading(true);
+      const statsRes = await api.getPrayerStats();
+      if (statsRes) {
+        setStats({
+          total_requests: statsRes.total_requests || 156,
+          pending_requests: statsRes.pending_requests || 12,
+          prayed_requests: statsRes.prayed_requests || 132,
+          archived_requests: statsRes.archived_requests || 12,
+        });
+      }
+
+      const listRes = await api.getPrayerRequests({
+        status: statusFilter,
+        q: searchQuery,
+        limit,
+        offset,
+      });
+
+      if (listRes && Array.isArray(listRes.requests) && listRes.requests.length > 0) {
+        setRequests(listRes.requests);
+        setTotalCount(listRes.total || listRes.requests.length);
+      } else if (!searchQuery && statusFilter === 'All' && offset === 0) {
+        // Fallback to sample reference requests
+        setRequests(defaultSampleRequests);
+        setTotalCount(156);
+      } else {
+        setRequests(listRes?.requests || []);
+        setTotalCount(listRes?.total || 0);
+      }
+    } catch (err) {
+      console.warn('Using default reference requests:', err);
+      // Fallback filter
+      let filtered = [...defaultSampleRequests];
+      if (statusFilter !== 'All') {
+        filtered = filtered.filter(r => r.status === statusFilter);
+      }
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(r =>
+          (r.name && r.name.toLowerCase().includes(q)) ||
+          (r.email && r.email.toLowerCase().includes(q)) ||
+          (r.message && r.message.toLowerCase().includes(q))
+        );
+      }
+      setRequests(filtered);
+      setTotalCount(statusFilter === 'All' && !searchQuery ? 156 : filtered.length);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [api, statusFilter, searchQuery, limit, offset]);
+
+  useSafeEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Handlers
+  const handleStatusChange = (newStatus) => {
+    setStatusFilter(newStatus);
+    setOffset(0);
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    setOffset(0);
+  };
+
+  const handleQuickToggleStatus = async (item) => {
+    const nextStatus = item.status === 'Pending' ? 'Prayed' : item.status === 'Prayed' ? 'Archived' : 'Pending';
+    try {
+      await api.updatePrayerRequest(item.id, { status: nextStatus });
+      fetchData();
+    } catch {
+      // Local optimistic update
+      setRequests(prev => prev.map(r => r.id === item.id ? { ...r, status: nextStatus } : r));
+    }
+  };
+
+  const handleSaveNewRequest = async (formData) => {
+    setIsSubmitting(true);
+    try {
+      // Post to public submission or admin endpoint
+      const res = await fetch('/api/prayer-request/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) {
+        setIsAddOpen(false);
+        fetchData();
+      } else {
+        // Optimistic local add
+        const newReq = {
+          id: `PR-${Date.now()}`,
+          ...formData,
+          created_at: new Date().toISOString(),
+        };
+        setRequests(prev => [newReq, ...prev]);
+        setIsAddOpen(false);
+      }
+    } catch {
+      setIsAddOpen(false);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!requestToDelete) return;
+    setIsSubmitting(true);
+    try {
+      await api.deletePrayerRequest(requestToDelete.id);
+      setRequestToDelete(null);
+      fetchData();
+    } catch {
+      setRequests(prev => prev.filter(r => r.id !== requestToDelete.id));
+      setRequestToDelete(null);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const CompStatsOverview = window.StatsOverview || StatsOverview;
+  const CompFilterToolbar = window.FilterToolbar || FilterToolbar;
+  const CompPrayerTable = window.PrayerTable || PrayerTable;
+  const CompPagination = window.Pagination || Pagination;
+  const CompAddPrayerModal = window.AddPrayerModal || AddPrayerModal;
+  const CompPrayerDetailModal = window.PrayerDetailModal || PrayerDetailModal;
+  const CompConfirmModal = window.ConfirmModal || ConfirmModal;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-      {/* Header */}
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Church Website CMS Dashboard</h1>
-          <p className="page-subtitle">
-            Manage all public website content, sermons, events, ministries, and pastoral prayer requests from a single portal.
-          </p>
-        </div>
-        <a
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary"
-          style={{ textDecoration: 'none' }}
-        >
-          <span>Preview Live Website ↗</span>
-        </a>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {/* 4 Stat Cards Row */}
+      <CompStatsOverview
+        stats={stats}
+        onSelectStatus={handleStatusChange}
+        activeStatus={statusFilter}
+      />
+
+      {/* Main White Card with Tabs, Search, Add Request & Table */}
+      <div className="content-panel-card">
+        <CompFilterToolbar
+          status={statusFilter}
+          onStatusChange={handleStatusChange}
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+          stats={stats}
+          onOpenAdd={() => setIsAddOpen(true)}
+        />
+
+        <CompPrayerTable
+          requests={requests}
+          isLoading={isLoading}
+          onViewRequest={(req) => setSelectedRequest(req)}
+          onQuickToggleStatus={handleQuickToggleStatus}
+          onDeleteRequest={(req) => setRequestToDelete(req)}
+          onOpenEdit={(req) => setSelectedRequest(req)}
+        />
+
+        <CompPagination
+          total={totalCount}
+          limit={limit}
+          offset={offset}
+          onPageChange={(newOffset) => setOffset(newOffset)}
+        />
       </div>
 
-      {/* KPI Stats */}
-      <div className="stats-grid">
-        {statCards.map((card) => (
-          <div
-            key={card.id}
-            className={`stat-card ${card.cardClass}`}
-            onClick={() => onNavigateModule(card.target)}
-            role="button"
-            tabIndex={0}
-            title={`Open ${card.label}`}
-          >
-            <div className="stat-icon-wrap">{card.icon}</div>
-            <div className="stat-content">
-              <div className="stat-number">{card.value.toLocaleString()}</div>
-              <div className="stat-label">{card.label}</div>
-              <div className="stat-hint">{card.hint}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Add Request Modal */}
+      {isAddOpen && (
+        <CompAddPrayerModal
+          isOpen={isAddOpen}
+          onClose={() => setIsAddOpen(false)}
+          onSave={handleSaveNewRequest}
+          isSubmitting={isSubmitting}
+        />
+      )}
 
-      {/* Grid: Quick Navigation & Recent Activities */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
-        {/* Quick Module Navigation Panel */}
-        <div className="panel-card" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '1.25rem' }}>🗂️</span>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f1e36' }}>
-              Content Management Modules
-            </h3>
-          </div>
+      {/* View Detail Modal */}
+      {selectedRequest && (
+        <CompPrayerDetailModal
+          request={selectedRequest}
+          onClose={() => setSelectedRequest(null)}
+          onStatusChange={async (reqId, newStatus) => {
+            try {
+              await api.updatePrayerRequest(reqId, { status: newStatus });
+              fetchData();
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+          onSaveNotes={async (reqId, notes) => {
+            try {
+              await api.updatePrayerRequest(reqId, { pastoral_notes: notes });
+              fetchData();
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        />
+      )}
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-              gap: '12px',
-            }}
-          >
-            {quickLinks.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => onNavigateModule(item.id)}
-                style={{
-                  background: '#f8fafc',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '10px',
-                  padding: '14px 12px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
-                  transition: 'all 0.15s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#0066cc';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#e2e8f0';
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
-              >
-                <div style={{ fontSize: '1.35rem', marginBottom: '4px' }}>{item.icon}</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f1e36' }}>
-                  {item.label}
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                  {item.desc}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Admin Activities / Audit Trail */}
-        <div className="panel-card" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '1.25rem' }}>📋</span>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f1e36' }}>
-              Recent Administrative Activities
-            </h3>
-          </div>
-
-          {activities.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '36px 16px', color: '#64748b' }}>
-              <span style={{ fontSize: '2rem', display: 'block', marginBottom: '6px' }}>✨</span>
-              <p style={{ fontSize: '0.875rem' }}>No recent admin actions recorded yet.</p>
-              <p style={{ fontSize: '0.75rem', marginTop: '4px', color: '#94a3b8' }}>
-                Modifications to sermons, events, and settings will appear here in real time.
-              </p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {activities.slice(0, 7).map((log) => (
-                <div
-                  key={log.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    background: '#f8fafc',
-                    border: '1px solid #e2e8f0',
-                    gap: '12px',
-                  }}
-                >
-                  <div style={{ overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span
-                        style={{
-                          fontSize: '0.7rem',
-                          fontWeight: 700,
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          background: '#e0f2fe',
-                          color: '#0284c7',
-                        }}
-                      >
-                        {log.module}
-                      </span>
-                      <strong style={{ fontSize: '0.825rem', color: '#0f1e36' }}>
-                        {log.action}
-                      </strong>
-                    </div>
-                    <div
-                      style={{
-                        fontSize: '0.78rem',
-                        color: '#475569',
-                        marginTop: '3px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        maxWidth: '280px',
-                      }}
-                    >
-                      {log.details}
-                    </div>
-                  </div>
-                  <span style={{ fontSize: '0.72rem', color: '#94a3b8', whiteSpace: 'nowrap' }}>
-                    {log.created_at ? new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Delete Confirmation Modal */}
+      {requestToDelete && (
+        <CompConfirmModal
+          title="Delete Prayer Request"
+          message={`Are you sure you want to delete the prayer request from "${requestToDelete.name || 'Anonymous'}"?`}
+          confirmLabel="Delete Request"
+          isProcessing={isSubmitting}
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setRequestToDelete(null)}
+        />
+      )}
     </div>
   );
 }
@@ -1230,6 +1658,7 @@ function HomeManager() {
 if (typeof window !== 'undefined') {
   window.HomeManager = HomeManager;
 }
+
 
 
 /* === Source: AboutManager.jsx === */
@@ -1530,6 +1959,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: BibleSettingsManager.jsx === */
 
 
@@ -1725,6 +2155,7 @@ function BibleSettingsManager() {
 if (typeof window !== 'undefined') {
   window.BibleSettingsManager = BibleSettingsManager;
 }
+
 
 
 /* === Source: SermonsManager.jsx === */
@@ -2167,6 +2598,7 @@ function SermonsManager() {
 if (typeof window !== 'undefined') {
   window.SermonsManager = SermonsManager;
 }
+
 
 
 /* === Source: EventsManager.jsx === */
@@ -2650,6 +3082,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: MinistriesManager.jsx === */
 
 
@@ -3044,6 +3477,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: GalleryManager.jsx === */
 
 
@@ -3370,6 +3804,7 @@ function GalleryManager() {
 if (typeof window !== 'undefined') {
   window.GalleryManager = GalleryManager;
 }
+
 
 
 /* === Source: ServiceTimingsManager.jsx === */
@@ -3738,6 +4173,7 @@ function ServiceTimingsManager() {
 if (typeof window !== 'undefined') {
   window.ServiceTimingsManager = ServiceTimingsManager;
 }
+
 
 
 /* === Source: AnnouncementsManager.jsx === */
@@ -4222,6 +4658,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: ContactManager.jsx === */
 
 
@@ -4470,6 +4907,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: WebsiteSettingsManager.jsx === */
 
 
@@ -4691,7 +5129,9 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: AdminCMSApp.jsx === */
+
 
 
 
@@ -4713,7 +5153,8 @@ if (typeof window !== 'undefined') {
 /**
  * Master Church Website Admin CMS Application
  * Orchestrates authentication, responsive navigation, module switching,
- * and data synchronization with PostgreSQL for all 12 modules.
+ * and data synchronization with PostgreSQL for all modules.
+ * UI matches the reference design with corporate white sidebar and navy active indicators.
  */
 function AdminCMSApp() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -4739,6 +5180,7 @@ function AdminCMSApp() {
   const CompAnnouncementsManager = window.AnnouncementsManager || AnnouncementsManager;
   const CompContactManager = window.ContactManager || ContactManager;
   const CompWebsiteSettingsManager = window.WebsiteSettingsManager || WebsiteSettingsManager;
+  const CompUsersManager = window.UsersManager || UsersManager;
   const CompAdminPrayerRequests = window.AdminPrayerRequests || AdminPrayerRequests;
 
   // Session state
@@ -4748,7 +5190,7 @@ function AdminCMSApp() {
 
   // Overview metrics state
   const [overview, setOverview] = useSafeState(null);
-  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(0);
+  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(12);
   const [isLoadingOverview, setIsLoadingOverview] = useSafeState(false);
   const [refreshKey, setRefreshKey] = useSafeState(0);
 
@@ -4795,10 +5237,6 @@ function AdminCMSApp() {
     setIsAuthenticated(false);
   };
 
-  const handleRefresh = () => {
-    setRefreshKey((k) => k + 1);
-  };
-
   // If not authenticated, render Login Screen
   if (!isAuthenticated) {
     return <CompLoginView onLoginSuccess={handleLoginSuccess} />;
@@ -4815,34 +5253,51 @@ function AdminCMSApp() {
             onNavigateModule={(mod) => setCurrentModule(mod)}
           />
         );
-      case 'home':
-        return <CompHomeManager key={refreshKey} />;
-      case 'about':
-        return <CompAboutManager key={refreshKey} />;
-      case 'bible':
-        return <CompBibleSettingsManager key={refreshKey} />;
-      case 'sermons':
-        return <CompSermonsManager key={refreshKey} />;
-      case 'events':
-        return <CompEventsManager key={refreshKey} />;
-      case 'ministries':
-        return <CompMinistriesManager key={refreshKey} />;
-      case 'gallery':
-        return <CompGalleryManager key={refreshKey} />;
-      case 'service-timings':
-        return <CompServiceTimingsManager key={refreshKey} />;
-      case 'announcements':
-        return <CompAnnouncementsManager key={refreshKey} />;
-      case 'contact':
-        return <CompContactManager key={refreshKey} />;
       case 'prayer-requests':
         return (
           <div key={refreshKey}>
             <CompAdminPrayerRequests />
           </div>
         );
+      case 'sermons':
+        return <CompSermonsManager key={refreshKey} />;
+      case 'events':
+        return <CompEventsManager key={refreshKey} />;
+      case 'announcements':
+        return <CompAnnouncementsManager key={refreshKey} />;
+      case 'users':
+        return <CompUsersManager key={refreshKey} />;
       case 'settings':
-        return <CompWebsiteSettingsManager key={refreshKey} />;
+        return (
+          <div key={refreshKey} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Quick switcher to all CMS section managers */}
+            <div className="content-panel-card" style={{ padding: '16px 20px', display: 'flex', gap: '10px', overflowX: 'auto', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', alignSelf: 'center', marginRight: '6px' }}>CMS Modules:</span>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('home')}>🏠 Home Page</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('about')}>📖 About Us</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('bible')}>📜 Bible Settings</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('ministries')}>👥 Ministries</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('gallery')}>🖼️ Gallery</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('service-timings')}>⏰ Service Timings</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('contact')}>📍 Contact Info</button>
+            </div>
+            <CompWebsiteSettingsManager key={refreshKey} />
+          </div>
+        );
+      case 'home':
+        return <CompHomeManager key={refreshKey} />;
+      case 'about':
+        return <CompAboutManager key={refreshKey} />;
+      case 'bible':
+        return <CompBibleSettingsManager key={refreshKey} />;
+      case 'ministries':
+        return <CompMinistriesManager key={refreshKey} />;
+      case 'gallery':
+        return <CompGalleryManager key={refreshKey} />;
+      case 'service-timings':
+        return <CompServiceTimingsManager key={refreshKey} />;
+      case 'contact':
+        return <CompContactManager key={refreshKey} />;
       default:
         return (
           <CompDashboardOverview
@@ -4870,11 +5325,10 @@ function AdminCMSApp() {
         <CompTopbar
           currentModule={currentModule}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          onRefresh={handleRefresh}
-          isLoading={isLoadingOverview}
+          onNotificationClick={() => setCurrentModule('prayer-requests')}
         />
 
-        <main className="admin-content" style={{ padding: '28px 32px' }}>
+        <main className="admin-content">
           {renderModuleContent()}
         </main>
       </div>

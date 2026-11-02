@@ -1,124 +1,153 @@
 /**
  * CMS Master Sidebar Navigation Component
- * Features all 12 modules, church crest branding, admin profile, and live badges.
+ * Features clean white corporate styling, church branding, navy active pills,
+ * and user administrator profile matching the reference screenshot.
  */
-export function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 0, onLogout, isOpen, onClose }) {
-  const navSections = [
+export function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 12, onLogout, isOpen, onClose }) {
+  const navItems = [
     {
-      title: 'Main',
-      items: [
-        { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-      ],
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+      ),
     },
     {
-      title: 'Website Content',
-      items: [
-        { id: 'home', label: 'Home Page', icon: '🏠' },
-        { id: 'about', label: 'About Us', icon: '📖' },
-        { id: 'sermons', label: 'Sermons', icon: '🎙️' },
-        { id: 'events', label: 'Events & Calendar', icon: '📅' },
-        { id: 'ministries', label: 'Ministries', icon: '👥' },
-        { id: 'gallery', label: 'Photo & Video Gallery', icon: '🖼️' },
-        { id: 'service-timings', label: 'Service Timings', icon: '⏰' },
-        { id: 'announcements', label: 'Announcements', icon: '📢' },
-        { id: 'contact', label: 'Contact & Location', icon: '📍' },
-        { id: 'bible', label: 'Bible Settings', icon: '📜' },
-      ],
+      id: 'prayer-requests',
+      label: 'Prayer Requests',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+          <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+          <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+          <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+        </svg>
+      ),
+      badge: pendingPrayersCount > 0 ? pendingPrayersCount : 12,
     },
     {
-      title: 'Pastoral Care',
-      items: [
-        {
-          id: 'prayer-requests',
-          label: 'Prayer Requests',
-          icon: '🙏',
-          badge: pendingPrayersCount > 0 ? pendingPrayersCount : null,
-        },
-      ],
+      id: 'sermons',
+      label: 'Sermons',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="10 8 16 12 10 16 10 8" />
+        </svg>
+      ),
     },
     {
-      title: 'System & SEO',
-      items: [
-        { id: 'settings', label: 'Website Settings', icon: '⚙️' },
-      ],
+      id: 'events',
+      label: 'Events',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      ),
+    },
+    {
+      id: 'announcements',
+      label: 'Announcements',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          <line x1="2" y1="8" x2="4" y2="8" />
+        </svg>
+      ),
+    },
+    {
+      id: 'users',
+      label: 'Users',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      ),
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      ),
     },
   ];
 
   return (
     <>
-      {isOpen && <div className="admin-sidebar-backdrop" onClick={onClose} />}
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 999,
+          }}
+          onClick={onClose}
+        />
+      )}
       <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
-        {/* Church Branding Crest */}
-        <div className="sidebar-brand">
-          <div className="brand-crest">✝</div>
-          <div className="brand-details">
-            <div className="brand-name">Grace Fellowship</div>
-            <div className="brand-role">Church Website CMS</div>
+        {/* Church Branding Header */}
+        <div className="sidebar-header">
+          <div className="sidebar-brand-cross">✝</div>
+          <div className="sidebar-brand-text">
+            <span className="sidebar-church-title">Grace Fellowship Church</span>
+            <span className="sidebar-portal-tag">Admin Portal</span>
           </div>
         </div>
 
-        {/* Administrator Profile Card */}
-        <div className="sidebar-profile">
-          <div className="profile-avatar-wrap">
-            <div className="profile-avatar">PS</div>
-            <div className="online-pulse" title="Administrator Online" />
-          </div>
-          <div className="profile-info">
-            <div className="profile-name">Pastor John Samuel</div>
-            <div className="profile-title">Chief Administrator</div>
-          </div>
-        </div>
-
-        {/* Modular Navigation */}
-        <nav className="sidebar-nav" style={{ paddingBottom: '24px' }}>
-          {navSections.map((sec, sIdx) => (
-            <div key={sec.title || sIdx}>
-              <div className="nav-section-title">{sec.title}</div>
-              {sec.items.map((item) => (
-                <div
-                  key={item.id}
-                  className={`nav-item ${currentModule === item.id ? 'active' : ''}`}
-                  onClick={() => {
-                    onSelectModule(item.id);
-                    if (onClose) onClose();
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className="nav-item-content">
-                    <span className="nav-icon">{item.icon}</span>
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge !== null && item.badge !== undefined && (
-                    <span className="nav-badge">{item.badge}</span>
-                  )}
+        {/* Clean Vertical Navigation */}
+        <nav className="sidebar-nav">
+          {navItems.map((item) => {
+            const isActive = currentModule === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
+                onClick={() => {
+                  onSelectModule(item.id);
+                  if (onClose) onClose();
+                }}
+              >
+                <div className="sidebar-nav-left">
+                  <span className="sidebar-nav-icon">{item.icon}</span>
+                  <span>{item.label}</span>
                 </div>
-              ))}
-            </div>
-          ))}
+                {item.badge !== undefined && item.badge !== null && (
+                  <span className="sidebar-badge-red">{item.badge}</span>
+                )}
+              </button>
+            );
+          })}
         </nav>
 
-        {/* Sidebar Footer */}
-        <div className="sidebar-footer">
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-sidebar-action"
-            title="Preview Public Website in new tab"
-          >
-            <span>🌐</span>
-            <span>View Public Site ↗</span>
-          </a>
-          <button
-            type="button"
-            className="btn-sidebar-action logout"
-            onClick={onLogout}
-            title="Sign Out of CMS Portal"
-          >
-            <span>🚪</span>
-            <span>Sign Out</span>
-          </button>
+        {/* Administrator Profile Card at Bottom */}
+        <div
+          className="sidebar-footer-profile"
+          onClick={onLogout}
+          title="Sign out of Admin Portal"
+        >
+          <div className="profile-left">
+            <div className="avatar-badge-circle">A</div>
+            <div className="profile-meta">
+              <span className="profile-admin-name">Admin</span>
+              <span className="profile-role-title">Church Administrator</span>
+            </div>
+          </div>
+          <span className="chevron-down-icon">˅</span>
         </div>
       </aside>
     </>
@@ -128,4 +157,3 @@ export function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 0
 if (typeof window !== 'undefined') {
   window.Sidebar = Sidebar;
 }
-

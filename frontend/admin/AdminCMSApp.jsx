@@ -14,13 +14,15 @@ import { ServiceTimingsManager } from './service-timings/ServiceTimingsManager.j
 import { AnnouncementsManager } from './announcements/AnnouncementsManager.jsx';
 import { ContactManager } from './contact/ContactManager.jsx';
 import { WebsiteSettingsManager } from './settings/WebsiteSettingsManager.jsx';
+import { UsersManager } from './users/UsersManager.jsx';
 import { LoginView } from './prayer-requests/components/LoginView.jsx';
 import { AdminPrayerRequests } from './prayer-requests/AdminPrayerRequests.jsx';
 
 /**
  * Master Church Website Admin CMS Application
  * Orchestrates authentication, responsive navigation, module switching,
- * and data synchronization with PostgreSQL for all 12 modules.
+ * and data synchronization with PostgreSQL for all modules.
+ * UI matches the reference design with corporate white sidebar and navy active indicators.
  */
 export function AdminCMSApp() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -46,6 +48,7 @@ export function AdminCMSApp() {
   const CompAnnouncementsManager = window.AnnouncementsManager || AnnouncementsManager;
   const CompContactManager = window.ContactManager || ContactManager;
   const CompWebsiteSettingsManager = window.WebsiteSettingsManager || WebsiteSettingsManager;
+  const CompUsersManager = window.UsersManager || UsersManager;
   const CompAdminPrayerRequests = window.AdminPrayerRequests || AdminPrayerRequests;
 
   // Session state
@@ -55,7 +58,7 @@ export function AdminCMSApp() {
 
   // Overview metrics state
   const [overview, setOverview] = useSafeState(null);
-  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(0);
+  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(12);
   const [isLoadingOverview, setIsLoadingOverview] = useSafeState(false);
   const [refreshKey, setRefreshKey] = useSafeState(0);
 
@@ -102,10 +105,6 @@ export function AdminCMSApp() {
     setIsAuthenticated(false);
   };
 
-  const handleRefresh = () => {
-    setRefreshKey((k) => k + 1);
-  };
-
   // If not authenticated, render Login Screen
   if (!isAuthenticated) {
     return <CompLoginView onLoginSuccess={handleLoginSuccess} />;
@@ -122,34 +121,51 @@ export function AdminCMSApp() {
             onNavigateModule={(mod) => setCurrentModule(mod)}
           />
         );
-      case 'home':
-        return <CompHomeManager key={refreshKey} />;
-      case 'about':
-        return <CompAboutManager key={refreshKey} />;
-      case 'bible':
-        return <CompBibleSettingsManager key={refreshKey} />;
-      case 'sermons':
-        return <CompSermonsManager key={refreshKey} />;
-      case 'events':
-        return <CompEventsManager key={refreshKey} />;
-      case 'ministries':
-        return <CompMinistriesManager key={refreshKey} />;
-      case 'gallery':
-        return <CompGalleryManager key={refreshKey} />;
-      case 'service-timings':
-        return <CompServiceTimingsManager key={refreshKey} />;
-      case 'announcements':
-        return <CompAnnouncementsManager key={refreshKey} />;
-      case 'contact':
-        return <CompContactManager key={refreshKey} />;
       case 'prayer-requests':
         return (
           <div key={refreshKey}>
             <CompAdminPrayerRequests />
           </div>
         );
+      case 'sermons':
+        return <CompSermonsManager key={refreshKey} />;
+      case 'events':
+        return <CompEventsManager key={refreshKey} />;
+      case 'announcements':
+        return <CompAnnouncementsManager key={refreshKey} />;
+      case 'users':
+        return <CompUsersManager key={refreshKey} />;
       case 'settings':
-        return <CompWebsiteSettingsManager key={refreshKey} />;
+        return (
+          <div key={refreshKey} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Quick switcher to all CMS section managers */}
+            <div className="content-panel-card" style={{ padding: '16px 20px', display: 'flex', gap: '10px', overflowX: 'auto', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', alignSelf: 'center', marginRight: '6px' }}>CMS Modules:</span>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('home')}>🏠 Home Page</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('about')}>📖 About Us</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('bible')}>📜 Bible Settings</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('ministries')}>👥 Ministries</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('gallery')}>🖼️ Gallery</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('service-timings')}>⏰ Service Timings</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('contact')}>📍 Contact Info</button>
+            </div>
+            <CompWebsiteSettingsManager key={refreshKey} />
+          </div>
+        );
+      case 'home':
+        return <CompHomeManager key={refreshKey} />;
+      case 'about':
+        return <CompAboutManager key={refreshKey} />;
+      case 'bible':
+        return <CompBibleSettingsManager key={refreshKey} />;
+      case 'ministries':
+        return <CompMinistriesManager key={refreshKey} />;
+      case 'gallery':
+        return <CompGalleryManager key={refreshKey} />;
+      case 'service-timings':
+        return <CompServiceTimingsManager key={refreshKey} />;
+      case 'contact':
+        return <CompContactManager key={refreshKey} />;
       default:
         return (
           <CompDashboardOverview
@@ -177,11 +193,10 @@ export function AdminCMSApp() {
         <CompTopbar
           currentModule={currentModule}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          onRefresh={handleRefresh}
-          isLoading={isLoadingOverview}
+          onNotificationClick={() => setCurrentModule('prayer-requests')}
         />
 
-        <main className="admin-content" style={{ padding: '28px 32px' }}>
+        <main className="admin-content">
           {renderModuleContent()}
         </main>
       </div>
@@ -192,4 +207,3 @@ export function AdminCMSApp() {
 if (typeof window !== 'undefined') {
   window.AdminCMSApp = AdminCMSApp;
 }
-

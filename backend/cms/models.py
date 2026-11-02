@@ -399,3 +399,29 @@ class AuditLog(Base):
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 
+
+class AdminUser(Base):
+    """Pastoral team & administrator accounts."""
+    __tablename__ = "admin_users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(120), nullable=False)
+    email = Column(String(255), nullable=False, unique=True, index=True)
+    role = Column(String(100), nullable=False)
+    status = Column(String(20), default="Active", nullable=False)
+    avatar_initials = Column(String(10), default="A", nullable=False)
+    last_login = Column(String(60), default="Today", nullable=False)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "role": self.role,
+            "status": self.status,
+            "avatar_initials": self.avatar_initials,
+            "last_login": self.last_login,
+        }
+
+

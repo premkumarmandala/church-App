@@ -9,7 +9,17 @@ const STATIC_ASSETS = [
   './index.html',
   './bible-react.css',
   './BibleApp.jsx',
-  './mockData.js'
+  './mockData.js',
+  './components/Sidebar.jsx',
+  './components/TopBar.jsx',
+  './components/DailyVerseHero.jsx',
+  './components/ViewTabs.jsx',
+  './components/PassageNavigation.jsx',
+  './components/ScriptureReader.jsx',
+  './components/SearchPanel.jsx',
+  './components/BookmarksPanel.jsx',
+  './components/OfflinePanel.jsx',
+  '../design-tokens.css'
 ];
 
 self.addEventListener('install', (event) => {

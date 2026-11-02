@@ -1,5 +1,5 @@
 """Pydantic schemas and data contracts for Bible API."""
-from typing import Optional
+from typing import Optional, Union
 from pydantic import BaseModel, Field
 
 
@@ -27,7 +27,7 @@ class BookSummary(BaseModel):
 
 class Verse(BaseModel):
     """A single verse representation."""
-    verse: str = Field(..., description="Verse number as string")
+    verse: Union[int, str] = Field(..., description="Verse number (integer or string)")
     text: str = Field(..., description="Verse scripture text")
 
 

@@ -39,6 +39,17 @@ function PassageNavigation({
     return Array.from({ length: count }, (_, i) => i + 1);
   }, [totalVerses]);
 
+  // Check boundary limits for Previous/Next chapter navigation
+  const currentBookIndex = React.useMemo(() => {
+    return booksList.findIndex((b) => b.slug === selectedBook);
+  }, [booksList, selectedBook]);
+
+  const isFirstPassage = (currentBookIndex <= 0 || currentBookIndex === -1) && selectedChapter <= 1;
+  const isLastPassage =
+    booksList.length > 0 &&
+    currentBookIndex >= booksList.length - 1 &&
+    selectedChapter >= totalChapters;
+
   return (
     <section className="passage-navigation-bar" aria-label="Scripture Passage Selectors">
       {/* Left Selectors Group */}
@@ -127,8 +138,8 @@ function PassageNavigation({
           type="button"
           className="btn-nav-prev"
           onClick={onPrevChapter}
-          disabled={selectedChapter <= 1}
-          title="Previous chapter"
+          disabled={isFirstPassage}
+          title={isFirstPassage ? "At beginning of Bible" : "Previous chapter"}
         >
           <span className="nav-arrow">&lt;</span>
           <span>Previous</span>
@@ -138,7 +149,8 @@ function PassageNavigation({
           type="button"
           className="btn-nav-next"
           onClick={onNextChapter}
-          title="Next chapter"
+          disabled={isLastPassage}
+          title={isLastPassage ? "At end of Bible" : "Next chapter"}
         >
           <span>Next</span>
           <span className="nav-arrow">&gt;</span>

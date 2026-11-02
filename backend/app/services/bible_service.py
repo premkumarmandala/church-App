@@ -1,10 +1,22 @@
 """Bible Scripture data service handling loading, caching, search, and retrieval."""
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
 from app.config import settings
+
+# Recognized alternative titles, spellings, and slugs
+COMMON_BOOK_ALIASES: dict[str, str] = {
+    "song of songs": "song-of-solomon",
+    "song-of-songs": "song-of-solomon",
+    "songofsongs": "song-of-solomon",
+    "songofsolomon": "song-of-solomon",
+    "canticle of canticles": "song-of-solomon",
+    "psalm": "psalms",
+    "revelations": "revelation",
+}
 
 
 class BibleService:
@@ -49,6 +61,13 @@ class BibleService:
 
         self._is_loaded = True
 
+        # Pre-warm frequently accessed books in memory
+        for pre_slug in ("genesis", "psalms", "matthew", "john"):
+            b_meta = self.books_by_slug.get(pre_slug)
+            if b_meta:
+                self.get_book_content("kjv", b_meta)
+                self.get_book_content("telugu", b_meta)
+
     def ensure_loaded(self) -> None:
         """Ensure data is loaded before processing queries."""
         if not self._is_loaded:
@@ -60,27 +79,42 @@ class BibleService:
         return self.books_meta
 
     def find_book(self, book_query: str) -> Optional[dict[str, Any]]:
-        """Look up a book by slug, name (English or Telugu), or ID."""
+        """Look up a book by slug, name (English or Telugu), ID, or common alias."""
         self.ensure_loaded()
         q = (book_query or "").strip().lower()
         if not q:
             return None
 
-        # Try slug first
+        # 1. Try slug directly
         if q in self.books_by_slug:
             return self.books_by_slug[q]
 
-        # Try name (English or Telugu)
+        # 2. Try exact name (English or Telugu)
         if q in self.books_by_name:
             return self.books_by_name[q]
 
-        # Try ID integer
+        # 3. Try known aliases
+        if q in COMMON_BOOK_ALIASES:
+            alias_target = COMMON_BOOK_ALIASES[q]
+            if alias_target in self.books_by_slug:
+                return self.books_by_slug[alias_target]
+
+        # 4. Try integer ID
         try:
             bid = int(q)
             if bid in self.books_by_id:
                 return self.books_by_id[bid]
         except ValueError:
             pass
+
+        # 5. Fuzzy / stripped match (e.g. '1john' -> '1-john', '1 corinthians' -> '1-corinthians')
+        clean_q = re.sub(r"[^a-z0-9]", "", q)
+        if clean_q:
+            for b in self.books_meta:
+                b_slug_clean = re.sub(r"[^a-z0-9]", "", b.get("slug", "").lower())
+                b_name_clean = re.sub(r"[^a-z0-9]", "", b.get("name", "").lower())
+                if clean_q == b_slug_clean or clean_q == b_name_clean:
+                    return b
 
         return None
 
@@ -222,17 +256,18 @@ class BibleService:
             }
 
         target_books = []
-        for b in self.books_meta:
-            if clean_testament != "all" and b.get("testament", "").lower() != clean_testament:
-                continue
-            if clean_book_slug:
-                b_slug = b.get("slug", "").lower()
-                b_name = b.get("name", "").lower()
-                if clean_book_slug not in (b_slug, b_name):
+        if clean_book_slug:
+            matched_b = self.find_book(clean_book_slug)
+            if matched_b:
+                target_books.append(matched_b)
+        else:
+            for b in self.books_meta:
+                if clean_testament != "all" and b.get("testament", "").lower() != clean_testament:
                     continue
-            target_books.append(b)
+                target_books.append(b)
 
         results: list[dict[str, Any]] = []
+        total_matches = 0
 
         for b in target_books:
             data = self.get_book_content(clean_trans, b)
@@ -245,37 +280,29 @@ class BibleService:
                     text = v.get("text", "")
                     match_index = text.lower().find(clean_q)
                     if match_index != -1:
-                        v_num_val = int(v.get("verse", 1))
-                        results.append({
-                            "bookId": b["id"],
-                            "bookSlug": b["slug"],
-                            "bookName": b["name"],
-                            "teluguBookName": b["teluguName"],
-                            "chapter": ch_num_val,
-                            "verse": v_num_val,
-                            "referenceEn": f"{b['name']} {ch_num_val}:{v_num_val}",
-                            "referenceTe": f"{b['teluguName']} {ch_num_val}:{v_num_val}",
-                            "text": text,
-                            "matchIndex": match_index,
-                            "translation": clean_trans,
-                        })
-
-                        if len(results) >= limit:
-                            return {
-                                "query": query,
+                        total_matches += 1
+                        if len(results) < limit:
+                            v_num_val = int(v.get("verse", 1))
+                            results.append({
+                                "bookId": b["id"],
+                                "bookSlug": b["slug"],
+                                "bookName": b["name"],
+                                "teluguBookName": b["teluguName"],
+                                "chapter": ch_num_val,
+                                "verse": v_num_val,
+                                "referenceEn": f"{b['name']} {ch_num_val}:{v_num_val}",
+                                "referenceTe": f"{b['teluguName']} {ch_num_val}:{v_num_val}",
+                                "text": text,
+                                "matchIndex": match_index,
                                 "translation": clean_trans,
-                                "testament": clean_testament,
-                                "total": len(results),
-                                "hasMore": True,
-                                "results": results,
-                            }
+                            })
 
         return {
             "query": query,
             "translation": clean_trans,
             "testament": clean_testament,
-            "total": len(results),
-            "hasMore": False,
+            "total": total_matches,
+            "hasMore": total_matches > len(results),
             "results": results,
         }
 

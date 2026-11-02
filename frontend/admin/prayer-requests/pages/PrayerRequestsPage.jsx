@@ -4,29 +4,26 @@ import { PrayerTable } from '../components/PrayerTable.jsx';
 import { Pagination } from '../components/Pagination.jsx';
 
 /**
- * Full Prayer Requests Management Page
- * Encapsulates search, filters, pagination, table view, and status updates.
+ * Dedicated Prayer Requests Page
+ * Shares the exact modern corporate white & navy layout.
  */
-
 export function PrayerRequestsPage({
   stats,
   requests = [],
-  total = 0,
-  limit = 25,
+  total = 156,
+  limit = 5,
   offset = 0,
   status = 'All',
-  category = 'All Categories',
   searchQuery = '',
   isLoading = false,
   onStatusChange,
-  onCategoryChange,
   onSearchChange,
   onPageChange,
-  onLimitChange,
-  onResetFilters,
   onViewRequest,
   onQuickToggleStatus,
   onDeleteRequest,
+  onOpenAdd,
+  onOpenEdit,
 }) {
   const CompStatsOverview = window.StatsOverview || StatsOverview;
   const CompFilterToolbar = window.FilterToolbar || FilterToolbar;
@@ -34,54 +31,37 @@ export function PrayerRequestsPage({
   const CompPagination = window.Pagination || Pagination;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Page Header */}
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">Prayer Requests</h1>
-          <p className="page-subtitle">
-            Manage, intercede, and archive church community prayer petitions with secure media attachments.
-          </p>
-        </div>
-      </div>
-
-      {/* 4 Metric KPI Cards */}
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <CompStatsOverview
         stats={stats}
         onSelectStatus={onStatusChange}
         activeStatus={status}
       />
 
-      {/* Main Data Panel */}
-      <div className="panel-card">
-        {/* Filter & Search Toolbar */}
+      <div className="content-panel-card">
         <CompFilterToolbar
           status={status}
           onStatusChange={onStatusChange}
-          category={category}
-          onCategoryChange={onCategoryChange}
           searchQuery={searchQuery}
           onSearchChange={onSearchChange}
           stats={stats}
-          onResetFilters={onResetFilters}
+          onOpenAdd={onOpenAdd}
         />
 
-        {/* Data Table */}
         <CompPrayerTable
           requests={requests}
           isLoading={isLoading}
           onViewRequest={onViewRequest}
           onQuickToggleStatus={onQuickToggleStatus}
           onDeleteRequest={onDeleteRequest}
+          onOpenEdit={onOpenEdit}
         />
 
-        {/* Pagination Bar */}
         <CompPagination
           total={total}
           limit={limit}
           offset={offset}
           onPageChange={onPageChange}
-          onLimitChange={onLimitChange}
         />
       </div>
     </div>

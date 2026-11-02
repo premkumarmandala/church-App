@@ -473,6 +473,18 @@ select {
   color: var(--accent-green);
 }
 
+.topbar-status-pill.offline {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  color: #b45309;
+}
+
+[data-theme="dark"] .topbar-status-pill.offline {
+  background: rgba(234, 179, 8, 0.18);
+  border-color: rgba(234, 179, 8, 0.45);
+  color: #fde047;
+}
+
 .status-indicator-dot {
   font-size: 0.65rem;
   line-height: 1;
@@ -1064,6 +1076,100 @@ select {
 
 .btn-verse-bookmark.bookmarked {
   color: var(--accent-gold);
+}
+
+/* ==========================================================================
+   Parallel Bilingual Reading Mode Styles
+   ========================================================================== */
+.reader-view-toggle-pill {
+  display: inline-flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 2px;
+  gap: 2px;
+}
+
+.btn-mode-toggle {
+  background: transparent;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-mode-toggle:hover {
+  color: var(--text-primary);
+}
+
+.btn-mode-toggle.active {
+  background: var(--accent-navy);
+  color: #ffffff;
+  box-shadow: var(--shadow-xs);
+}
+
+[data-theme="dark"] .btn-mode-toggle.active {
+  background: var(--accent-gold);
+  color: #0f172a;
+}
+
+.verse-row-container.parallel-mode-row {
+  align-items: stretch;
+}
+
+.verse-bilingual-columns {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 768px) {
+  .verse-bilingual-columns {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.verse-lang-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bilingual-lang-tag {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(15, 30, 54, 0.06);
+  color: var(--navy-800);
+}
+
+[data-theme="dark"] .bilingual-lang-tag {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.verse-lang-col.secondary-lang-col {
+  border-left: 1px dashed var(--border-subtle);
+  padding-left: 14px;
+}
+
+@media (max-width: 768px) {
+  .verse-lang-col.secondary-lang-col {
+    border-left: none;
+    border-top: 1px dashed var(--border-subtle);
+    padding-left: 0;
+    padding-top: 8px;
+  }
 }
 
 /* ==========================================================================

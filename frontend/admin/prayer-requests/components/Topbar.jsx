@@ -1,59 +1,82 @@
 /**
- * Topbar Component
- * Provides breadcrumb trail, mobile sidebar drawer toggle,
- * live date/time indicator, and data refresh button.
+ * Topbar Navigation Component
+ * Matches the reference screenshot with page titles, notification bell,
+ * and user profile avatar.
  */
+export function Topbar({ currentView = 'dashboard', onToggleSidebar, onNotificationClick }) {
+  const titles = {
+    dashboard: {
+      title: 'Dashboard',
+      subtitle: 'Overview of prayer requests and church activities',
+    },
+    'prayer-requests': {
+      title: 'Prayer Requests',
+      subtitle: 'Manage, intercede, and archive church community prayer petitions',
+    },
+    sermons: {
+      title: 'Sermons Library',
+      subtitle: 'Manage recorded video messages, audio podcasts, and notes',
+    },
+    events: {
+      title: 'Events & Calendar',
+      subtitle: 'Upcoming gatherings, conferences, registrations, and posters',
+    },
+    announcements: {
+      title: 'Announcements',
+      subtitle: 'Publish church bulletins, fasting notices, and urgent alerts',
+    },
+    users: {
+      title: 'Users & Team',
+      subtitle: 'Pastoral staff, prayer coordinators, and administrator accounts',
+    },
+    settings: {
+      title: 'Settings',
+      subtitle: 'Website settings, prayer preferences, and administration options',
+    },
+  };
 
-export function Topbar({ currentView, onToggleSidebar, onRefresh, isLoading }) {
-  const todayFormatted = new Intl.DateTimeFormat('en-US', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date());
-
-  const viewTitles = {
-    dashboard: 'Dashboard Overview',
-    'prayer-requests': 'Prayer Requests',
+  const currentInfo = titles[currentView] || {
+    title: 'Dashboard',
+    subtitle: 'Overview of prayer requests and church activities',
   };
 
   return (
-    <header className="admin-topbar">
-      <div className="topbar-left">
-        <button
-          type="button"
-          className="btn-mobile-menu"
-          onClick={onToggleSidebar}
-          aria-label="Toggle navigation menu"
-        >
-          ☰
-        </button>
-        <div className="breadcrumbs">
-          <span>Church Admin</span>
-          <span>/</span>
-          <span className="breadcrumb-active">{viewTitles[currentView] || 'Prayer Requests'}</span>
+    <div className="admin-header-row">
+      <div className="admin-header-titles">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            type="button"
+            className="btn-mobile-toggle"
+            onClick={onToggleSidebar}
+            aria-label="Toggle Navigation"
+          >
+            ☰
+          </button>
+          <h1 className="admin-page-heading">{currentInfo.title}</h1>
         </div>
+        <p className="admin-page-subheading">{currentInfo.subtitle}</p>
       </div>
 
-      <div className="topbar-right">
-        <div className="live-indicator">
-          <div className="status-dot-pulse" />
-          <span>{todayFormatted}</span>
-        </div>
+      <div className="admin-header-actions">
         <button
           type="button"
-          className="btn-topbar-action"
-          onClick={onRefresh}
-          disabled={isLoading}
-          title="Refresh prayer records from database"
+          className="btn-bell-notification"
+          onClick={onNotificationClick}
+          title="12 Pending Prayer Requests"
+          aria-label="Notifications"
         >
-          <span style={{ display: 'inline-block', transform: isLoading ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s ease' }}>
-            🔄
-          </span>
-          <span>{isLoading ? 'Updating...' : 'Refresh'}</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span className="bell-unread-dot" />
         </button>
+
+        <div className="header-user-avatar" title="Logged in as Admin">
+          A
+        </div>
       </div>
-    </header>
+    </div>
   );
 }
 
