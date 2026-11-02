@@ -1,0 +1,14 @@
+/plan explain with simple terms and learly
+
+---
+
+/plan what is the file path.
+
+---
+
+/plan how to fix these issues.
+
+---
+
+proceed with
+  implementing the fixes step-by-step
