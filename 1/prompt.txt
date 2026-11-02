@@ -1,0 +1,106 @@
+explore the project.
+
+---
+
+run the test cases.
+
+---
+
+ok solve theses two test failures.
+
+---
+
+about prayer request site to send message to clint.
+
+---
+
+> i am sending deployed render link so give me short message just describe about this feature clear.
+
+---
+
+give commit message.
+
+---
+
+form which sources you have cloned the bible json files.
+
+---
+
+form which sources you have cloned the bible json files.
+
+---
+
+/plan creat back for prayer request site.
+
+---
+
+/plan creat back end to prayer request site.
+
+---
+
+/plan ## Task: Connect Prayer Request Feature to PostgreSQL
+
+Connect my existing Prayer Request frontend to the backend using **PostgreSQL**.
+
+1. Inspect the existing project and reuse its backend architecture.
+2. Configure PostgreSQL using environment variables.
+3. Create a `prayer_requests` table containing:
+   - Request ID
+   - Name, email, phone (optional)
+   - Prayer category
+   - Prayer message
+   - Anonymous status
+   - Contact permission
+   - Status (Pending, Prayed, Archived)
+   - Created date and time
+4. Create a separate `prayer_attachments` table linked to prayer requests using a foreign key.
+5. Support multiple attachments: images, audio, video, PDF, and DOCX.
+6. Store media files in private file storage and save their metadata and paths in PostgreSQL.
+7. Connect the frontend form to backend APIs so submitted requests are saved in PostgreSQL.
+8. Provide APIs for submitting, viewing, searching, and updating prayer requests.
+9. Allow only authenticated administrators to access and manage prayer requests and attachments.
+10. Add proper validation, error handling, and secure file uploads.
+
+### Acceptance Criteria
+- Prayer requests are successfully saved in PostgreSQL.
+- Multiple attachments are correctly associated with each request.
+- Anonymous submissions work.
+- Admins can view and manage requests.
+- Unauthorized users cannot access private requests or media.
+- Existing website features remain unchanged.
+
+Use the existing project structure. Do not duplicate code or modify unrelated features. Run tests, fix errors, and document PostgreSQL setup and required environment variables.
+
+**Scope: Only PostgreSQL database connection and Prayer Request backend integration.**
+
+---
+
+proceed the plane.
+
+---
+
+password and username
+
+---
+
+git commit message
+
+---
+
+make all the database files in one folder and delete the mockdata in data base.
+
+---
+
+git commit message
+
+---
+
+expain "  backend/tests/test_prayer_postgres.py"
+
+---
+
+commit message for this file
+
+---
+
+/plan read the bible page code and data.list the mistakes in backend and frontend.
