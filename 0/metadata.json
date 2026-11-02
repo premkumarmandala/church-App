@@ -1,0 +1,61 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DC7E9VP0ZQHDZK40ZG6R1E",
+  "session_id": "3af0e6bd-fe71-4a39-8490-69c289ba6546",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-02T05:38:11.2125247Z",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "save_step_count": 3,
+  "files_touched": [
+    "backend/app/db/__init__.py",
+    "backend/app/db/connection.py",
+    "backend/app/db/models.py",
+    "backend/app/services/prayer_service.py",
+    "backend/database/__init__.py",
+    "backend/database/connection.py",
+    "backend/database/models.py",
+    "backend/database/prayer_service.py"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "ff061009f0ad",
+  "token_usage": {
+    "input_tokens": 28999,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7946928,
+    "output_tokens": 16007,
+    "api_call_count": 40
+  },
+  "session_metrics": {
+    "turn_count": 16
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-11-02T05:38:11.1798588Z",
+    "agent_lines": 550,
+    "agent_removed": 515,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 550,
+    "total_lines_changed": 1065,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 591,
+      "agent_lines_removed": 516
+    }
+  ]
+}

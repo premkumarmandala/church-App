@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DC7E9VP0ZQHDZK40ZG6R1E",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "backend/app/db/__init__.py",
+    "backend/app/db/connection.py",
+    "backend/app/db/models.py",
+    "backend/app/services/prayer_service.py",
+    "backend/database/__init__.py",
+    "backend/database/connection.py",
+    "backend/database/models.py",
+    "backend/database/prayer_service.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 28999,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7946928,
+    "output_tokens": 16007,
+    "api_call_count": 40
+  }
+}
