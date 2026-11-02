@@ -1,0 +1,399 @@
+i want file struture . and  about the file system.
+
+---
+
+why scripts folder .
+
+---
+
+# TASK: Professional UI/UX Upgrade
+
+Act as a Senior UI/UX Designer and Senior Frontend Engineer.
+
+Your task is to completely review and improve the existing application's UI to achieve a professional, modern, production-quality design.
+
+## 1. Mandatory Skill Usage
+Before making changes, use the installed skills:
+- UI UX Pro Max: Design system, color palette, typography and layout.
+- Frontend Design: Professional visual design and layout decisions.
+- 21st.dev: High-quality reusable React components where appropriate.
+- Web Design Guidelines: Accessibility and responsive design audit.
+- Impeccable: Visual refinement and design polishing.
+
+Do not ignore these skills.
+
+## 2. First Audit the Existing Project
+Before writing code:
+- Inspect the complete frontend folder structure.
+- Understand existing pages, components and layouts.
+- Identify inconsistent colors, font sizes, spacing and component dimensions.
+- Identify duplicated CSS and unnecessary styles.
+- Check responsive issues and visual inconsistencies.
+- Understand existing functionality before modifying anything.
+
+## 3. Establish a Consistent Design System
+
+Create or improve a centralized design system.
+
+Standardize:
+- Primary and secondary colors.
+- Background and surface colors.
+- Typography and font hierarchy.
+- Heading and body font sizes.
+- Spacing scale.
+- Border radius.
+- Shadows and borders.
+- Button dimensions.
+- Input and form dimensions.
+- Card dimensions.
+- Container widths.
+- Icons and visual elements.
+
+Use centralized CSS variables/design tokens.
+
+Never introduce random colors, font sizes, spacing or border radii on individual pages.
+
+## 4. Professional UI Design
+
+Improve the following:
+- Visual hierarchy.
+- Alignment and spacing.
+- Navigation and sidebar.
+- Header and footer.
+- Cards and content sections.
+- Forms and input fields.
+- Buttons and interactive elements.
+- Tables and dashboards.
+- Empty, loading and error states.
+- Hover, focus and active states.
+
+Avoid:
+- Generic AI-generated layouts.
+- Excessive gradients.
+- Unnecessary animations.
+- Random colors.
+- Oversized cards.
+- Inconsistent typography.
+- Unnecessary decorative elements.
+- Repeated component styles.
+
+## 5. Responsive Design
+
+Ensure proper layouts for:
+- Desktop.
+- Laptop.
+- Tablet.
+- Mobile.
+
+Prevent horizontal scrolling, overlapping elements and broken layouts.
+
+## 6. Code Quality
+
+- Preserve existing application functionality.
+- Do not modify backend APIs or business logic unnecessarily.
+- Use reusable React components.
+- Follow existing React + TypeScript architecture.
+- Avoid duplicate components and CSS.
+- Use proper TypeScript types.
+- Maintain existing routing and integrations.
+- Do not remove existing features.
+
+## 7. Implementation and Visual Verification
+
+Do not stop after generating code.
+
+1. Implement the UI improvements.
+2. Run the application.
+3. Inspect actual browser output.
+4. Check every important page.
+5. Test mobile and desktop layouts.
+6. Identify visual inconsistencies.
+7. Fix spacing, colors, typography and alignment issues.
+8. Repeat the review until the UI is consistent.
+
+## 8. Final Quality Requirements
+
+The final result must have:
+- Consistent design across all pages.
+- Professional typography.
+- Balanced spacing.
+- Harmonious colors.
+- Consistent component dimensions.
+- Responsive layouts.
+- Accessible interactions.
+- Clean and maintainable code.
+
+## IMPORTANT RULES
+
+- Do not blindly redesign everything.
+- Understand the existing project before editing.
+- Do not add unnecessary features.
+- Do not break existing functionality.
+- Do not create duplicate files or components.
+- Do not leave unfinished UI sections.
+- Do not claim visual verification without actually inspecting the browser.
+
+**Expected result:** Transform the existing interface into a cohesive, polished, professional product UI while preserving all existing functionality.
+
+---
+
+commit message
+
+---
+
+## Task: Build Prayer Request Admin Dashboard
+
+Implement a professional Prayer Request Admin Dashboard using the uploaded screenshot as the UI reference.
+
+### 1. Existing Project
+- Inspect the existing project, admin frontend, backend, PostgreSQL database, and APIs.
+- Replace the existing admin dashboard UI.
+- Preserve existing authentication and reusable functionality.
+- Do not modify unrelated features.
+
+### 2. Folder Structure
+
+Keep frontend and backend code separate.
+
+**Frontend: `frontend/admin/`**
+
+```text
+frontend/admin/prayer-requests/
+├── components/
+├── pages/
+├── services/
+├── styles/
+└── AdminPrayerRequests.jsx
+```
+
+**Backend: `backend/`**
+
+Keep all Prayer Request backend code in a dedicated `prayer_requests/` feature folder containing routes, models, schemas, services, and repository files.
+
+### 3. Dashboard UI
+
+Match the uploaded screenshot.
+
+Create:
+- Clean corporate design with white background and navy sidebar.
+- Church branding and admin profile.
+- Dashboard and Prayer Requests navigation.
+- Total Requests, Pending, Prayed, and Archived statistics.
+- Prayer request table with ID, requester, category, message preview, media, date, status, and actions.
+- Search, filters, tabs, and pagination.
+- Responsive desktop, tablet, and mobile layouts.
+
+Keep Sermons, Events, Announcements, Users, and Settings as placeholders. Implement only Dashboard and Prayer Requests.
+
+### 4. Prayer Request Management
+
+Allow authorized admins to:
+- View complete prayer request details.
+- Read messages and requester information.
+- Play audio and video attachments.
+- Preview photos and documents.
+- Securely download attachments.
+- Change status to Pending, Prayed, or Archived.
+- Delete requests with confirmation.
+
+### 5. Backend and PostgreSQL
+- Use the existing PostgreSQL database and Prayer Request tables.
+- Reuse existing database connections and authentication.
+- Implement required admin APIs for listing, searching, filtering, pagination, statistics, viewing, and updating requests.
+- Keep attachments in private storage.
+- Enforce admin authorization on every protected endpoint.
+- Do not create duplicate tables or connections.
+
+### 6. Development Rules
+- Use React and JavaScript (JSX), not TypeScript.
+- Frontend code must remain inside `frontend/admin/`.
+- Backend code must remain inside `backend/`.
+- Use descriptive filenames and avoid duplicate code.
+- Do not hardcode production data.
+- Do not modify the public Prayer Request page.
+
+### 7. Acceptance Criteria
+- Dashboard matches the reference screenshot.
+- Statistics come from PostgreSQL.
+- Search, filters, tabs, and pagination work.
+- All supported attachments can be viewed securely.
+- Status changes persist in PostgreSQL.
+- Unauthorized users cannot access admin data.
+- Existing website features continue working.
+
+### 8. Execution Permission
+
+I authorize you to execute necessary commands without repeatedly asking for permission, including installing dependencies, creating files, modifying code, running migrations, and executing tests.
+
+Do not overwrite unrelated work, delete important data, expose secrets, or make irreversible production changes without informing me.
+
+Implement, test, fix errors, and report the files created, modified, removed, and test results.
+
+**Scope: Replace the existing admin UI and implement only the Prayer Request Admin Dashboard with its required backend integration.**
+
+---
+
+commit massage
+
+---
+
+# Task: Build Complete Church Website Admin Dashboard (CMS)
+
+Build a professional Admin Dashboard for my existing Grace Fellowship Church website. Use the uploaded screenshot as the UI design reference.
+
+## 1. Main Objective
+
+Build a centralized CMS that allows administrators to manage all content displayed on the public website without editing source code.
+
+All editable text, images, videos, posters, links, dates, buttons, and content attributes must be manageable through the admin dashboard.
+
+## 2. UI Design Agent Skills (Mandatory)
+
+- Inspect and use the installed UI/UX design agent skills before implementation.
+- Apply professional UI/UX principles and established design systems.
+- Create a consistent design system for colors, typography, spacing, buttons, forms, tables, cards, and icons.
+- Use a clean, modern corporate dashboard design.
+- Maintain consistent layouts across all admin modules.
+- Avoid random colors, inconsistent sizing, unnecessary gradients, excessive shadows, and repetitive UI.
+- Follow responsive design and accessibility best practices.
+- Build reusable components instead of duplicating UI code.
+- Review and improve visual consistency before completion.
+
+## 3. Admin Dashboard
+
+Include:
+- Total website content.
+- Total prayer requests.
+- Upcoming events.
+- Published sermons.
+- Recent admin activities.
+- Notifications.
+
+Use a white background, navy sidebar, blue accents, professional typography, and responsive layouts.
+
+## 4. Admin Management Modules
+
+Create separate management modules:
+
+1. **Home:** Welcome text, hero images, buttons, announcements, Verse of the Day, and homepage sections.
+2. **About Us:** Church history, mission, vision, beliefs, text, and images.
+3. **Bible:** Translation selection and display settings. Do not modify original Scripture data.
+4. **Sermons:** Upload, edit, publish, unpublish, and delete videos, thumbnails, titles, descriptions, and speaker details.
+5. **Events:** Event titles, descriptions, posters, dates, locations, and registration links.
+6. **Ministries:** Ministry names, descriptions, images, and details.
+7. **Gallery:** Upload, organize, edit, and delete photos and videos.
+8. **Prayer Requests:** View requests, play audio/video, preview attachments, and update statuses.
+9. **Service Timings:** Service names, days, times, languages, and locations.
+10. **Announcements:** Create, edit, publish, schedule, and remove text announcements and posters.
+11. **Contact:** Address, phone, email, map location, and social media links.
+12. **Website Settings:** Logo, website name, footer, navigation labels, SEO, and general settings.
+
+## 5. Content Management
+
+Every applicable module must support:
+
+- Create new content.
+- Edit existing content.
+- Upload and replace media.
+- Delete content with confirmation.
+- Publish and unpublish.
+- Set publication and expiry dates.
+- Preview before publishing.
+
+All public website content must load from backend APIs. Do not hardcode permanent admin-managed content.
+
+## 6. Project Structure
+
+Keep frontend and backend separate.
+
+**Frontend: All admin UI code must be inside `frontend/admin/`.**
+
+```text
+frontend/admin/
+├── components/
+├── layout/
+├── dashboard/
+├── home/
+├── about/
+├── sermons/
+├── events/
+├── ministries/
+├── gallery/
+├── prayer-requests/
+├── service-timings/
+├── announcements/
+├── contact/
+├── settings/
+└── services/
+```
+
+**Backend:** Keep all backend code inside the existing `backend/` folder. Organize each feature independently.
+
+## 7. Database and Backend
+
+- Use the existing PostgreSQL database.
+- Create or update database models for each module.
+- Implement required CRUD APIs.
+- Store media in appropriate private or controlled object storage.
+- Store media metadata and references in PostgreSQL.
+- Implement authentication and role-based authorization.
+- Ensure published admin changes appear on the public website.
+- Reuse existing database connections and APIs.
+- Avoid duplicate tables and backend functionality.
+
+## 8. Development Rules
+
+- Use React and JavaScript (JSX), not TypeScript.
+- Keep admin frontend code inside `frontend/admin/`.
+- Keep backend code inside `backend/`.
+- Give every feature its own folder and descriptive filenames.
+- Reuse existing architecture and components.
+- Avoid duplicate code.
+- Do not break existing public website functionality.
+- Do not hardcode admin-managed content.
+- Do not modify Bible Scripture source data.
+
+## 9. Acceptance Criteria
+
+- Admin can manage all listed website content.
+- All applicable text, images, videos, posters, links, and attributes are editable.
+- Published changes appear on the public website.
+- Unpublished and expired content is handled correctly.
+- Media uploads and replacements work.
+- Changes persist in PostgreSQL.
+- Only authorized administrators can access management functions.
+- Existing website features continue working.
+
+## 10. Execution Permission
+
+I authorize you to execute necessary development commands without repeatedly asking for permission, including:
+
+- Creating and modifying files and folders.
+- Installing dependencies.
+- Running database migrations.
+- Executing tests.
+- Starting development servers.
+- Fixing implementation errors.
+
+Do not overwrite unrelated work, delete important data, or expose secrets.
+
+## 11. Final Deliverables
+
+Implement and test the dashboard module by module.
+
+Report:
+- Completed modules.
+- Files and folders created, modified, or removed.
+- Database changes and API endpoints.
+- Tests executed and results.
+- Remaining issues.
+
+**Final Scope:** Build a centralized Church Website Admin CMS. The admin must be able to manage all content displayed across the existing public website. Do not rebuild the public frontend.
+
+---
+
+admin ui shoud be like this. use agent skill.
+
+---
+
+chech the admin site ui and list out the issues in ui. remove mock data

@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6E3YN7MKPD8MM0RG8GVK952",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "backend/app/models/bible_models.py",
+    "backend/app/services/bible_service.py",
+    "backend/tests/test_bible_api.py",
+    "frontend/admin/AdminCMSApp.jsx",
+    "frontend/admin/cms.bundle.jsx",
+    "frontend/admin/dashboard/DashboardOverview.jsx",
+    "frontend/admin/layout/Sidebar.jsx",
+    "frontend/admin/layout/Topbar.jsx",
+    "frontend/admin/prayer-requests/AdminPrayerRequests.jsx",
+    "frontend/admin/prayer-requests/components/AddPrayerModal.jsx",
+    "frontend/admin/prayer-requests/components/FilterToolbar.jsx",
+    "frontend/admin/prayer-requests/components/Pagination.jsx",
+    "frontend/admin/prayer-requests/components/PrayerTable.jsx",
+    "frontend/admin/prayer-requests/components/Sidebar.jsx",
+    "frontend/admin/prayer-requests/components/StatsOverview.jsx",
+    "frontend/admin/prayer-requests/components/Topbar.jsx",
+    "frontend/admin/prayer-requests/pages/DashboardPage.jsx",
+    "frontend/admin/prayer-requests/pages/PrayerRequestsPage.jsx",
+    "frontend/admin/prayer-requests/prayer-requests.bundle.jsx",
+    "frontend/admin/prayer-requests/styles/admin.css",
+    "frontend/admin/users/UsersManager.jsx",
+    "frontend/bible/BibleApp.jsx",
+    "frontend/bible/bible-react.css",
+    "frontend/bible/components/BookmarksPanel.jsx",
+    "frontend/bible/components/PassageNavigation.jsx",
+    "frontend/bible/components/ScriptureReader.jsx",
+    "frontend/bible/components/TopBar.jsx",
+    "frontend/home/assets/uploads/17d75103_poster_test.png",
+    "frontend/home/assets/uploads/88786e0b_poster_test.png",
+    "scripts/build.js"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ]
+}
