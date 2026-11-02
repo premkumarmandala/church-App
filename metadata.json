@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DEW8FB79PRN56DYAD9CPA5",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "frontend/bible/bible-react.css",
+    "frontend/bible/index.html",
+    "frontend/design-tokens.css",
+    "frontend/home/components/Announcements.jsx",
+    "frontend/home/components/Navbar.jsx",
+    "frontend/home/home.css",
+    "frontend/index.html",
+    "frontend/prayer-request/admin.html",
+    "frontend/prayer-request/index.html",
+    "frontend/prayer-request/prayer-request.css"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DEW8FB79PRN56DYAD9CPA5",
+  "session_id": "186c5ea2-6349-4c07-b53d-5f2ebe401b0d",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-02T06:24:23.0609128Z",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "save_step_count": 3,
+  "files_touched": [
+    "frontend/bible/bible-react.css",
+    "frontend/bible/index.html",
+    "frontend/design-tokens.css",
+    "frontend/home/components/Announcements.jsx",
+    "frontend/home/components/Navbar.jsx",
+    "frontend/home/home.css",
+    "frontend/index.html",
+    "frontend/prayer-request/admin.html",
+    "frontend/prayer-request/index.html",
+    "frontend/prayer-request/prayer-request.css"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "a5a2d5c8020d",
+  "checkpoint_transcript_start": 42,
+  "transcript_lines_at_start": 42,
+  "session_metrics": {
+    "turn_count": 4
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-11-02T06:24:22.9920965Z",
+    "agent_lines": 1240,
+    "agent_removed": 723,
+    "human_added": 2,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1242,
+    "total_lines_changed": 1965,
+    "agent_percentage": 99.89821882951654,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 107,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_removed_per_file": {
+        "docs/BIBLE_SOURCES_AND_LICENSING.md": 107
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 1,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1241,
+      "agent_lines_removed": 94037,
+      "user_added_per_file": {
+        "frontend/design-tokens.css": 1
+      }
+    }
+  ]
+}

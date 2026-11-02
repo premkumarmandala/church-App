@@ -1,0 +1,136 @@
+why scripts folder .
+
+---
+
+# TASK: Professional UI/UX Upgrade
+
+Act as a Senior UI/UX Designer and Senior Frontend Engineer.
+
+Your task is to completely review and improve the existing application's UI to achieve a professional, modern, production-quality design.
+
+## 1. Mandatory Skill Usage
+Before making changes, use the installed skills:
+- UI UX Pro Max: Design system, color palette, typography and layout.
+- Frontend Design: Professional visual design and layout decisions.
+- 21st.dev: High-quality reusable React components where appropriate.
+- Web Design Guidelines: Accessibility and responsive design audit.
+- Impeccable: Visual refinement and design polishing.
+
+Do not ignore these skills.
+
+## 2. First Audit the Existing Project
+Before writing code:
+- Inspect the complete frontend folder structure.
+- Understand existing pages, components and layouts.
+- Identify inconsistent colors, font sizes, spacing and component dimensions.
+- Identify duplicated CSS and unnecessary styles.
+- Check responsive issues and visual inconsistencies.
+- Understand existing functionality before modifying anything.
+
+## 3. Establish a Consistent Design System
+
+Create or improve a centralized design system.
+
+Standardize:
+- Primary and secondary colors.
+- Background and surface colors.
+- Typography and font hierarchy.
+- Heading and body font sizes.
+- Spacing scale.
+- Border radius.
+- Shadows and borders.
+- Button dimensions.
+- Input and form dimensions.
+- Card dimensions.
+- Container widths.
+- Icons and visual elements.
+
+Use centralized CSS variables/design tokens.
+
+Never introduce random colors, font sizes, spacing or border radii on individual pages.
+
+## 4. Professional UI Design
+
+Improve the following:
+- Visual hierarchy.
+- Alignment and spacing.
+- Navigation and sidebar.
+- Header and footer.
+- Cards and content sections.
+- Forms and input fields.
+- Buttons and interactive elements.
+- Tables and dashboards.
+- Empty, loading and error states.
+- Hover, focus and active states.
+
+Avoid:
+- Generic AI-generated layouts.
+- Excessive gradients.
+- Unnecessary animations.
+- Random colors.
+- Oversized cards.
+- Inconsistent typography.
+- Unnecessary decorative elements.
+- Repeated component styles.
+
+## 5. Responsive Design
+
+Ensure proper layouts for:
+- Desktop.
+- Laptop.
+- Tablet.
+- Mobile.
+
+Prevent horizontal scrolling, overlapping elements and broken layouts.
+
+## 6. Code Quality
+
+- Preserve existing application functionality.
+- Do not modify backend APIs or business logic unnecessarily.
+- Use reusable React components.
+- Follow existing React + TypeScript architecture.
+- Avoid duplicate components and CSS.
+- Use proper TypeScript types.
+- Maintain existing routing and integrations.
+- Do not remove existing features.
+
+## 7. Implementation and Visual Verification
+
+Do not stop after generating code.
+
+1. Implement the UI improvements.
+2. Run the application.
+3. Inspect actual browser output.
+4. Check every important page.
+5. Test mobile and desktop layouts.
+6. Identify visual inconsistencies.
+7. Fix spacing, colors, typography and alignment issues.
+8. Repeat the review until the UI is consistent.
+
+## 8. Final Quality Requirements
+
+The final result must have:
+- Consistent design across all pages.
+- Professional typography.
+- Balanced spacing.
+- Harmonious colors.
+- Consistent component dimensions.
+- Responsive layouts.
+- Accessible interactions.
+- Clean and maintainable code.
+
+## IMPORTANT RULES
+
+- Do not blindly redesign everything.
+- Understand the existing project before editing.
+- Do not add unnecessary features.
+- Do not break existing functionality.
+- Do not create duplicate files or components.
+- Do not leave unfinished UI sections.
+- Do not claim visual verification without actually inspecting the browser.
+
+**Expected result:** Transform the existing interface into a cohesive, polished, professional product UI while preserving all existing functionality.
+
+---
+
+commit message
