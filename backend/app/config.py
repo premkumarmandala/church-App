@@ -27,8 +27,16 @@ class Settings(BaseModel):
     APP_DIR: Path = APP_DIR
     BACKEND_DIR: Path = BACKEND_DIR
     PROJECT_ROOT: Path = PROJECT_ROOT
-    DATA_DIR: Path = BACKEND_DIR / "data"
-    FRONTEND_DIR: Path = PROJECT_ROOT / "frontend"
+    DATA_DIR: Path = (
+        BACKEND_DIR / "data"
+        if (BACKEND_DIR / "data").exists()
+        else (PROJECT_ROOT / "data" if (PROJECT_ROOT / "data").exists() else BACKEND_DIR / "data")
+    )
+    FRONTEND_DIR: Path = (
+        PROJECT_ROOT / "frontend"
+        if (PROJECT_ROOT / "frontend").exists()
+        else (BACKEND_DIR / "frontend" if (BACKEND_DIR / "frontend").exists() else PROJECT_ROOT / "frontend")
+    )
     DOCS_DIR: Path = PROJECT_ROOT / "docs"
     STORAGE_DIR: Path = BACKEND_DIR / "storage" / "prayer_attachments"
 

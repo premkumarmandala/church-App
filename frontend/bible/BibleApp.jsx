@@ -5,6 +5,16 @@
  * Fully supports all 66 canonical Bible books, dynamic chapter loading, search, and bookmarks.
  */
 
+// Universal API Base URL resolver:
+// In production (Render, custom domains) or same-origin FastAPI, returns '' (clean relative URL).
+// Only in standalone file:/// mode does it fall back to http://localhost:8000.
+const getBibleApiBase = () => {
+  if (typeof window === 'undefined') return '';
+  if (window.API_BASE_URL) return window.API_BASE_URL;
+  if (window.location && window.location.protocol === 'file:') return 'http://localhost:8000';
+  return '';
+};
+
 function BibleApp() {
   // Navigation & View State
   const [activeTab, setActiveTab] = React.useState("reader");
@@ -98,12 +108,16 @@ function BibleApp() {
     } catch (e) {}
   }, [bookmarks]);
 
-  // Load all 66 canonical books from backend API if available
+  // Load all 66 canonical books from backend API (or static JSON fallback)
   React.useEffect(() => {
     const loadBooks = async () => {
       try {
-        const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
-        const res = await fetch(`${apiBase}/api/bible/books`);
+        const apiBase = getBibleApiBase();
+        let res = await fetch(`${apiBase}/api/bible/books`);
+        if (!res.ok) {
+          // Secondary fallback to static JSON asset mount
+          res = await fetch(`${apiBase}/bible-data/books.json`);
+        }
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -121,7 +135,7 @@ function BibleApp() {
   React.useEffect(() => {
     const loadDailyVerse = async () => {
       try {
-        const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+        const apiBase = getBibleApiBase();
         const res = await fetch(`${apiBase}/api/bible/daily-verse`);
         if (res.ok) {
           const data = await res.json();
@@ -150,13 +164,13 @@ function BibleApp() {
     return currentBook?.chaptersCount || 50;
   }, [currentBook]);
 
-  // Dynamic chapter loading from backend API or offline mock
+  // Dynamic chapter loading from backend API or static JSON or offline mock
   React.useEffect(() => {
     let isCancelled = false;
     const loadChapter = async () => {
       setIsLoadingChapter(true);
       try {
-        const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+        const apiBase = getBibleApiBase();
         const res = await fetch(`${apiBase}/api/bible/chapter?translation=${selectedLang}&book=${selectedBook}&chapter=${selectedChapter}&parallel=true`);
         if (res.ok) {
           const data = await res.json();
@@ -168,6 +182,31 @@ function BibleApp() {
         }
       } catch (e) {
         // Proceed to fallback
+      }
+
+      // Secondary fallback: Direct JSON file via static /bible-data mount
+      try {
+        const apiBase = getBibleApiBase();
+        const folder = selectedLang === "telugu" ? "telugu" : "kjv";
+        const fileName = (selectedLang === "telugu" ? currentBook.teluguFile : currentBook.kjvFile) || `${currentBook.name}.json`;
+        const staticRes = await fetch(`${apiBase}/bible-data/${folder}/${fileName}`);
+        if (staticRes.ok) {
+          const rawBook = await staticRes.json();
+          const targetCh = (rawBook.chapters || []).find((c) => Number(c.chapter) === Number(selectedChapter));
+          if (!isCancelled && targetCh && targetCh.verses) {
+            setChapterData({
+              book: currentBook,
+              chapter: selectedChapter,
+              translation: selectedLang,
+              versesCount: targetCh.verses.length,
+              verses: targetCh.verses,
+            });
+            setIsLoadingChapter(false);
+            return;
+          }
+        }
+      } catch (e) {
+        // Proceed to offline mock
       }
 
       if (!isCancelled) {

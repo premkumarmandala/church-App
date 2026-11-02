@@ -41,7 +41,7 @@ function OfflinePanel() {
     setStatusMessage(`Initializing offline download for ${isKjv ? "English KJV" : "Telugu"}...`);
 
     try {
-      const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+      const apiBase = window.API_BASE_URL || (window.location && window.location.protocol === 'file:' ? 'http://localhost:8000' : '');
       const cache = await ('caches' in window ? caches.open('church-bible-v2') : null);
 
       // 1. Fetch books list

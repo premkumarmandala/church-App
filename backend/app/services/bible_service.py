@@ -35,6 +35,20 @@ class BibleService:
     def load_data(self) -> None:
         """Load books metadata and daily verses index into memory."""
         books_path = self.data_dir / "books.json"
+        if not books_path.exists():
+            # Robust candidate directory search for production deployment environments (e.g. Render)
+            candidates = [
+                settings.BACKEND_DIR / "data",
+                settings.PROJECT_ROOT / "backend" / "data",
+                settings.PROJECT_ROOT / "data",
+                Path(__file__).resolve().parent.parent.parent / "data",
+            ]
+            for c in candidates:
+                if (c / "books.json").exists():
+                    self.data_dir = c
+                    books_path = c / "books.json"
+                    break
+
         if books_path.exists():
             with open(books_path, "r", encoding="utf-8") as f:
                 self.books_meta = json.load(f)
@@ -131,6 +145,16 @@ class BibleService:
         file_name = book_meta.get("teluguFile") if trans == "telugu" else book_meta.get("kjvFile")
         folder = "telugu" if trans == "telugu" else "kjv"
         full_path = self.data_dir / folder / str(file_name)
+
+        if not full_path.exists():
+            # Robust case-insensitive and whitespace-normalized fallback for Linux filesystems (e.g. Render)
+            folder_dir = self.data_dir / folder
+            if folder_dir.exists():
+                norm_target = str(file_name).replace(" ", "").replace("-", "").replace("_", "").lower()
+                for p in folder_dir.glob("*.json"):
+                    if p.name.replace(" ", "").replace("-", "").replace("_", "").lower() == norm_target:
+                        full_path = p
+                        break
 
         if not full_path.exists():
             return None

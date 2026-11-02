@@ -37,7 +37,7 @@ function SearchPanel({ onNavigateToVerse, initialQuery = "", selectedLang = "kjv
     setIsSearching(true);
     setHasSearched(true);
     try {
-      const apiBase = (window.location.origin && window.location.origin.includes(':8000')) ? '' : 'http://localhost:8000';
+      const apiBase = window.API_BASE_URL || (window.location && window.location.protocol === 'file:' ? 'http://localhost:8000' : '');
       const res = await fetch(`${apiBase}/api/bible/search?q=${encodeURIComponent(trimmed)}&translation=${lang}&testament=${testm}&limit=50`);
       if (res.ok) {
         const data = await res.json();
