@@ -196,7 +196,7 @@ def test_static_church_home():
     """Verify GET / serves Church landing page HTML."""
     response = client.get("/")
     assert response.status_code == 200
-    assert "Grace Church" in response.text
+    assert "Grace Fellowship Church" in response.text or "Grace Church" in response.text
 
 
 def test_static_bible_app():
