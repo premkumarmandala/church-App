@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6EHF4Y3J6PSXKSXD3411DV3",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "backend/cms/repository.py",
+    "backend/cms/routes.py",
+    "backend/cms/services.py",
+    "backend/prayer_requests/routes.py",
+    "backend/prayer_requests/services.py",
+    "backend/tests/test_cms_feature.py",
+    "frontend/admin/AdminCMSApp.jsx",
+    "frontend/admin/cms.bundle.jsx",
+    "frontend/admin/components/PageHeader.jsx",
+    "frontend/admin/dashboard/DashboardOverview.jsx",
+    "frontend/admin/layout/Sidebar.jsx",
+    "frontend/admin/layout/Topbar.jsx",
+    "frontend/admin/prayer-requests/AdminPrayerRequests.jsx",
+    "frontend/admin/prayer-requests/components/FilterToolbar.jsx",
+    "frontend/admin/prayer-requests/components/Pagination.jsx",
+    "frontend/admin/prayer-requests/components/PrayerTable.jsx",
+    "frontend/admin/prayer-requests/components/Sidebar.jsx",
+    "frontend/admin/prayer-requests/components/StatsOverview.jsx",
+    "frontend/admin/prayer-requests/components/Topbar.jsx",
+    "frontend/admin/prayer-requests/prayer-requests.bundle.jsx",
+    "frontend/admin/prayer-requests/styles/admin.css",
+    "frontend/admin/services/api.js",
+    "frontend/admin/users/UsersManager.jsx",
+    "frontend/home/assets/uploads/49d9a353_poster_test.png",
+    "frontend/home/assets/uploads/52d38702_poster_test.png",
+    "frontend/home/assets/uploads/59ca2a05_poster_test.png",
+    "scripts/build.js"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ]
+}

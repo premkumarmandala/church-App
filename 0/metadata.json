@@ -1,0 +1,80 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6EHF4Y3J6PSXKSXD3411DV3",
+  "session_id": "186c5ea2-6349-4c07-b53d-5f2ebe401b0d",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-02T16:28:59.6654287Z",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "save_step_count": 4,
+  "files_touched": [
+    "backend/cms/repository.py",
+    "backend/cms/routes.py",
+    "backend/cms/services.py",
+    "backend/prayer_requests/routes.py",
+    "backend/prayer_requests/services.py",
+    "backend/tests/test_cms_feature.py",
+    "frontend/admin/AdminCMSApp.jsx",
+    "frontend/admin/cms.bundle.jsx",
+    "frontend/admin/components/PageHeader.jsx",
+    "frontend/admin/dashboard/DashboardOverview.jsx",
+    "frontend/admin/layout/Sidebar.jsx",
+    "frontend/admin/layout/Topbar.jsx",
+    "frontend/admin/prayer-requests/AdminPrayerRequests.jsx",
+    "frontend/admin/prayer-requests/components/FilterToolbar.jsx",
+    "frontend/admin/prayer-requests/components/Pagination.jsx",
+    "frontend/admin/prayer-requests/components/PrayerTable.jsx",
+    "frontend/admin/prayer-requests/components/Sidebar.jsx",
+    "frontend/admin/prayer-requests/components/StatsOverview.jsx",
+    "frontend/admin/prayer-requests/components/Topbar.jsx",
+    "frontend/admin/prayer-requests/prayer-requests.bundle.jsx",
+    "frontend/admin/prayer-requests/styles/admin.css",
+    "frontend/admin/services/api.js",
+    "frontend/admin/users/UsersManager.jsx",
+    "frontend/home/assets/uploads/49d9a353_poster_test.png",
+    "frontend/home/assets/uploads/52d38702_poster_test.png",
+    "frontend/home/assets/uploads/59ca2a05_poster_test.png",
+    "scripts/build.js"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "0da3bb881b43",
+  "session_metrics": {
+    "turn_count": 11
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-11-02T16:28:59.5438167Z",
+    "agent_lines": 2985,
+    "agent_removed": 944,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2985,
+    "total_lines_changed": 3929,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2603,
+      "agent_lines_removed": 94130
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2985,
+      "agent_lines_removed": 94258
+    }
+  ]
+}
