@@ -1,0 +1,85 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DV4J2MF9TS8T70ZKKCBBYE",
+  "session_id": "186c5ea2-6349-4c07-b53d-5f2ebe401b0d",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-02T09:58:38.9526844Z",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "save_step_count": 3,
+  "files_touched": [
+    "backend/app/main.py",
+    "backend/prayer_requests/__init__.py",
+    "backend/prayer_requests/models.py",
+    "backend/prayer_requests/repository.py",
+    "backend/prayer_requests/routes.py",
+    "backend/prayer_requests/schemas.py",
+    "backend/prayer_requests/services.py",
+    "backend/tests/test_admin_integration.py",
+    "backend/tests/test_prayer_requests_feature.py",
+    "frontend/admin/index.html",
+    "frontend/admin/prayer-requests/AdminPrayerRequests.jsx",
+    "frontend/admin/prayer-requests/components/DeleteConfirmModal.jsx",
+    "frontend/admin/prayer-requests/components/FilterToolbar.jsx",
+    "frontend/admin/prayer-requests/components/LoginView.jsx",
+    "frontend/admin/prayer-requests/components/Pagination.jsx",
+    "frontend/admin/prayer-requests/components/PrayerDetailModal.jsx",
+    "frontend/admin/prayer-requests/components/PrayerTable.jsx",
+    "frontend/admin/prayer-requests/components/Sidebar.jsx",
+    "frontend/admin/prayer-requests/components/StatsOverview.jsx",
+    "frontend/admin/prayer-requests/components/Topbar.jsx",
+    "frontend/admin/prayer-requests/pages/DashboardPage.jsx",
+    "frontend/admin/prayer-requests/pages/PrayerRequestsPage.jsx",
+    "frontend/admin/prayer-requests/prayer-requests.bundle.jsx",
+    "frontend/admin/prayer-requests/services/api.js",
+    "frontend/admin/prayer-requests/styles/admin.css",
+    "frontend/prayer-request/admin.html",
+    "scripts/build.js"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "e566ed9baa43",
+  "session_metrics": {
+    "turn_count": 6
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-11-02T09:58:38.8975636Z",
+    "agent_lines": 6914,
+    "agent_removed": 785,
+    "human_added": 15,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 6929,
+    "total_lines_changed": 7715,
+    "agent_percentage": 99.79261179520414,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 107,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 93314,
+      "user_removed_per_file": {
+        "docs/BIBLE_SOURCES_AND_LICENSING.md": 107
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 7,
+      "user_lines_removed": 0,
+      "agent_lines_added": 6921,
+      "agent_lines_removed": 94099,
+      "user_added_per_file": {
+        "backend/prayer_requests/__init__.py": 1,
+        "backend/prayer_requests/models.py": 1,
+        "backend/prayer_requests/routes.py": 1,
+        "backend/prayer_requests/services.py": 1,
+        "backend/tests/test_admin_integration.py": 1,
+        "backend/tests/test_prayer_requests_feature.py": 1,
+        "frontend/admin/prayer-requests/styles/admin.css": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DV4J2MF9TS8T70ZKKCBBYE",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "backend/app/main.py",
+    "backend/prayer_requests/__init__.py",
+    "backend/prayer_requests/models.py",
+    "backend/prayer_requests/repository.py",
+    "backend/prayer_requests/routes.py",
+    "backend/prayer_requests/schemas.py",
+    "backend/prayer_requests/services.py",
+    "backend/tests/test_admin_integration.py",
+    "backend/tests/test_prayer_requests_feature.py",
+    "frontend/admin/index.html",
+    "frontend/admin/prayer-requests/AdminPrayerRequests.jsx",
+    "frontend/admin/prayer-requests/components/DeleteConfirmModal.jsx",
+    "frontend/admin/prayer-requests/components/FilterToolbar.jsx",
+    "frontend/admin/prayer-requests/components/LoginView.jsx",
+    "frontend/admin/prayer-requests/components/Pagination.jsx",
+    "frontend/admin/prayer-requests/components/PrayerDetailModal.jsx",
+    "frontend/admin/prayer-requests/components/PrayerTable.jsx",
+    "frontend/admin/prayer-requests/components/Sidebar.jsx",
+    "frontend/admin/prayer-requests/components/StatsOverview.jsx",
+    "frontend/admin/prayer-requests/components/Topbar.jsx",
+    "frontend/admin/prayer-requests/pages/DashboardPage.jsx",
+    "frontend/admin/prayer-requests/pages/PrayerRequestsPage.jsx",
+    "frontend/admin/prayer-requests/prayer-requests.bundle.jsx",
+    "frontend/admin/prayer-requests/services/api.js",
+    "frontend/admin/prayer-requests/styles/admin.css",
+    "frontend/prayer-request/admin.html",
+    "scripts/build.js"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ]
+}
