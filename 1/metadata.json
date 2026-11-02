@@ -1,0 +1,91 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6E3YN7MKPD8MM0RG8GVK952",
+  "session_id": "3af0e6bd-fe71-4a39-8490-69c289ba6546",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-02T12:32:42.8317696Z",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "save_step_count": 2,
+  "files_touched": [
+    "backend/app/models/bible_models.py",
+    "backend/app/services/bible_service.py",
+    "backend/cms/models.py",
+    "backend/tests/test_bible_api.py",
+    "frontend/admin/AdminCMSApp.jsx",
+    "frontend/admin/cms.bundle.jsx",
+    "frontend/admin/dashboard/DashboardOverview.jsx",
+    "frontend/admin/layout/Sidebar.jsx",
+    "frontend/admin/layout/Topbar.jsx",
+    "frontend/admin/prayer-requests/AdminPrayerRequests.jsx",
+    "frontend/admin/prayer-requests/components/AddPrayerModal.jsx",
+    "frontend/admin/prayer-requests/components/FilterToolbar.jsx",
+    "frontend/admin/prayer-requests/components/Pagination.jsx",
+    "frontend/admin/prayer-requests/components/PrayerTable.jsx",
+    "frontend/admin/prayer-requests/components/Sidebar.jsx",
+    "frontend/admin/prayer-requests/components/StatsOverview.jsx",
+    "frontend/admin/prayer-requests/components/Topbar.jsx",
+    "frontend/admin/prayer-requests/pages/DashboardPage.jsx",
+    "frontend/admin/prayer-requests/pages/PrayerRequestsPage.jsx",
+    "frontend/admin/prayer-requests/prayer-requests.bundle.jsx",
+    "frontend/admin/prayer-requests/styles/admin.css",
+    "frontend/admin/users/UsersManager.jsx",
+    "frontend/bible/BibleApp.jsx",
+    "frontend/bible/bible-react.css",
+    "frontend/bible/components/BookmarksPanel.jsx",
+    "frontend/bible/components/OfflinePanel.jsx",
+    "frontend/bible/components/PassageNavigation.jsx",
+    "frontend/bible/components/ScriptureReader.jsx",
+    "frontend/bible/components/SearchPanel.jsx",
+    "frontend/bible/components/TopBar.jsx",
+    "frontend/bible/index.html",
+    "frontend/bible/sw.js",
+    "frontend/home/assets/uploads/17d75103_poster_test.png",
+    "frontend/home/assets/uploads/88786e0b_poster_test.png",
+    "frontend/home/assets/uploads/ed5b2bfc_poster_test.png",
+    "scripts/build.js"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "3f1a3697a81a",
+  "checkpoint_transcript_start": 546,
+  "transcript_lines_at_start": 546,
+  "token_usage": {
+    "input_tokens": 78889,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 9310989,
+    "output_tokens": 37004,
+    "api_call_count": 83
+  },
+  "session_metrics": {
+    "turn_count": 24
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-11-02T12:32:42.6702998Z",
+    "agent_lines": 4857,
+    "agent_removed": 4803,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 4857,
+    "total_lines_changed": 9660,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4857,
+      "agent_lines_removed": 98117
+    }
+  ]
+}
