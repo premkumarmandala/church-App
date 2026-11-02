@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pastoral Prayer Admin Dashboard - Grace Fellowship Church</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Master Typography & Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Design System Tokens & Admin Stylesheet -->
+  <link rel="stylesheet" href="../design-tokens.css">
+  <link rel="stylesheet" href="./prayer-requests/styles/admin.css">
+
+  <!-- React 18 & ReactDOM 18 -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <!-- Root mounting node with graceful loading indicator -->
+  <div id="admin-root">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; background: #081220; color: #ffffff;">
+      <div style="text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 12px; color: #c59b27;">✝</div>
+        <p style="font-size: 1.1rem; font-weight: 700; letter-spacing: 0.02em;">Loading Pastoral Prayer Admin...</p>
+        <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">Grace Fellowship Church</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Pastoral Admin Feature Bundle -->
+  <script type="text/babel" src="./prayer-requests/prayer-requests.bundle.jsx"></script>
+
+  <!-- Mount Root Application -->
+  <script type="text/babel">
+    function mountAdminApp() {
+      const rootElement = document.getElementById('admin-root');
+      if (!rootElement) return;
+
+      const App = window.AdminPrayerRequests;
+      if (App) {
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(<App />);
+      } else {
+        setTimeout(mountAdminApp, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mountAdminApp);
+    } else {
+      mountAdminApp();
+    }
+  </script>
+</body>
+</html>

@@ -95,7 +95,7 @@ Church App/
 
 From the project root:
 ```bash
-python backend/run_server.py
+
 ```
 
 The server will start at `http://localhost:8000/`.

@@ -50,7 +50,7 @@ def get_licensing_doc() -> Response:
     doc_path = settings.DOCS_DIR / "BIBLE_SOURCES_AND_LICENSING.md"
     if doc_path.exists():
         return FileResponse(doc_path, media_type="text/markdown; charset=utf-8")
-    return Response(content="# Licensing Documentation\nPublic Domain / MIT License.", media_type="text/markdown")
+    return Response(content="# Bible Sources and Licensing Documentation\nPublic Domain / MIT License.", media_type="text/markdown")
 
 
 # Clean redirect for /bible without trailing slash to /bible/
@@ -58,6 +58,13 @@ def get_licensing_doc() -> Response:
 def redirect_to_bible_app() -> Response:
     """Redirect /bible to /bible/ for clean URL normalization."""
     return RedirectResponse(url="/bible/", status_code=307)
+
+
+# Clean redirect for /admin without trailing slash to /admin/
+@app.get("/admin", include_in_schema=False)
+def redirect_to_admin_app() -> Response:
+    """Redirect /admin to /admin/ for clean URL normalization."""
+    return RedirectResponse(url="/admin/", status_code=307)
 
 
 # Serve service worker with Service-Worker-Allowed header to permit root scope
