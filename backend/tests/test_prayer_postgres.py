@@ -20,9 +20,26 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def setup_db():
-    """Ensure database schema is created before tests."""
+    """Ensure database schema is created before tests, and cleans up mock data after tests."""
     init_db()
     yield
+    # Clean up test rows and mock data after each test
+    db = SessionLocal()
+    try:
+        db.query(PrayerAttachment).delete()
+        db.query(PrayerRequest).delete()
+        db.commit()
+    except Exception:
+        db.rollback()
+    finally:
+        db.close()
+
+    # Clean up any test upload directories in storage
+    if settings.STORAGE_DIR.exists():
+        import shutil
+        for p in settings.STORAGE_DIR.iterdir():
+            if p.is_dir() and p.name.startswith("PR-"):
+                shutil.rmtree(p, ignore_errors=True)
 
 
 @pytest.fixture
@@ -198,6 +215,17 @@ def test_admin_list_and_search(admin_token):
     """Verify admin can list, filter by status and category, and search."""
     headers = {"Authorization": f"Bearer {admin_token}"}
 
+    # Submit sample request for this test
+    client.post(
+        "/api/prayer-request",
+        json={
+            "name": "David Grace",
+            "contact": "david@grace.org",
+            "category": "Spiritual Growth",
+            "request": "Please pray for strength and spiritual clarity.",
+        },
+    )
+
     # List all requests
     resp = client.get("/api/admin/prayer-requests", headers=headers)
     assert resp.status_code == 200
@@ -298,6 +326,18 @@ def test_admin_attachment_streaming(admin_token):
 def test_admin_stats(admin_token):
     """Verify summary counts of total, pending, prayed, and category breakdown."""
     headers = {"Authorization": f"Bearer {admin_token}"}
+
+    # Submit sample request for this test
+    client.post(
+        "/api/prayer-request",
+        json={
+            "name": "Sister Faith",
+            "contact": "faith@example.org",
+            "category": "Praise & Thanksgiving",
+            "request": "Thanking God for prayers answered this week.",
+        },
+    )
+
     resp = client.get("/api/admin/prayer-requests/stats", headers=headers)
     assert resp.status_code == 200
     stats = resp.json()
