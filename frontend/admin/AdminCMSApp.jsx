@@ -58,7 +58,7 @@ export function AdminCMSApp() {
 
   // Overview metrics state
   const [overview, setOverview] = useSafeState(null);
-  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(12);
+  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(0);
   const [isLoadingOverview, setIsLoadingOverview] = useSafeState(false);
   const [refreshKey, setRefreshKey] = useSafeState(0);
 
@@ -123,9 +123,11 @@ export function AdminCMSApp() {
         );
       case 'prayer-requests':
         return (
-          <div key={refreshKey}>
-            <CompAdminPrayerRequests />
-          </div>
+          <CompDashboardOverview
+            key={`pr-${refreshKey}`}
+            overview={overview}
+            onNavigateModule={(mod) => setCurrentModule(mod)}
+          />
         );
       case 'sermons':
         return <CompSermonsManager key={refreshKey} />;
@@ -194,6 +196,7 @@ export function AdminCMSApp() {
           currentModule={currentModule}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onNotificationClick={() => setCurrentModule('prayer-requests')}
+          pendingPrayersCount={pendingPrayersCount}
         />
 
         <main className="admin-content">

@@ -342,6 +342,22 @@ export const cmsApi = {
     const base = `/api/admin/prayer-requests/${encodeURIComponent(requestId)}/attachments/${encodeURIComponent(attachmentId)}`;
     return token ? `${base}?token=${encodeURIComponent(token)}` : base;
   },
+
+  // 13. Users & Pastoral Team Management
+  async getUsers() {
+    return request('/api/admin/users');
+  },
+  async createUser(data) {
+    return request('/api/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  async deleteUser(id) {
+    return request(`/api/admin/users/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
 if (typeof window !== 'undefined') {

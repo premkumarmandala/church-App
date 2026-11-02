@@ -215,7 +215,7 @@ function Sidebar({ currentView, onViewChange, pendingCount = 12, onLogout, isOpe
           <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
         </svg>
       ),
-      badge: pendingCount > 0 ? pendingCount : 12,
+      badge: pendingCount || 12,
     },
     {
       id: 'sermons',
@@ -333,7 +333,9 @@ function Sidebar({ currentView, onViewChange, pendingCount = 12, onLogout, isOpe
               <span className="profile-role-title">Church Administrator</span>
             </div>
           </div>
-          <span className="chevron-down-icon">˅</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="chevron-down-icon">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </div>
       </aside>
     </>
@@ -351,7 +353,7 @@ if (typeof window !== 'undefined') {
  * Matches the reference screenshot with page titles, notification bell,
  * and user profile avatar.
  */
-function Topbar({ currentView = 'dashboard', onToggleSidebar, onNotificationClick }) {
+function Topbar({ currentView = 'dashboard', onToggleSidebar, onNotificationClick, pendingCount = 12 }) {
   const titles = {
     dashboard: {
       title: 'Dashboard',
@@ -410,14 +412,14 @@ function Topbar({ currentView = 'dashboard', onToggleSidebar, onNotificationClic
           type="button"
           className="btn-bell-notification"
           onClick={onNotificationClick}
-          title="12 Pending Prayer Requests"
+          title={pendingCount > 0 ? `${pendingCount} Pending Prayer Requests` : 'No pending prayer requests'}
           aria-label="Notifications"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
-          <span className="bell-unread-dot" />
+          {pendingCount > 0 && <span className="bell-unread-dot" />}
         </button>
 
         <div className="header-user-avatar" title="Logged in as Admin">
@@ -437,7 +439,7 @@ if (typeof window !== 'undefined') {
 /**
  * Statistics Overview KPI Cards Component
  * Renders 4 metric cards: Total Requests, Pending, Prayed, and Archived.
- * Matches the reference screenshot layout, icons, and colors.
+ * Matches the reference screenshot layout, icons, and pastel color themes.
  */
 function StatsOverview({ stats, onSelectStatus, activeStatus }) {
   const totalVal = stats?.total_requests ?? stats?.total ?? 156;
@@ -452,12 +454,15 @@ function StatsOverview({ stats, onSelectStatus, activeStatus }) {
       value: totalVal,
       cardClass: 'total',
       filterTarget: 'All',
+      iconColor: '#2563eb',
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
-          <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
-          <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
-          <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+        /* Praying Hands Outline Icon */
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M7 11.5L9.5 3.5a1.8 1.8 0 0 1 3.5 0l2.5 8" />
+          <path d="M12 3.5v16.5" />
+          <path d="M5.5 14.5l2-3" />
+          <path d="M18.5 14.5l-2-3" />
+          <path d="M6.5 18a3.5 3.5 0 0 0 3 2h5a3.5 3.5 0 0 0 3-2" />
         </svg>
       ),
     },
@@ -467,10 +472,12 @@ function StatsOverview({ stats, onSelectStatus, activeStatus }) {
       value: pendingVal,
       cardClass: 'pending',
       filterTarget: 'Pending',
+      iconColor: '#d97706',
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10" />
-          <polyline points="12 6 12 12 16 14" />
+        /* Circular Clock Icon */
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9.5" />
+          <polyline points="12 6.5 12 12 15.5 14" />
         </svg>
       ),
     },
@@ -480,8 +487,10 @@ function StatsOverview({ stats, onSelectStatus, activeStatus }) {
       value: prayedVal,
       cardClass: 'prayed',
       filterTarget: 'Prayed',
+      iconColor: '#16a34a',
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        /* Bold Green Checkmark Icon */
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.9" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="20 6 9 17 4 12" />
         </svg>
       ),
@@ -492,10 +501,12 @@ function StatsOverview({ stats, onSelectStatus, activeStatus }) {
       value: archivedVal,
       cardClass: 'archived',
       filterTarget: 'Archived',
+      iconColor: '#9333ea',
       icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="21 8 21 21 3 21 3 8" />
-          <rect x="1" y="3" width="22" height="5" />
+        /* Archive Box / Chest Icon */
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 8v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8" />
+          <rect x="2" y="3" width="20" height="5" rx="1" />
           <line x1="10" y1="12" x2="14" y2="12" />
         </svg>
       ),
@@ -504,22 +515,25 @@ function StatsOverview({ stats, onSelectStatus, activeStatus }) {
 
   return (
     <div className="stats-kpi-grid">
-      {statItems.map((item) => (
-        <div
-          key={item.id}
-          className={`kpi-card ${item.cardClass}`}
-          onClick={() => onSelectStatus && onSelectStatus(item.filterTarget)}
-          role="button"
-          tabIndex={0}
-          title={`Filter by ${item.label}`}
-        >
-          <div className="kpi-icon-box">{item.icon}</div>
-          <div className="kpi-meta-box">
-            <span className="kpi-label">{item.label}</span>
-            <span className="kpi-number">{Number(item.value).toLocaleString()}</span>
+      {statItems.map((item) => {
+        const isSelected = activeStatus === item.filterTarget;
+        return (
+          <div
+            key={item.id}
+            className={`kpi-card ${item.cardClass} ${isSelected ? 'active-filter' : ''}`}
+            onClick={() => onSelectStatus && onSelectStatus(item.filterTarget)}
+            role="button"
+            tabIndex={0}
+            title={`Filter by ${item.label}`}
+          >
+            <div className="kpi-icon-box">{item.icon}</div>
+            <div className="kpi-meta-box">
+              <span className="kpi-label">{item.label}</span>
+              <span className="kpi-number">{Number(item.value).toLocaleString()}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -541,8 +555,13 @@ function FilterToolbar({
   onStatusChange,
   searchQuery = '',
   onSearchChange,
+  category = 'All Categories',
+  onCategoryChange,
+  sortOrder = 'newest',
+  onSortChange,
   stats,
   onOpenAdd,
+  isFilterOpen = false,
   onToggleFilterMenu,
 }) {
   const totalVal = stats?.total_requests ?? stats?.total ?? 156;
@@ -557,8 +576,18 @@ function FilterToolbar({
     { id: 'Archived', label: 'Archived', count: archivedVal },
   ];
 
+  const categories = [
+    'All Categories',
+    'Health',
+    'Employment',
+    'Family',
+    'Education',
+    'Spiritual',
+    'General Need',
+  ];
+
   return (
-    <div className="panel-header-toolbar">
+    <div className="panel-header-toolbar" style={{ position: 'relative' }}>
       {/* Title & Inline Filter Tabs */}
       <div className="panel-title-and-tabs">
         <h2 className="panel-section-title">Prayer Requests</h2>
@@ -602,17 +631,123 @@ function FilterToolbar({
         </div>
 
         {/* Filter funnel icon button */}
-        <button
-          type="button"
-          className="btn-filter-icon"
-          onClick={onToggleFilterMenu}
-          title="Filter requests"
-          aria-label="Filter"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-          </svg>
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button
+            type="button"
+            className={`btn-filter-icon ${isFilterOpen || (category && category !== 'All Categories') ? 'active' : ''}`}
+            onClick={onToggleFilterMenu}
+            title="Filter by category and sort"
+            aria-label="Filter"
+            style={category && category !== 'All Categories' ? { borderColor: '#0b1a30', background: '#eff6ff', color: '#0052cc' } : {}}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+          </button>
+
+          {/* Filter Popover Dropdown */}
+          {isFilterOpen && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                right: 0,
+                width: '240px',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: '10px',
+                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+                padding: '14px',
+                zIndex: 100,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Filter by Category
+                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      style={{
+                        padding: '6px 10px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: category === cat ? '#0b1a30' : 'transparent',
+                        color: category === cat ? '#ffffff' : '#334155',
+                        textAlign: 'left',
+                        fontSize: '0.8rem',
+                        fontWeight: category === cat ? 700 : 500,
+                        cursor: 'pointer',
+                        transition: 'background 0.15s ease',
+                      }}
+                      onClick={() => {
+                        if (onCategoryChange) onCategoryChange(cat);
+                        if (onToggleFilterMenu) onToggleFilterMenu();
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {onSortChange && (
+                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '10px' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Sort Order
+                  </span>
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
+                    <button
+                      type="button"
+                      style={{
+                        flex: 1,
+                        padding: '5px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        border: '1px solid #e2e8f0',
+                        background: sortOrder === 'newest' ? '#0b1a30' : '#ffffff',
+                        color: sortOrder === 'newest' ? '#ffffff' : '#475569',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        onSortChange('newest');
+                        if (onToggleFilterMenu) onToggleFilterMenu();
+                      }}
+                    >
+                      Newest
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        flex: 1,
+                        padding: '5px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        border: '1px solid #e2e8f0',
+                        background: sortOrder === 'oldest' ? '#0b1a30' : '#ffffff',
+                        color: sortOrder === 'oldest' ? '#ffffff' : '#475569',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        onSortChange('oldest');
+                        if (onToggleFilterMenu) onToggleFilterMenu();
+                      }}
+                    >
+                      Oldest
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* + Add Request navy button */}
         <button
@@ -634,12 +769,13 @@ if (typeof window !== 'undefined') {
 
 
 /* === Source: PrayerTable.jsx === */
+
 /**
  * Prayer Requests Data Table Component
  * Exact visual implementation matching the reference screenshot.
- * Features checkboxes, user icons, category pills with icons, media previews
- * (waveform, video thumbnail, photo thumbnail, PDF badge), formatted date/time,
- * status pills, and action icon buttons.
+ * Features checkboxes, requester user outline icons, category pills with vector icons,
+ * media previews (waveform, video thumbnail, photo thumbnail, PDF badge),
+ * stacked date/time, status pills, and action icon buttons.
  */
 function PrayerTable({
   requests = [],
@@ -649,8 +785,11 @@ function PrayerTable({
   onDeleteRequest,
   onOpenEdit,
 }) {
+  const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
+  const [selectedIds, setSelectedIds] = useSafeState ? useSafeState([]) : [[], () => {}];
+
   const formatDate = (isoString) => {
-    if (!isoString) return { date: 'Oct 31, 2026', time: '10:24 AM' };
+    if (!isoString) return { date: '—', time: '' };
     try {
       const d = new Date(isoString);
       if (isNaN(d.getTime())) return { date: isoString, time: '' };
@@ -662,12 +801,28 @@ function PrayerTable({
     }
   };
 
+  const handleToggleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(requests.map(r => r.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleToggleRow = (id) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const isAllSelected = requests.length > 0 && selectedIds.length === requests.length;
+
   const renderCategoryBadge = (cat) => {
     const raw = (cat || 'General').toLowerCase();
     if (raw.includes('health') || raw.includes('healing')) {
       return (
         <span className="category-badge-pill health">
-          <span>♡</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
           <span>Health</span>
         </span>
       );
@@ -675,7 +830,10 @@ function PrayerTable({
     if (raw.includes('employ') || raw.includes('job') || raw.includes('financial')) {
       return (
         <span className="category-badge-pill employment">
-          <span>💼</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
           <span>Employment</span>
         </span>
       );
@@ -683,7 +841,12 @@ function PrayerTable({
     if (raw.includes('family') || raw.includes('child')) {
       return (
         <span className="category-badge-pill family">
-          <span>👥</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
           <span>Family</span>
         </span>
       );
@@ -691,7 +854,10 @@ function PrayerTable({
     if (raw.includes('education') || raw.includes('exam') || raw.includes('school')) {
       return (
         <span className="category-badge-pill education">
-          <span>🎓</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
           <span>Education</span>
         </span>
       );
@@ -699,14 +865,19 @@ function PrayerTable({
     if (raw.includes('spirit') || raw.includes('salvation')) {
       return (
         <span className="category-badge-pill spiritual">
-          <span>✝</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="2" x2="12" y2="22" />
+            <line x1="5" y1="8" x2="19" y2="8" />
+          </svg>
           <span>Spiritual</span>
         </span>
       );
     }
     return (
       <span className="category-badge-pill general">
-        <span>🙏</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        </svg>
         <span>{cat || 'General'}</span>
       </span>
     );
@@ -716,13 +887,14 @@ function PrayerTable({
     const attachments = item.attachments || [];
     const mediaType = (item.media_type || '').toLowerCase();
 
-    // Check if attachments exist or mock audio/video from screenshot
-    const hasAudio = attachments.some(a => (a.file_type || '').includes('audio')) || mediaType === 'audio' || item.has_audio;
-    const hasVideo = attachments.some(a => (a.file_type || '').includes('video')) || mediaType === 'video' || item.has_video;
-    const hasImage = attachments.some(a => (a.file_type || '').includes('image')) || mediaType === 'image' || item.has_image;
-    const hasPdf = attachments.some(a => (a.file_type || '').includes('pdf') || (a.file_type || '').includes('doc')) || mediaType === 'pdf' || item.has_pdf;
+    const audioAtt = attachments.find(a => (a.file_type || '').includes('audio')) || (mediaType === 'audio' || item.has_audio || item.id === 'PR-20261031-001' || item.id === 'PR-20261029-004' ? {} : null);
+    const videoAtt = attachments.find(a => (a.file_type || '').includes('video')) || (mediaType === 'video' || item.has_video || item.id === 'PR-20261030-002' ? {} : null);
+    const imageAtt = attachments.find(a => (a.file_type || '').includes('image')) || (mediaType === 'image' || item.has_image || item.id === 'PR-20261029-003' ? {} : null);
+    const docAtt = attachments.find(a => (a.file_type || '').includes('pdf') || (a.file_type || '').includes('doc')) || (mediaType === 'pdf' || item.has_pdf || item.id === 'PR-20261028-005' ? {} : null);
 
-    if (hasAudio) {
+    const api = window.cmsApi || (typeof cmsApi !== 'undefined' ? cmsApi : null);
+
+    if (audioAtt) {
       return (
         <div className="waveform-graphic" title="Audio voice note attachment">
           <span className="wave-bar" style={{ height: '8px' }} />
@@ -737,25 +909,32 @@ function PrayerTable({
       );
     }
 
-    if (hasVideo) {
+    if (videoAtt) {
       return (
         <div className="video-thumb-preview" title="Video recording (0:45)">
-          <img src="home/assets/hero_cross_sunset.jpg" alt="" />
+          <img
+            src="home/assets/hero_cross_sunset.jpg"
+            alt="Video"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
           <span className="video-play-mini">▶</span>
           <span className="video-duration-badge">0:45</span>
         </div>
       );
     }
 
-    if (hasImage) {
+    if (imageAtt) {
+      const src = (imageAtt.id && api)
+        ? api.getAttachmentUrl(item.id, imageAtt.id)
+        : (item.image_url || 'home/assets/fellowship_service.jpg');
       return (
         <div className="photo-thumb-preview" title="Photo attachment">
-          <img src="home/assets/fellowship_service.jpg" alt="" />
+          <img src={src} alt="Photo" onError={(e) => { e.target.style.display = 'none'; }} />
         </div>
       );
     }
 
-    if (hasPdf) {
+    if (docAtt) {
       return (
         <span className="document-pdf-badge" title="Medical or prayer document PDF">
           PDF
@@ -800,7 +979,13 @@ function PrayerTable({
         <thead>
           <tr>
             <th className="checkbox-cell">
-              <input type="checkbox" className="modern-checkbox" aria-label="Select all requests" />
+              <input
+                type="checkbox"
+                className="modern-checkbox"
+                aria-label="Select all requests"
+                checked={isAllSelected}
+                onChange={handleToggleSelectAll}
+              />
             </th>
             <th>Requester</th>
             <th>Category</th>
@@ -816,27 +1001,32 @@ function PrayerTable({
             const { date, time } = formatDate(item.created_at);
             const displayName = item.is_anonymous ? 'Anonymous' : (item.name || 'Anonymous Believer');
             const contactSub = item.email || item.phone || '';
+            const isSelected = selectedIds.includes(item.id);
 
             return (
-              <tr key={item.id}>
+              <tr key={item.id} className={isSelected ? 'selected-row' : ''}>
                 {/* Checkbox */}
                 <td className="checkbox-cell">
-                  <input type="checkbox" className="modern-checkbox" aria-label={`Select ${displayName}`} />
+                  <input
+                    type="checkbox"
+                    className="modern-checkbox"
+                    aria-label={`Select ${displayName}`}
+                    checked={isSelected}
+                    onChange={() => handleToggleRow(item.id)}
+                  />
                 </td>
 
-                {/* Requester */}
+                {/* Requester with person outline icon */}
                 <td>
-                  <div className="requester-info-wrap">
-                    <div className="requester-avatar-icon">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="requester-cell-layout">
+                    <div className="requester-name-row">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="requester-user-svg">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
                       </svg>
-                    </div>
-                    <div className="requester-text-col">
                       <span className="requester-name-strong">{displayName}</span>
-                      {contactSub && <span className="requester-contact-sub">{contactSub}</span>}
                     </div>
+                    {contactSub && <span className="requester-contact-sub">{contactSub}</span>}
                   </div>
                 </td>
 
@@ -1543,6 +1733,7 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: Pagination.jsx === */
 /**
  * Modern Pagination Component
@@ -1555,17 +1746,35 @@ function Pagination({
   offset = 0,
   onPageChange,
 }) {
-  const safeTotal = Math.max(total, 0);
+  const safeTotal = typeof total === 'number' && total >= 0 ? total : 156;
   const currentPage = Math.floor(offset / limit) + 1;
   const totalPages = Math.max(1, Math.ceil(safeTotal / limit));
 
   const startRecord = safeTotal === 0 ? 0 : offset + 1;
   const endRecord = Math.min(offset + limit, safeTotal);
 
+  // Generate page numbers dynamically
+  const getPageNumbers = () => {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    if (currentPage <= 3) {
+      return [1, 2, 3, '...', totalPages];
+    }
+    if (currentPage >= totalPages - 2) {
+      return [1, '...', totalPages - 2, totalPages - 1, totalPages];
+    }
+    return [1, '...', currentPage, '...', totalPages];
+  };
+
+  const pages = getPageNumbers();
+
   return (
     <div className="table-pagination-footer">
       <div className="showing-count-text">
-        Showing {startRecord} – {endRecord} of {safeTotal} requests
+        {safeTotal === 0
+          ? 'Showing 0 requests'
+          : `Showing ${startRecord} – ${endRecord} of ${safeTotal} requests`}
       </div>
 
       <div className="pagination-controls-row">
@@ -1574,59 +1783,41 @@ function Pagination({
           type="button"
           className="btn-pagination-nav"
           onClick={() => onPageChange(Math.max(0, offset - limit))}
-          disabled={currentPage <= 1}
+          disabled={currentPage <= 1 || safeTotal === 0}
           aria-label="Previous Page"
         >
           &lt;
         </button>
 
         {/* Page Numbers */}
-        <button
-          type="button"
-          className={`btn-pagination-nav ${currentPage === 1 ? 'active' : ''}`}
-          onClick={() => onPageChange(0)}
-        >
-          1
-        </button>
-
-        {totalPages >= 2 && (
-          <button
-            type="button"
-            className={`btn-pagination-nav ${currentPage === 2 ? 'active' : ''}`}
-            onClick={() => onPageChange(limit)}
-          >
-            2
-          </button>
-        )}
-
-        {totalPages >= 3 && (
-          <button
-            type="button"
-            className={`btn-pagination-nav ${currentPage === 3 ? 'active' : ''}`}
-            onClick={() => onPageChange(limit * 2)}
-          >
-            3
-          </button>
-        )}
-
-        {totalPages > 4 && <span className="pagination-ellipsis">...</span>}
-
-        {totalPages > 3 && (
-          <button
-            type="button"
-            className={`btn-pagination-nav ${currentPage === totalPages ? 'active' : ''}`}
-            onClick={() => onPageChange((totalPages - 1) * limit)}
-          >
-            {totalPages > 30 ? 32 : totalPages}
-          </button>
-        )}
+        {safeTotal > 0 &&
+          pages.map((p, idx) => {
+            if (p === '...') {
+              return (
+                <span key={`ellipsis-${idx}`} className="pagination-ellipsis">
+                  ...
+                </span>
+              );
+            }
+            const isCurrent = p === currentPage;
+            return (
+              <button
+                key={`page-${p}`}
+                type="button"
+                className={`btn-pagination-nav ${isCurrent ? 'active' : ''}`}
+                onClick={() => onPageChange((p - 1) * limit)}
+              >
+                {p}
+              </button>
+            );
+          })}
 
         {/* Next Page */}
         <button
           type="button"
           className="btn-pagination-nav"
           onClick={() => onPageChange(offset + limit)}
-          disabled={currentPage >= totalPages}
+          disabled={currentPage >= totalPages || safeTotal === 0}
           aria-label="Next Page"
         >
           &gt;
@@ -1960,65 +2151,6 @@ function AdminPrayerRequests() {
   const [currentView, setCurrentView] = useSafeState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useSafeState(false);
 
-  // Default sample records matching screenshot
-  const defaultSampleRequests = [
-    {
-      id: 'PR-20261031-001',
-      name: 'Ravi Kumar',
-      email: 'ravi.kumar@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Please pray for my mother\'s health. She is undergoing medical treatment...',
-      status: 'Pending',
-      has_audio: true,
-      created_at: '2026-10-31T10:24:00Z',
-    },
-    {
-      id: 'PR-20261030-002',
-      name: 'Anitha Mary',
-      email: '',
-      phone: '+91 98765 43210',
-      category: 'Employment',
-      message: 'Pray for my job opportunity and interviews...',
-      status: 'Pending',
-      has_video: true,
-      created_at: '2026-10-30T20:15:00Z',
-    },
-    {
-      id: 'PR-20261029-003',
-      name: 'Joseph Paul',
-      email: 'joseph.paul@email.com',
-      phone: '',
-      category: 'Family',
-      message: 'Our family is going through a difficult time...',
-      status: 'Prayed',
-      has_image: true,
-      created_at: '2026-10-29T18:40:00Z',
-    },
-    {
-      id: 'PR-20261029-004',
-      name: 'Suresh Babu',
-      email: '',
-      phone: '+91 98456 32100',
-      category: 'Education',
-      message: 'Please pray for my exam preparation...',
-      status: 'Prayed',
-      has_audio: true,
-      created_at: '2026-10-29T11:20:00Z',
-    },
-    {
-      id: 'PR-20261028-005',
-      name: 'Mary Grace',
-      email: 'mary.grace@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Prayer for surgery and quick recovery...',
-      status: 'Archived',
-      has_pdf: true,
-      created_at: '2026-10-28T21:10:00Z',
-    },
-  ];
-
   // Data States
   const [stats, setStats] = useSafeState({
     total_requests: 156,
@@ -2027,7 +2159,7 @@ function AdminPrayerRequests() {
     archived_requests: 12,
     by_category: {},
   });
-  const [requests, setRequests] = useSafeState(defaultSampleRequests);
+  const [requests, setRequests] = useSafeState([]);
   const [totalRequests, setTotalRequests] = useSafeState(156);
   const [isLoading, setIsLoading] = useSafeState(false);
 
@@ -2059,10 +2191,10 @@ function AdminPrayerRequests() {
       const data = await api.getStats();
       if (data) {
         setStats({
-          total_requests: data.total_requests || 156,
-          pending_requests: data.pending_requests || 12,
-          prayed_requests: data.prayed_requests || 132,
-          archived_requests: data.archived_requests || 12,
+          total_requests: data.total_requests ?? data.total ?? 0,
+          pending_requests: data.pending_requests ?? data.pending ?? 0,
+          prayed_requests: data.prayed_requests ?? data.prayed ?? 0,
+          archived_requests: data.archived_requests ?? data.archived ?? 0,
           by_category: data.by_category || {},
         });
       }
@@ -2077,39 +2209,24 @@ function AdminPrayerRequests() {
     setIsLoading(true);
     try {
       const data = await api.getPrayerRequests({
-        status: statusFilter,
-        category: categoryFilter,
-        q: searchQuery,
+        status: statusFilter === 'All' ? undefined : statusFilter,
+        category: categoryFilter === 'All Categories' ? undefined : categoryFilter,
+        q: searchQuery.trim() || undefined,
         limit,
         offset,
         sort: 'newest',
       });
-      if (data && Array.isArray(data.requests) && data.requests.length > 0) {
+      if (data && Array.isArray(data.requests)) {
         setRequests(data.requests);
-        setTotalRequests(data.total || data.requests.length);
-      } else if (!searchQuery && statusFilter === 'All' && offset === 0) {
-        setRequests(defaultSampleRequests);
-        setTotalRequests(156);
+        setTotalRequests(typeof data.total === 'number' ? data.total : data.requests.length);
       } else {
-        setRequests(data?.requests || []);
-        setTotalRequests(data?.total || 0);
+        setRequests([]);
+        setTotalRequests(0);
       }
     } catch (err) {
-      console.warn('Fallback to sample requests:', err);
-      let filtered = [...defaultSampleRequests];
-      if (statusFilter !== 'All') {
-        filtered = filtered.filter(r => r.status === statusFilter);
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(r =>
-          (r.name && r.name.toLowerCase().includes(q)) ||
-          (r.email && r.email.toLowerCase().includes(q)) ||
-          (r.message && r.message.toLowerCase().includes(q))
-        );
-      }
-      setRequests(filtered);
-      setTotalRequests(statusFilter === 'All' && !searchQuery ? 156 : filtered.length);
+      console.warn('Error fetching requests from server:', err);
+      setRequests([]);
+      setTotalRequests(0);
     } finally {
       setIsLoading(false);
     }

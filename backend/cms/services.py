@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from cms.models import (
     AboutSection,
+    AdminUser,
     Announcement,
     BibleDisplaySettings,
     ContactInfo,
@@ -362,6 +363,46 @@ class CMSService:
             ]
             for g in default_gallery:
                 db.add(GalleryItem(**g))
+            db.commit()
+
+        # 12. Admin & Pastoral Users
+        if db.query(AdminUser).count() == 0:
+            default_users = [
+                {
+                    "name": "Pastor John Samuel",
+                    "email": "pastor@gracefellowship.org",
+                    "role": "Senior Pastor & Super Admin",
+                    "status": "Active",
+                    "avatar_initials": "PS",
+                    "last_login": "Today, 2:30 PM",
+                },
+                {
+                    "name": "Deacon David Raj",
+                    "email": "david.raj@gracefellowship.org",
+                    "role": "Prayer Coordinator",
+                    "status": "Active",
+                    "avatar_initials": "DR",
+                    "last_login": "Yesterday, 8:15 PM",
+                },
+                {
+                    "name": "Sister Sarah Grace",
+                    "email": "sarah.grace@gracefellowship.org",
+                    "role": "Intercession Lead",
+                    "status": "Active",
+                    "avatar_initials": "SG",
+                    "last_login": "Oct 30, 2026",
+                },
+                {
+                    "name": "Brother Timothy Paul",
+                    "email": "timothy.paul@gracefellowship.org",
+                    "role": "Media & Tech Minister",
+                    "status": "Active",
+                    "avatar_initials": "TP",
+                    "last_login": "Oct 28, 2026",
+                },
+            ]
+            for u in default_users:
+                db.add(AdminUser(**u))
             db.commit()
 
     def get_public_content(self, db: Session) -> dict[str, Any]:

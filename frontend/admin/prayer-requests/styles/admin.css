@@ -290,8 +290,10 @@ body {
 }
 
 .chevron-down-icon {
-  font-size: 0.85rem;
-  color: #94a3b8;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ==========================================================================
@@ -398,14 +400,12 @@ body {
 }
 
 .kpi-card {
-  background: #ffffff;
-  border: 1px solid #edf2f7;
   border-radius: 14px;
   padding: 20px 22px;
   display: flex;
   align-items: center;
   gap: 18px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   cursor: pointer;
   user-select: none;
@@ -413,58 +413,39 @@ body {
 
 .kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .kpi-card.total {
-  background: linear-gradient(135deg, #ffffff 0%, #f7faff 100%);
-  border-color: #e0f2fe;
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
 }
 
 .kpi-card.pending {
-  background: linear-gradient(135deg, #ffffff 0%, #fffdf7 100%);
-  border-color: #fef3c7;
+  background-color: #fffbeb;
+  border: 1px solid #fef3c7;
 }
 
 .kpi-card.prayed {
-  background: linear-gradient(135deg, #ffffff 0%, #f7fef9 100%);
-  border-color: #dcfce7;
+  background-color: #f0fdf4;
+  border: 1px solid #dcfce7;
 }
 
 .kpi-card.archived {
-  background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
-  border-color: #f3e8ff;
+  background-color: #faf5ff;
+  border: 1px solid #f3e8ff;
 }
 
 .kpi-icon-box {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.45rem;
   flex-shrink: 0;
-}
-
-.kpi-card.total .kpi-icon-box {
-  background-color: #eff6ff;
-  color: #2563eb;
-}
-
-.kpi-card.pending .kpi-icon-box {
-  background-color: #fef3c7;
-  color: #d97706;
-}
-
-.kpi-card.prayed .kpi-icon-box {
-  background-color: #dcfce7;
-  color: #16a34a;
-}
-
-.kpi-card.archived .kpi-icon-box {
-  background-color: #f3e8ff;
-  color: #9333ea;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .kpi-meta-box {
@@ -473,18 +454,18 @@ body {
 }
 
 .kpi-label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
   margin-bottom: 2px;
 }
 
 .kpi-number {
-  font-size: 1.75rem;
+  font-size: 2.1rem;
   font-weight: 800;
-  color: #0f172a;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  color: #0b1a30;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 
 /* ==========================================================================
@@ -512,7 +493,7 @@ body {
 .panel-title-and-tabs {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -527,17 +508,17 @@ body {
 .inline-filter-tabs {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
 }
 
 .inline-tab-btn {
   background: transparent;
   border: none;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #64748b;
+  color: #334155;
   cursor: pointer;
-  padding: 4px 0;
+  padding: 6px 0;
   position: relative;
   transition: color 0.15s ease;
   user-select: none;
@@ -558,7 +539,7 @@ body {
   bottom: -4px;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 2.5px;
   background-color: #0052cc;
   border-radius: 2px;
 }
@@ -699,42 +680,35 @@ body {
   accent-color: #0b1a30;
 }
 
-/* Requester Cell */
-.requester-info-wrap {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.requester-avatar-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #f1f5f9;
-  color: #64748b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.requester-text-col {
+/* Requester Cell Layout */
+.requester-cell-layout {
   display: flex;
   flex-direction: column;
+  gap: 2px;
+}
+
+.requester-name-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.requester-user-svg {
+  color: #0f172a;
+  flex-shrink: 0;
 }
 
 .requester-name-strong {
   font-weight: 700;
   color: #0f172a;
   font-size: 0.88rem;
+  letter-spacing: -0.01em;
 }
 
 .requester-contact-sub {
   font-size: 0.78rem;
   color: #64748b;
-  margin-top: 1px;
+  padding-left: 22px;
 }
 
 /* Category Pill Badges */
@@ -804,10 +778,10 @@ body {
 .waveform-graphic {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  height: 22px;
-  padding: 2px 6px;
-  border-radius: 4px;
+  gap: 2.5px;
+  height: 26px;
+  padding: 3px 8px;
+  border-radius: 6px;
   background: #eff6ff;
 }
 
@@ -827,6 +801,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .video-thumb-preview img {
@@ -839,27 +814,37 @@ body {
 .video-play-mini {
   position: absolute;
   color: #ffffff;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.5);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
 }
 
 .video-duration-badge {
   position: absolute;
   bottom: 2px;
-  right: 3px;
-  background: rgba(0, 0, 0, 0.7);
+  right: 2px;
+  background: rgba(0, 0, 0, 0.75);
   color: #ffffff;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  padding: 1px 3px;
+  padding: 0.5px 3px;
   border-radius: 2px;
+  line-height: 1.2;
 }
 
 .photo-thumb-preview {
-  width: 48px;
+  width: 52px;
   height: 32px;
   border-radius: 6px;
   overflow: hidden;
   background-color: #f1f5f9;
+  flex-shrink: 0;
 }
 
 .photo-thumb-preview img {
@@ -869,16 +854,20 @@ body {
 }
 
 .document-pdf-badge {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background-color: #ef4444;
+  color: #ffffff;
   font-size: 0.72rem;
   font-weight: 800;
-  padding: 3px 7px;
+  padding: 2.5px 7px;
   border-radius: 4px;
-  border: 1px solid #fecaca;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  letter-spacing: 0.04em;
+}
+
+.data-table-modern tbody tr.selected-row {
+  background-color: #f8faff;
 }
 
 /* Date and Time Cell */
@@ -902,7 +891,9 @@ body {
 /* Status Badges */
 .status-pill-badge {
   display: inline-block;
-  padding: 4px 12px;
+  min-width: 80px;
+  text-align: center;
+  padding: 4px 14px;
   border-radius: 9999px;
   font-size: 0.78rem;
   font-weight: 700;

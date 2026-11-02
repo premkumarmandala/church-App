@@ -181,3 +181,30 @@ def test_admin_cms_crud_workflow(admin_token):
     assert upload_res.status_code == 200
     assert "url" in upload_res.json()
 
+    # 7. List, Create, and Delete Admin Users
+    users_list_res = client.get("/api/admin/users", headers=headers)
+    assert users_list_res.status_code == 200
+    users = users_list_res.json()
+    assert len(users) >= 4  # Seeded users present
+
+    new_user_res = client.post(
+        "/api/admin/users",
+        json={
+            "name": "Deacon Barnabas",
+            "email": "barnabas@gracefellowship.org",
+            "role": "Outreach Minister",
+            "status": "Active",
+        },
+        headers=headers,
+    )
+    assert new_user_res.status_code == 200
+    u_data = new_user_res.json()
+    assert u_data["name"] == "Deacon Barnabas"
+    assert u_data["avatar_initials"] == "DB"
+    user_id = u_data["id"]
+
+    del_user_res = client.delete(f"/api/admin/users/{user_id}", headers=headers)
+    assert del_user_res.status_code == 200
+    assert del_user_res.json()["status"] == "success"
+
+

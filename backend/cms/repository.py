@@ -4,6 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from cms.models import (
     AboutSection,
+    AdminUser,
     Announcement,
     AuditLog,
     BibleDisplaySettings,
@@ -377,6 +378,30 @@ class CMSRepository:
 
     # ------------------------------------------------------------------------
     # Overview Statistics
+    # ------------------------------------------------------------------------
+    # Admin Users
+    # ------------------------------------------------------------------------
+    def list_admin_users(self, db: Session) -> list[AdminUser]:
+        return db.query(AdminUser).order_by(AdminUser.id.asc()).all()
+
+    def get_admin_user_by_id(self, db: Session, user_id: int) -> Optional[AdminUser]:
+        return db.query(AdminUser).filter(AdminUser.id == user_id).first()
+
+    def create_admin_user(self, db: Session, data: dict[str, Any]) -> AdminUser:
+        item = AdminUser(**data)
+        db.add(item)
+        db.commit()
+        db.refresh(item)
+        return item
+
+    def delete_admin_user(self, db: Session, user_id: int) -> bool:
+        item = self.get_admin_user_by_id(db, user_id)
+        if not item:
+            return False
+        db.delete(item)
+        db.commit()
+        return True
+
     # ------------------------------------------------------------------------
     def get_cms_overview_stats(self, db: Session) -> dict[str, Any]:
         sermons_count = db.query(func.count(Sermon.id)).filter(Sermon.is_published.is_(True)).scalar() or 0

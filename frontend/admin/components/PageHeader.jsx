@@ -1,18 +1,26 @@
 /**
- * Reusable Page Header Component
+ * Section Action Header Component
+ * Provides clean module-level toolbar with section title and primary action button,
+ * aligning with the unified white & navy corporate dashboard theme.
  */
-export function PageHeader({ title, subtitle, actionLabel, onAction, actionIcon = '➕' }) {
+export function PageHeader({ title, subtitle, actionLabel, onAction, actionIcon = '+' }) {
   return (
-    <div className="page-header">
-      <div>
-        <h1 className="page-title">{title}</h1>
-        {subtitle && <p className="page-subtitle">{subtitle}</p>}
+    <div className="panel-header-toolbar" style={{ marginBottom: '8px' }}>
+      <div className="panel-title-and-tabs">
+        {title && <h2 className="panel-section-title">{title}</h2>}
+        {subtitle && (
+          <span style={{ fontSize: '0.8rem', color: '#64748b', marginLeft: '6px' }}>
+            — {subtitle}
+          </span>
+        )}
       </div>
       {actionLabel && onAction && (
-        <button type="button" className="btn-primary" onClick={onAction}>
-          <span>{actionIcon}</span>
-          <span>{actionLabel}</span>
-        </button>
+        <div className="panel-right-tools">
+          <button type="button" className="btn-add-primary" onClick={onAction}>
+            <span>{actionIcon}</span>
+            <span>{actionLabel}</span>
+          </button>
+        </div>
       )}
     </div>
   );

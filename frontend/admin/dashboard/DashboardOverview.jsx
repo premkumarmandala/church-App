@@ -11,6 +11,7 @@ import { ConfirmModal } from '../components/ConfirmModal.jsx';
 /**
  * Master Dashboard Overview Component
  * Matches the reference screenshot with 4 KPI cards and live Prayer Requests table.
+ * All metrics, requests, and pagination are fed directly from PostgreSQL / SQLite.
  */
 export function DashboardOverview({ overview, onNavigateModule }) {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -19,66 +20,7 @@ export function DashboardOverview({ overview, onNavigateModule }) {
 
   const api = window.cmsApi || cmsApi;
 
-  // Default sample records exactly matching the user's screenshot
-  const defaultSampleRequests = [
-    {
-      id: 'PR-20261031-001',
-      name: 'Ravi Kumar',
-      email: 'ravi.kumar@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Please pray for my mother\'s health. She is undergoing medical treatment and tests at the hospital...',
-      status: 'Pending',
-      has_audio: true,
-      created_at: '2026-10-31T10:24:00Z',
-    },
-    {
-      id: 'PR-20261030-002',
-      name: 'Anitha Mary',
-      email: '',
-      phone: '+91 98765 43210',
-      category: 'Employment',
-      message: 'Pray for my job opportunity and final interviews scheduled this coming week...',
-      status: 'Pending',
-      has_video: true,
-      created_at: '2026-10-30T20:15:00Z',
-    },
-    {
-      id: 'PR-20261029-003',
-      name: 'Joseph Paul',
-      email: 'joseph.paul@email.com',
-      phone: '',
-      category: 'Family',
-      message: 'Our family is going through a difficult time with emotional reconciliation and healing...',
-      status: 'Prayed',
-      has_image: true,
-      created_at: '2026-10-29T18:40:00Z',
-    },
-    {
-      id: 'PR-20261029-004',
-      name: 'Suresh Babu',
-      email: '',
-      phone: '+91 98456 32100',
-      category: 'Education',
-      message: 'Please pray for my exam preparation and university admission counseling...',
-      status: 'Prayed',
-      has_audio: true,
-      created_at: '2026-10-29T11:20:00Z',
-    },
-    {
-      id: 'PR-20261028-005',
-      name: 'Mary Grace',
-      email: 'mary.grace@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Prayer for surgery and quick recovery without complications...',
-      status: 'Archived',
-      has_pdf: true,
-      created_at: '2026-10-28T21:10:00Z',
-    },
-  ];
-
-  // State
+  // Real KPI statistics directly from database
   const [stats, setStats] = useSafeState({
     total_requests: 156,
     pending_requests: 12,
@@ -86,13 +28,18 @@ export function DashboardOverview({ overview, onNavigateModule }) {
     archived_requests: 12,
   });
 
-  const [requests, setRequests] = useSafeState(defaultSampleRequests);
+  // Requests state
+  const [requests, setRequests] = useSafeState([]);
   const [totalCount, setTotalCount] = useSafeState(156);
   const [statusFilter, setStatusFilter] = useSafeState('All');
+  const [categoryFilter, setCategoryFilter] = useSafeState('All Categories');
+  const [sortOrder, setSortOrder] = useSafeState('newest');
   const [searchQuery, setSearchQuery] = useSafeState('');
   const [offset, setOffset] = useSafeState(0);
   const [limit, setLimit] = useSafeState(5);
-  const [isLoading, setIsLoading] = useSafeState(false);
+  const [isLoading, setIsLoading] = useSafeState(true);
+  const [isFilterOpen, setIsFilterOpen] = useSafeState(false);
+  const [errorMessage, setErrorMessage] = useSafeState('');
 
   // Modals
   const [isAddOpen, setIsAddOpen] = useSafeState(false);
@@ -100,59 +47,49 @@ export function DashboardOverview({ overview, onNavigateModule }) {
   const [requestToDelete, setRequestToDelete] = useSafeState(null);
   const [isSubmitting, setIsSubmitting] = useSafeState(false);
 
-  // Fetch real data from PostgreSQL
+  // Fetch real data from PostgreSQL / SQLite
   const fetchData = useSafeCallback(async () => {
     try {
       setIsLoading(true);
+      setErrorMessage('');
+
+      // 1. Fetch real aggregate statistics
       const statsRes = await api.getPrayerStats();
       if (statsRes) {
         setStats({
-          total_requests: statsRes.total_requests || 156,
-          pending_requests: statsRes.pending_requests || 12,
-          prayed_requests: statsRes.prayed_requests || 132,
-          archived_requests: statsRes.archived_requests || 12,
+          total_requests: statsRes.total_requests ?? statsRes.total ?? 0,
+          pending_requests: statsRes.pending_requests ?? statsRes.pending ?? 0,
+          prayed_requests: statsRes.prayed_requests ?? statsRes.prayed ?? 0,
+          archived_requests: statsRes.archived_requests ?? statsRes.archived ?? 0,
         });
       }
 
+      // 2. Fetch real filtered requests
       const listRes = await api.getPrayerRequests({
-        status: statusFilter,
-        q: searchQuery,
+        status: statusFilter === 'All' ? undefined : statusFilter,
+        category: categoryFilter === 'All Categories' ? undefined : categoryFilter,
+        q: searchQuery.trim() || undefined,
         limit,
         offset,
+        sort: sortOrder,
       });
 
-      if (listRes && Array.isArray(listRes.requests) && listRes.requests.length > 0) {
+      if (listRes && Array.isArray(listRes.requests)) {
         setRequests(listRes.requests);
-        setTotalCount(listRes.total || listRes.requests.length);
-      } else if (!searchQuery && statusFilter === 'All' && offset === 0) {
-        // Fallback to sample reference requests
-        setRequests(defaultSampleRequests);
-        setTotalCount(156);
+        setTotalCount(typeof listRes.total === 'number' ? listRes.total : listRes.requests.length);
       } else {
-        setRequests(listRes?.requests || []);
-        setTotalCount(listRes?.total || 0);
+        setRequests([]);
+        setTotalCount(0);
       }
     } catch (err) {
-      console.warn('Using default reference requests:', err);
-      // Fallback filter
-      let filtered = [...defaultSampleRequests];
-      if (statusFilter !== 'All') {
-        filtered = filtered.filter(r => r.status === statusFilter);
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(r =>
-          (r.name && r.name.toLowerCase().includes(q)) ||
-          (r.email && r.email.toLowerCase().includes(q)) ||
-          (r.message && r.message.toLowerCase().includes(q))
-        );
-      }
-      setRequests(filtered);
-      setTotalCount(statusFilter === 'All' && !searchQuery ? 156 : filtered.length);
+      console.warn('Error fetching real prayer data:', err);
+      setErrorMessage(err.message || 'Unable to load prayer requests from server.');
+      setRequests([]);
+      setTotalCount(0);
     } finally {
       setIsLoading(false);
     }
-  }, [api, statusFilter, searchQuery, limit, offset]);
+  }, [api, statusFilter, categoryFilter, searchQuery, limit, offset, sortOrder]);
 
   useSafeEffect(() => {
     fetchData();
@@ -164,8 +101,18 @@ export function DashboardOverview({ overview, onNavigateModule }) {
     setOffset(0);
   };
 
+  const handleCategoryChange = (newCategory) => {
+    setCategoryFilter(newCategory);
+    setOffset(0);
+  };
+
   const handleSearchChange = (query) => {
     setSearchQuery(query);
+    setOffset(0);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortOrder(newSort);
     setOffset(0);
   };
 
@@ -174,17 +121,17 @@ export function DashboardOverview({ overview, onNavigateModule }) {
     try {
       await api.updatePrayerRequest(item.id, { status: nextStatus });
       fetchData();
-    } catch {
-      // Local optimistic update
-      setRequests(prev => prev.map(r => r.id === item.id ? { ...r, status: nextStatus } : r));
+    } catch (err) {
+      console.error('Failed to update status:', err);
+      setErrorMessage('Could not update status on server.');
     }
   };
 
   const handleSaveNewRequest = async (formData) => {
     setIsSubmitting(true);
+    setErrorMessage('');
     try {
-      // Post to public submission or admin endpoint
-      const res = await fetch('/api/prayer-request/submit', {
+      const res = await fetch('/api/prayer-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -193,17 +140,11 @@ export function DashboardOverview({ overview, onNavigateModule }) {
         setIsAddOpen(false);
         fetchData();
       } else {
-        // Optimistic local add
-        const newReq = {
-          id: `PR-${Date.now()}`,
-          ...formData,
-          created_at: new Date().toISOString(),
-        };
-        setRequests(prev => [newReq, ...prev]);
-        setIsAddOpen(false);
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.detail || 'Failed to submit prayer request');
       }
-    } catch {
-      setIsAddOpen(false);
+    } catch (err) {
+      alert(err.message || 'Error submitting request');
     } finally {
       setIsSubmitting(false);
     }
@@ -216,9 +157,9 @@ export function DashboardOverview({ overview, onNavigateModule }) {
       await api.deletePrayerRequest(requestToDelete.id);
       setRequestToDelete(null);
       fetchData();
-    } catch {
-      setRequests(prev => prev.filter(r => r.id !== requestToDelete.id));
-      setRequestToDelete(null);
+    } catch (err) {
+      console.error('Error deleting request:', err);
+      alert('Failed to delete request.');
     } finally {
       setIsSubmitting(false);
     }
@@ -234,6 +175,12 @@ export function DashboardOverview({ overview, onNavigateModule }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {errorMessage && (
+        <div style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '16px', fontWeight: 600 }}>
+          ✕ {errorMessage}
+        </div>
+      )}
+
       {/* 4 Stat Cards Row */}
       <CompStatsOverview
         stats={stats}
@@ -248,8 +195,14 @@ export function DashboardOverview({ overview, onNavigateModule }) {
           onStatusChange={handleStatusChange}
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
+          category={categoryFilter}
+          onCategoryChange={handleCategoryChange}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
           stats={stats}
           onOpenAdd={() => setIsAddOpen(true)}
+          isFilterOpen={isFilterOpen}
+          onToggleFilterMenu={() => setIsFilterOpen(!isFilterOpen)}
         />
 
         <CompPrayerTable

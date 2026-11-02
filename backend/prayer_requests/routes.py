@@ -200,6 +200,7 @@ def list_prayer_requests(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     """Retrieve filtered list of prayer requests for pastoral care."""
+    prayer_service.seed_default_requests(db)
     records, total = prayer_service.list_prayer_requests(
         db=db,
         category=category,
@@ -229,6 +230,7 @@ def get_prayer_stats(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     """Retrieve summary statistics of church prayer requests."""
+    prayer_service.seed_default_requests(db)
     return prayer_service.get_stats(db)
 
 

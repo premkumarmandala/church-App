@@ -576,3 +576,59 @@ def update_admin_site_settings(
     cms_repository.add_audit_log(db, admin["username"], "Settings", "Update", "Updated global site branding, SEO, and footer")
     return item.to_dict()
 
+
+# ----------------------------------------------------------------------------
+# 12. Admin & Pastoral Users Module Endpoints
+# ----------------------------------------------------------------------------
+
+@router.get("/api/admin/users", summary="List Church Administrators & Pastoral Team")
+def get_admin_users(
+    admin: dict = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> list[dict[str, Any]]:
+    cms_service.seed_default_cms_data(db)
+    return [u.to_dict() for u in cms_repository.list_admin_users(db)]
+
+
+@router.post("/api/admin/users", summary="Add Admin or Pastoral Team Member")
+def create_admin_user(
+    payload: dict[str, Any],
+    admin: dict = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    name = payload.get("name", "").strip()
+    email = payload.get("email", "").strip()
+    role = payload.get("role", "Staff Administrator").strip()
+    status = payload.get("status", "Active").strip()
+    if not name or not email:
+        raise HTTPException(status_code=400, detail="Name and email are required.")
+
+    initials = "".join([part[0].upper() for part in name.split()[:2]]) or "A"
+    data = {
+        "name": name,
+        "email": email,
+        "role": role,
+        "status": status,
+        "avatar_initials": initials,
+        "last_login": "Just now",
+    }
+    user = cms_repository.create_admin_user(db, data)
+    cms_repository.add_audit_log(db, admin["username"], "Users", "Create", f"Added user: {name} ({role})")
+    return user.to_dict()
+
+
+@router.delete("/api/admin/users/{user_id}", summary="Delete Admin or Pastoral Team Member")
+def delete_admin_user(
+    user_id: int,
+    admin: dict = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    existing = cms_repository.get_admin_user_by_id(db, user_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="User not found.")
+    name = existing.name
+    cms_repository.delete_admin_user(db, user_id)
+    cms_repository.add_audit_log(db, admin["username"], "Users", "Delete", f"Removed user: {name}")
+    return {"status": "success", "message": f"User {name} removed."}
+
+

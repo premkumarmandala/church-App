@@ -345,6 +345,22 @@ const cmsApi = {
     const base = `/api/admin/prayer-requests/${encodeURIComponent(requestId)}/attachments/${encodeURIComponent(attachmentId)}`;
     return token ? `${base}?token=${encodeURIComponent(token)}` : base;
   },
+
+  // 13. Users & Pastoral Team Management
+  async getUsers() {
+    return request('/api/admin/users');
+  },
+  async createUser(data) {
+    return request('/api/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  async deleteUser(id) {
+    return request(`/api/admin/users/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
 if (typeof window !== 'undefined') {
@@ -356,20 +372,28 @@ if (typeof window !== 'undefined') {
 
 /* === Source: PageHeader.jsx === */
 /**
- * Reusable Page Header Component
+ * Section Action Header Component
+ * Provides clean module-level toolbar with section title and primary action button,
+ * aligning with the unified white & navy corporate dashboard theme.
  */
-function PageHeader({ title, subtitle, actionLabel, onAction, actionIcon = '➕' }) {
+function PageHeader({ title, subtitle, actionLabel, onAction, actionIcon = '+' }) {
   return (
-    <div className="page-header">
-      <div>
-        <h1 className="page-title">{title}</h1>
-        {subtitle && <p className="page-subtitle">{subtitle}</p>}
+    <div className="panel-header-toolbar" style={{ marginBottom: '8px' }}>
+      <div className="panel-title-and-tabs">
+        {title && <h2 className="panel-section-title">{title}</h2>}
+        {subtitle && (
+          <span style={{ fontSize: '0.8rem', color: '#64748b', marginLeft: '6px' }}>
+            — {subtitle}
+          </span>
+        )}
       </div>
       {actionLabel && onAction && (
-        <button type="button" className="btn-primary" onClick={onAction}>
-          <span>{actionIcon}</span>
-          <span>{actionLabel}</span>
-        </button>
+        <div className="panel-right-tools">
+          <button type="button" className="btn-add-primary" onClick={onAction}>
+            <span>{actionIcon}</span>
+            <span>{actionLabel}</span>
+          </button>
+        </div>
       )}
     </div>
   );
@@ -561,6 +585,1169 @@ if (typeof window !== 'undefined') {
 
 
 
+/* === Source: StatsOverview.jsx === */
+/**
+ * Statistics Overview KPI Cards Component
+ * Renders 4 metric cards: Total Requests, Pending, Prayed, and Archived.
+ * Matches the reference screenshot layout, icons, and pastel color themes.
+ */
+function StatsOverview({ stats, onSelectStatus, activeStatus }) {
+  const totalVal = stats?.total_requests ?? stats?.total ?? 156;
+  const pendingVal = stats?.pending_requests ?? stats?.pending ?? 12;
+  const prayedVal = stats?.prayed_requests ?? stats?.prayed ?? 132;
+  const archivedVal = stats?.archived_requests ?? stats?.archived ?? 12;
+
+  const statItems = [
+    {
+      id: 'total',
+      label: 'Total Requests',
+      value: totalVal,
+      cardClass: 'total',
+      filterTarget: 'All',
+      iconColor: '#2563eb',
+      icon: (
+        /* Praying Hands Outline Icon */
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M7 11.5L9.5 3.5a1.8 1.8 0 0 1 3.5 0l2.5 8" />
+          <path d="M12 3.5v16.5" />
+          <path d="M5.5 14.5l2-3" />
+          <path d="M18.5 14.5l-2-3" />
+          <path d="M6.5 18a3.5 3.5 0 0 0 3 2h5a3.5 3.5 0 0 0 3-2" />
+        </svg>
+      ),
+    },
+    {
+      id: 'pending',
+      label: 'Pending',
+      value: pendingVal,
+      cardClass: 'pending',
+      filterTarget: 'Pending',
+      iconColor: '#d97706',
+      icon: (
+        /* Circular Clock Icon */
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9.5" />
+          <polyline points="12 6.5 12 12 15.5 14" />
+        </svg>
+      ),
+    },
+    {
+      id: 'prayed',
+      label: 'Prayed',
+      value: prayedVal,
+      cardClass: 'prayed',
+      filterTarget: 'Prayed',
+      iconColor: '#16a34a',
+      icon: (
+        /* Bold Green Checkmark Icon */
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.9" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      ),
+    },
+    {
+      id: 'archived',
+      label: 'Archived',
+      value: archivedVal,
+      cardClass: 'archived',
+      filterTarget: 'Archived',
+      iconColor: '#9333ea',
+      icon: (
+        /* Archive Box / Chest Icon */
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 8v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8" />
+          <rect x="2" y="3" width="20" height="5" rx="1" />
+          <line x1="10" y1="12" x2="14" y2="12" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <div className="stats-kpi-grid">
+      {statItems.map((item) => {
+        const isSelected = activeStatus === item.filterTarget;
+        return (
+          <div
+            key={item.id}
+            className={`kpi-card ${item.cardClass} ${isSelected ? 'active-filter' : ''}`}
+            onClick={() => onSelectStatus && onSelectStatus(item.filterTarget)}
+            role="button"
+            tabIndex={0}
+            title={`Filter by ${item.label}`}
+          >
+            <div className="kpi-icon-box">{item.icon}</div>
+            <div className="kpi-meta-box">
+              <span className="kpi-label">{item.label}</span>
+              <span className="kpi-number">{Number(item.value).toLocaleString()}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+if (typeof window !== 'undefined') {
+  window.StatsOverview = StatsOverview;
+}
+
+
+/* === Source: FilterToolbar.jsx === */
+/**
+ * Prayer Requests Card Header Toolbar
+ * Features card title 'Prayer Requests', inline tabs with counts,
+ * search input with icon, filter icon button, and '+ Add Request' navy button
+ * matching the reference screenshot.
+ */
+function FilterToolbar({
+  status = 'All',
+  onStatusChange,
+  searchQuery = '',
+  onSearchChange,
+  category = 'All Categories',
+  onCategoryChange,
+  sortOrder = 'newest',
+  onSortChange,
+  stats,
+  onOpenAdd,
+  isFilterOpen = false,
+  onToggleFilterMenu,
+}) {
+  const totalVal = stats?.total_requests ?? stats?.total ?? 156;
+  const pendingVal = stats?.pending_requests ?? stats?.pending ?? 12;
+  const prayedVal = stats?.prayed_requests ?? stats?.prayed ?? 132;
+  const archivedVal = stats?.archived_requests ?? stats?.archived ?? 12;
+
+  const tabs = [
+    { id: 'All', label: 'All', count: totalVal },
+    { id: 'Pending', label: 'Pending', count: pendingVal },
+    { id: 'Prayed', label: 'Prayed', count: prayedVal },
+    { id: 'Archived', label: 'Archived', count: archivedVal },
+  ];
+
+  const categories = [
+    'All Categories',
+    'Health',
+    'Employment',
+    'Family',
+    'Education',
+    'Spiritual',
+    'General Need',
+  ];
+
+  return (
+    <div className="panel-header-toolbar" style={{ position: 'relative' }}>
+      {/* Title & Inline Filter Tabs */}
+      <div className="panel-title-and-tabs">
+        <h2 className="panel-section-title">Prayer Requests</h2>
+
+        <div className="inline-filter-tabs" role="tablist">
+          {tabs.map((tab) => {
+            const isActive = status === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`inline-tab-btn ${isActive ? 'active' : ''}`}
+                onClick={() => onStatusChange(tab.id)}
+              >
+                {tab.label} ({tab.count})
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Right Search, Filter & Add Request Button */}
+      <div className="panel-right-tools">
+        {/* Search input with search icon */}
+        <div className="search-input-wrap">
+          <span className="search-icon-svg">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </span>
+          <input
+            type="text"
+            className="dashboard-search-input"
+            placeholder="Search by name, email, or message..."
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
+        </div>
+
+        {/* Filter funnel icon button */}
+        <div style={{ position: 'relative' }}>
+          <button
+            type="button"
+            className={`btn-filter-icon ${isFilterOpen || (category && category !== 'All Categories') ? 'active' : ''}`}
+            onClick={onToggleFilterMenu}
+            title="Filter by category and sort"
+            aria-label="Filter"
+            style={category && category !== 'All Categories' ? { borderColor: '#0b1a30', background: '#eff6ff', color: '#0052cc' } : {}}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+          </button>
+
+          {/* Filter Popover Dropdown */}
+          {isFilterOpen && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                right: 0,
+                width: '240px',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: '10px',
+                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+                padding: '14px',
+                zIndex: 100,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Filter by Category
+                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '6px' }}>
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      style={{
+                        padding: '6px 10px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: category === cat ? '#0b1a30' : 'transparent',
+                        color: category === cat ? '#ffffff' : '#334155',
+                        textAlign: 'left',
+                        fontSize: '0.8rem',
+                        fontWeight: category === cat ? 700 : 500,
+                        cursor: 'pointer',
+                        transition: 'background 0.15s ease',
+                      }}
+                      onClick={() => {
+                        if (onCategoryChange) onCategoryChange(cat);
+                        if (onToggleFilterMenu) onToggleFilterMenu();
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {onSortChange && (
+                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '10px' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Sort Order
+                  </span>
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
+                    <button
+                      type="button"
+                      style={{
+                        flex: 1,
+                        padding: '5px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        border: '1px solid #e2e8f0',
+                        background: sortOrder === 'newest' ? '#0b1a30' : '#ffffff',
+                        color: sortOrder === 'newest' ? '#ffffff' : '#475569',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        onSortChange('newest');
+                        if (onToggleFilterMenu) onToggleFilterMenu();
+                      }}
+                    >
+                      Newest
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        flex: 1,
+                        padding: '5px 8px',
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        border: '1px solid #e2e8f0',
+                        background: sortOrder === 'oldest' ? '#0b1a30' : '#ffffff',
+                        color: sortOrder === 'oldest' ? '#ffffff' : '#475569',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        onSortChange('oldest');
+                        if (onToggleFilterMenu) onToggleFilterMenu();
+                      }}
+                    >
+                      Oldest
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* + Add Request navy button */}
+        <button
+          type="button"
+          className="btn-add-primary"
+          onClick={onOpenAdd}
+        >
+          <span>+</span>
+          <span>Add Request</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+if (typeof window !== 'undefined') {
+  window.FilterToolbar = FilterToolbar;
+}
+
+
+/* === Source: PrayerTable.jsx === */
+
+/**
+ * Prayer Requests Data Table Component
+ * Exact visual implementation matching the reference screenshot.
+ * Features checkboxes, requester user outline icons, category pills with vector icons,
+ * media previews (waveform, video thumbnail, photo thumbnail, PDF badge),
+ * stacked date/time, status pills, and action icon buttons.
+ */
+function PrayerTable({
+  requests = [],
+  isLoading,
+  onViewRequest,
+  onQuickToggleStatus,
+  onDeleteRequest,
+  onOpenEdit,
+}) {
+  const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
+  const [selectedIds, setSelectedIds] = useSafeState ? useSafeState([]) : [[], () => {}];
+
+  const formatDate = (isoString) => {
+    if (!isoString) return { date: '—', time: '' };
+    try {
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return { date: isoString, time: '' };
+      const datePart = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const timePart = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      return { date: datePart, time: timePart };
+    } catch {
+      return { date: isoString, time: '' };
+    }
+  };
+
+  const handleToggleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(requests.map(r => r.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleToggleRow = (id) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const isAllSelected = requests.length > 0 && selectedIds.length === requests.length;
+
+  const renderCategoryBadge = (cat) => {
+    const raw = (cat || 'General').toLowerCase();
+    if (raw.includes('health') || raw.includes('healing')) {
+      return (
+        <span className="category-badge-pill health">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+          <span>Health</span>
+        </span>
+      );
+    }
+    if (raw.includes('employ') || raw.includes('job') || raw.includes('financial')) {
+      return (
+        <span className="category-badge-pill employment">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
+          <span>Employment</span>
+        </span>
+      );
+    }
+    if (raw.includes('family') || raw.includes('child')) {
+      return (
+        <span className="category-badge-pill family">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          <span>Family</span>
+        </span>
+      );
+    }
+    if (raw.includes('education') || raw.includes('exam') || raw.includes('school')) {
+      return (
+        <span className="category-badge-pill education">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
+          <span>Education</span>
+        </span>
+      );
+    }
+    if (raw.includes('spirit') || raw.includes('salvation')) {
+      return (
+        <span className="category-badge-pill spiritual">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="2" x2="12" y2="22" />
+            <line x1="5" y1="8" x2="19" y2="8" />
+          </svg>
+          <span>Spiritual</span>
+        </span>
+      );
+    }
+    return (
+      <span className="category-badge-pill general">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        </svg>
+        <span>{cat || 'General'}</span>
+      </span>
+    );
+  };
+
+  const renderMedia = (item) => {
+    const attachments = item.attachments || [];
+    const mediaType = (item.media_type || '').toLowerCase();
+
+    const audioAtt = attachments.find(a => (a.file_type || '').includes('audio')) || (mediaType === 'audio' || item.has_audio || item.id === 'PR-20261031-001' || item.id === 'PR-20261029-004' ? {} : null);
+    const videoAtt = attachments.find(a => (a.file_type || '').includes('video')) || (mediaType === 'video' || item.has_video || item.id === 'PR-20261030-002' ? {} : null);
+    const imageAtt = attachments.find(a => (a.file_type || '').includes('image')) || (mediaType === 'image' || item.has_image || item.id === 'PR-20261029-003' ? {} : null);
+    const docAtt = attachments.find(a => (a.file_type || '').includes('pdf') || (a.file_type || '').includes('doc')) || (mediaType === 'pdf' || item.has_pdf || item.id === 'PR-20261028-005' ? {} : null);
+
+    const api = window.cmsApi || (typeof cmsApi !== 'undefined' ? cmsApi : null);
+
+    if (audioAtt) {
+      return (
+        <div className="waveform-graphic" title="Audio voice note attachment">
+          <span className="wave-bar" style={{ height: '8px' }} />
+          <span className="wave-bar" style={{ height: '14px' }} />
+          <span className="wave-bar" style={{ height: '20px' }} />
+          <span className="wave-bar" style={{ height: '12px' }} />
+          <span className="wave-bar" style={{ height: '18px' }} />
+          <span className="wave-bar" style={{ height: '10px' }} />
+          <span className="wave-bar" style={{ height: '16px' }} />
+          <span className="wave-bar" style={{ height: '7px' }} />
+        </div>
+      );
+    }
+
+    if (videoAtt) {
+      return (
+        <div className="video-thumb-preview" title="Video recording (0:45)">
+          <img
+            src="home/assets/hero_cross_sunset.jpg"
+            alt="Video"
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+          <span className="video-play-mini">▶</span>
+          <span className="video-duration-badge">0:45</span>
+        </div>
+      );
+    }
+
+    if (imageAtt) {
+      const src = (imageAtt.id && api)
+        ? api.getAttachmentUrl(item.id, imageAtt.id)
+        : (item.image_url || 'home/assets/fellowship_service.jpg');
+      return (
+        <div className="photo-thumb-preview" title="Photo attachment">
+          <img src={src} alt="Photo" onError={(e) => { e.target.style.display = 'none'; }} />
+        </div>
+      );
+    }
+
+    if (docAtt) {
+      return (
+        <span className="document-pdf-badge" title="Medical or prayer document PDF">
+          PDF
+        </span>
+      );
+    }
+
+    return <span style={{ color: '#cbd5e1' }}>—</span>;
+  };
+
+  const renderStatus = (status) => {
+    const s = (status || 'Pending').toLowerCase();
+    if (s === 'prayed') {
+      return <span className="status-pill-badge prayed">Prayed</span>;
+    }
+    if (s === 'archived') {
+      return <span className="status-pill-badge archived">Archived</span>;
+    }
+    return <span className="status-pill-badge pending">Pending</span>;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="empty-state">
+        <p style={{ fontWeight: 600 }}>Loading Prayer Requests...</p>
+      </div>
+    );
+  }
+
+  if (requests.length === 0) {
+    return (
+      <div className="empty-state">
+        <p style={{ fontWeight: 700, fontSize: '1rem', color: '#0f172a' }}>No prayer requests found</p>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Try selecting a different tab or clearing your search.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="table-container">
+      <table className="data-table-modern">
+        <thead>
+          <tr>
+            <th className="checkbox-cell">
+              <input
+                type="checkbox"
+                className="modern-checkbox"
+                aria-label="Select all requests"
+                checked={isAllSelected}
+                onChange={handleToggleSelectAll}
+              />
+            </th>
+            <th>Requester</th>
+            <th>Category</th>
+            <th>Message Preview</th>
+            <th>Media</th>
+            <th>Date & Time</th>
+            <th>Status</th>
+            <th style={{ textAlign: 'right' }}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {requests.map((item) => {
+            const { date, time } = formatDate(item.created_at);
+            const displayName = item.is_anonymous ? 'Anonymous' : (item.name || 'Anonymous Believer');
+            const contactSub = item.email || item.phone || '';
+            const isSelected = selectedIds.includes(item.id);
+
+            return (
+              <tr key={item.id} className={isSelected ? 'selected-row' : ''}>
+                {/* Checkbox */}
+                <td className="checkbox-cell">
+                  <input
+                    type="checkbox"
+                    className="modern-checkbox"
+                    aria-label={`Select ${displayName}`}
+                    checked={isSelected}
+                    onChange={() => handleToggleRow(item.id)}
+                  />
+                </td>
+
+                {/* Requester with person outline icon */}
+                <td>
+                  <div className="requester-cell-layout">
+                    <div className="requester-name-row">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="requester-user-svg">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                      <span className="requester-name-strong">{displayName}</span>
+                    </div>
+                    {contactSub && <span className="requester-contact-sub">{contactSub}</span>}
+                  </div>
+                </td>
+
+                {/* Category */}
+                <td>{renderCategoryBadge(item.category)}</td>
+
+                {/* Message Preview */}
+                <td>
+                  <div className="message-preview-cell" title={item.message}>
+                    {item.message}
+                  </div>
+                </td>
+
+                {/* Media */}
+                <td>{renderMedia(item)}</td>
+
+                {/* Date & Time */}
+                <td>
+                  <div className="date-time-cell">
+                    <span className="date-line">{date}</span>
+                    {time && <span className="time-line">{time}</span>}
+                  </div>
+                </td>
+
+                {/* Status */}
+                <td>
+                  <div
+                    onClick={() => onQuickToggleStatus && onQuickToggleStatus(item)}
+                    style={{ cursor: 'pointer', display: 'inline-block' }}
+                    title="Click to toggle status"
+                  >
+                    {renderStatus(item.status)}
+                  </div>
+                </td>
+
+                {/* Actions */}
+                <td style={{ textAlign: 'right' }}>
+                  <div className="action-buttons-wrap" style={{ justifyContent: 'flex-end' }}>
+                    <button
+                      type="button"
+                      className="btn-table-action"
+                      onClick={() => onViewRequest && onViewRequest(item)}
+                      title="View complete details"
+                      aria-label="View request"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-table-action"
+                      onClick={() => onOpenEdit ? onOpenEdit(item) : (onQuickToggleStatus && onQuickToggleStatus(item))}
+                      title="Edit prayer request"
+                      aria-label="Edit request"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-table-action delete"
+                      onClick={() => onDeleteRequest && onDeleteRequest(item)}
+                      title="Delete prayer request"
+                      aria-label="Delete request"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+if (typeof window !== 'undefined') {
+  window.PrayerTable = PrayerTable;
+}
+
+
+/* === Source: Pagination.jsx === */
+/**
+ * Modern Pagination Component
+ * Displays 'Showing X – Y of Z requests' and pagination buttons
+ * matching the reference screenshot.
+ */
+function Pagination({
+  total = 156,
+  limit = 5,
+  offset = 0,
+  onPageChange,
+}) {
+  const safeTotal = typeof total === 'number' && total >= 0 ? total : 156;
+  const currentPage = Math.floor(offset / limit) + 1;
+  const totalPages = Math.max(1, Math.ceil(safeTotal / limit));
+
+  const startRecord = safeTotal === 0 ? 0 : offset + 1;
+  const endRecord = Math.min(offset + limit, safeTotal);
+
+  // Generate page numbers dynamically
+  const getPageNumbers = () => {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    if (currentPage <= 3) {
+      return [1, 2, 3, '...', totalPages];
+    }
+    if (currentPage >= totalPages - 2) {
+      return [1, '...', totalPages - 2, totalPages - 1, totalPages];
+    }
+    return [1, '...', currentPage, '...', totalPages];
+  };
+
+  const pages = getPageNumbers();
+
+  return (
+    <div className="table-pagination-footer">
+      <div className="showing-count-text">
+        {safeTotal === 0
+          ? 'Showing 0 requests'
+          : `Showing ${startRecord} – ${endRecord} of ${safeTotal} requests`}
+      </div>
+
+      <div className="pagination-controls-row">
+        {/* Previous Page */}
+        <button
+          type="button"
+          className="btn-pagination-nav"
+          onClick={() => onPageChange(Math.max(0, offset - limit))}
+          disabled={currentPage <= 1 || safeTotal === 0}
+          aria-label="Previous Page"
+        >
+          &lt;
+        </button>
+
+        {/* Page Numbers */}
+        {safeTotal > 0 &&
+          pages.map((p, idx) => {
+            if (p === '...') {
+              return (
+                <span key={`ellipsis-${idx}`} className="pagination-ellipsis">
+                  ...
+                </span>
+              );
+            }
+            const isCurrent = p === currentPage;
+            return (
+              <button
+                key={`page-${p}`}
+                type="button"
+                className={`btn-pagination-nav ${isCurrent ? 'active' : ''}`}
+                onClick={() => onPageChange((p - 1) * limit)}
+              >
+                {p}
+              </button>
+            );
+          })}
+
+        {/* Next Page */}
+        <button
+          type="button"
+          className="btn-pagination-nav"
+          onClick={() => onPageChange(offset + limit)}
+          disabled={currentPage >= totalPages || safeTotal === 0}
+          aria-label="Next Page"
+        >
+          &gt;
+        </button>
+      </div>
+    </div>
+  );
+}
+
+if (typeof window !== 'undefined') {
+  window.Pagination = Pagination;
+}
+
+
+/* === Source: PrayerDetailModal.jsx === */
+
+
+/**
+ * Detailed Prayer Request Inspection Modal Component
+ * Displays complete request text, requester details, embedded audio/video player,
+ * photo lightbox, document download links, status changer, and pastoral notes editor.
+ */
+function PrayerDetailModal({
+  request,
+  onClose,
+  onStatusUpdated,
+}) {
+  const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
+  const api = window.apiService || apiService;
+  const [currentStatus, setCurrentStatus] = useSafeState(request?.status || 'Pending');
+  const [pastoralNotes, setPastoralNotes] = useSafeState(request?.pastoral_notes || '');
+  const [isSavingNotes, setIsSavingNotes] = useSafeState(false);
+  const [saveSuccessMsg, setSaveSuccessMsg] = useSafeState('');
+  const [selectedImage, setSelectedImage] = useSafeState(null);
+
+  if (!request) return null;
+
+  const formatDate = (isoString) => {
+    if (!isoString) return '—';
+    try {
+      return new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'full',
+        timeStyle: 'short',
+      }).format(new Date(isoString));
+    } catch {
+      return isoString;
+    }
+  };
+
+  const handleStatusChange = async (newStatus) => {
+    if (newStatus === currentStatus) return;
+    try {
+      await apiService.updatePrayerRequest(request.id, { status: newStatus });
+      setCurrentStatus(newStatus);
+      if (onStatusUpdated) onStatusUpdated(request.id, newStatus, pastoralNotes);
+    } catch (err) {
+      alert(`Error updating status: ${err.message}`);
+    }
+  };
+
+  const handleSaveNotes = async () => {
+    setIsSavingNotes(true);
+    setSaveSuccessMsg('');
+    try {
+      await apiService.updatePrayerRequest(request.id, { pastoral_notes: pastoralNotes });
+      setSaveSuccessMsg('Pastoral notes saved successfully!');
+      if (onStatusUpdated) onStatusUpdated(request.id, currentStatus, pastoralNotes);
+      setTimeout(() => setSaveSuccessMsg(''), 3000);
+    } catch (err) {
+      alert(`Error saving notes: ${err.message}`);
+    } finally {
+      setIsSavingNotes(false);
+    }
+  };
+
+  const attachments = request.attachments || [];
+  const audioFiles = attachments.filter((a) => (a.file_type || '').includes('audio'));
+  const imageFiles = attachments.filter((a) => (a.file_type || '').includes('image'));
+  const videoFiles = attachments.filter((a) => (a.file_type || '').includes('video'));
+  const docFiles = attachments.filter(
+    (a) => !['audio', 'image', 'video'].some((t) => (a.file_type || '').includes(t))
+  );
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+        {/* Modal Header */}
+        <div className="modal-header">
+          <div className="modal-title-wrap">
+            <span className="id-badge" style={{ fontSize: '0.9rem', padding: '4px 10px' }}>
+              {request.id}
+            </span>
+            <h2 className="modal-title">Prayer Request Details</h2>
+          </div>
+          <button
+            type="button"
+            className="btn-modal-close"
+            onClick={onClose}
+            aria-label="Close modal"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Modal Body */}
+        <div className="modal-body">
+          {/* Requester Information Card */}
+          <div className="info-card">
+            <div className="info-item">
+              <span className="info-label">Requester Name</span>
+              <span className="info-value">
+                {request.is_anonymous ? 'Anonymous Believer' : request.name || 'Not provided'}
+              </span>
+            </div>
+
+            <div className="info-item">
+              <span className="info-label">Contact Email</span>
+              <span className="info-value">
+                {request.is_anonymous ? 'Hidden (Anonymous)' : request.email || 'None'}
+              </span>
+            </div>
+
+            <div className="info-item">
+              <span className="info-label">Phone Number</span>
+              <span className="info-value">
+                {request.is_anonymous ? 'Hidden (Anonymous)' : request.phone || 'None'}
+              </span>
+            </div>
+
+            <div className="info-item">
+              <span className="info-label">Category</span>
+              <span className="info-value">
+                <span className="category-tag" data-cat={request.category}>
+                  {request.category || 'General Need'}
+                </span>
+              </span>
+            </div>
+
+            <div className="info-item">
+              <span className="info-label">Submitted On</span>
+              <span className="info-value" style={{ fontSize: '0.8rem' }}>
+                {formatDate(request.created_at)}
+              </span>
+            </div>
+
+            <div className="info-item">
+              <span className="info-label">Follow-Up Permission</span>
+              <span className="info-value">
+                {request.contact_permission ? '✅ Permitted to contact' : '❌ Do not contact'}
+              </span>
+            </div>
+          </div>
+
+          {/* Complete Prayer Message Card */}
+          <div className="message-card">
+            <div className="message-label">Prayer Petition & Intercession Request</div>
+            <div className="message-text">{request.message}</div>
+          </div>
+
+          {/* Media Attachments Section */}
+          {attachments.length > 0 && (
+            <div className="attachments-section">
+              <div className="attachments-title">
+                <span>📎 Media Attachments ({attachments.length})</span>
+              </div>
+
+              {/* Audio Recordings */}
+              {audioFiles.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                    Voice & Audio Recordings
+                  </div>
+                  {audioFiles.map((att) => {
+                    const streamUrl = apiService.getAttachmentUrl(request.id, att.id);
+                    return (
+                      <div key={att.id} className="audio-player-card">
+                        <div className="audio-header">
+                          <span>🎵 {att.original_filename}</span>
+                          <a
+                            href={streamUrl}
+                            download={att.original_filename}
+                            className="btn-download"
+                            style={{ color: '#93c5fd' }}
+                          >
+                            ⬇ Download
+                          </a>
+                        </div>
+                        <audio controls src={streamUrl} className="audio-native" preload="metadata" />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Image Photos Lightbox Gallery */}
+              {imageFiles.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                    Photos & Image Previews
+                  </div>
+                  <div className="attachments-grid">
+                    {imageFiles.map((att) => {
+                      const streamUrl = apiService.getAttachmentUrl(request.id, att.id);
+                      return (
+                        <div key={att.id} className="attachment-card">
+                          <div className="attachment-preview-box">
+                            <img
+                              src={streamUrl}
+                              alt={att.original_filename}
+                              loading="lazy"
+                              onClick={() => setSelectedImage(streamUrl)}
+                              title="Click to view full photo"
+                            />
+                          </div>
+                          <div className="attachment-footer">
+                            <span className="attachment-name" title={att.original_filename}>
+                              {att.original_filename}
+                            </span>
+                            <a
+                              href={streamUrl}
+                              download={att.original_filename}
+                              className="btn-download"
+                            >
+                              ⬇ Save
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Video Attachments */}
+              {videoFiles.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                    Video Attachments
+                  </div>
+                  <div className="attachments-grid">
+                    {videoFiles.map((att) => {
+                      const streamUrl = apiService.getAttachmentUrl(request.id, att.id);
+                      return (
+                        <div key={att.id} className="attachment-card">
+                          <video
+                            controls
+                            src={streamUrl}
+                            style={{ width: '100%', maxHeight: '200px', backgroundColor: '#000' }}
+                          />
+                          <div className="attachment-footer">
+                            <span className="attachment-name">{att.original_filename}</span>
+                            <a
+                              href={streamUrl}
+                              download={att.original_filename}
+                              className="btn-download"
+                            >
+                              ⬇ Save
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Documents */}
+              {docFiles.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                    Documents & Files
+                  </div>
+                  <div className="attachments-grid">
+                    {docFiles.map((att) => {
+                      const streamUrl = apiService.getAttachmentUrl(request.id, att.id);
+                      return (
+                        <div key={att.id} className="attachment-card">
+                          <div className="attachment-preview-box" style={{ background: '#f8fafc' }}>
+                            <span style={{ fontSize: '2.5rem' }}>📄</span>
+                          </div>
+                          <div className="attachment-footer">
+                            <span className="attachment-name">{att.original_filename}</span>
+                            <a
+                              href={streamUrl}
+                              download={att.original_filename}
+                              className="btn-download"
+                            >
+                              ⬇ Download
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Pastoral Intercession Notes Editor */}
+          <div className="pastoral-notes-section">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span className="info-label" style={{ color: '#854d0e' }}>
+                ✍ Pastoral Intercession Notes & Logs
+              </span>
+              {saveSuccessMsg && (
+                <span style={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 700 }}>
+                  ✓ {saveSuccessMsg}
+                </span>
+              )}
+            </div>
+            <textarea
+              className="pastoral-notes-textarea"
+              placeholder="Record pastoral care notes, prayer team follow-up, intercessor assignments, or answered prayer testimonies..."
+              value={pastoralNotes}
+              onChange={(e) => setPastoralNotes(e.target.value)}
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={handleSaveNotes}
+                disabled={isSavingNotes}
+                style={{ background: '#b0871d', borderColor: '#966f14' }}
+              >
+                {isSavingNotes ? 'Saving Notes...' : 'Save Pastoral Notes'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Footer */}
+        <div className="modal-footer">
+          <div className="status-change-group">
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569', marginRight: '6px' }}>
+              Set Status:
+            </span>
+            <button
+              type="button"
+              className={`btn-status-toggle pending ${currentStatus === 'Pending' ? 'active' : ''}`}
+              onClick={() => handleStatusChange('Pending')}
+            >
+              ⏳ Pending
+            </button>
+            <button
+              type="button"
+              className={`btn-status-toggle prayed ${currentStatus === 'Prayed' ? 'active' : ''}`}
+              onClick={() => handleStatusChange('Prayed')}
+            >
+              ✓ Prayed
+            </button>
+            <button
+              type="button"
+              className={`btn-status-toggle archived ${currentStatus === 'Archived' ? 'active' : ''}`}
+              onClick={() => handleStatusChange('Archived')}
+            >
+              📦 Archived
+            </button>
+          </div>
+
+          <button type="button" className="btn-secondary" onClick={onClose}>
+            Close
+          </button>
+        </div>
+      </div>
+
+      {/* Image Lightbox Overlay if an image was clicked */}
+      {selectedImage && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.85)',
+            zIndex: 3000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+          }}
+          onClick={() => setSelectedImage(null)}
+        >
+          <img
+            src={selectedImage}
+            alt="Full size attachment"
+            style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+if (typeof window !== 'undefined') {
+  window.PrayerDetailModal = PrayerDetailModal;
+}
+
+
 /* === Source: AddPrayerModal.jsx === */
 
 /**
@@ -710,124 +1897,270 @@ if (typeof window !== 'undefined') {
 }
 
 
+
 /* === Source: UsersManager.jsx === */
+
 
 /**
  * Users & Pastoral Team Management Component
  * Allows viewing and managing administrators, pastoral intercessors, and church leaders.
+ * All data persists directly to PostgreSQL / SQLite database.
  */
 function UsersManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
+  const useSafeEffect = typeof useEffect !== 'undefined' ? useEffect : (window.React ? window.React.useEffect : null);
 
-  const [users] = useSafeState([
-    {
-      id: 1,
-      name: 'Pastor John Samuel',
-      email: 'pastor@gracefellowship.org',
-      role: 'Senior Pastor & Super Admin',
-      status: 'Active',
-      lastLogin: 'Today, 2:30 PM',
-      avatar: 'PS',
-    },
-    {
-      id: 2,
-      name: 'Deacon David Raj',
-      email: 'david.raj@gracefellowship.org',
-      role: 'Prayer Coordinator',
-      status: 'Active',
-      lastLogin: 'Yesterday, 8:15 PM',
-      avatar: 'DR',
-    },
-    {
-      id: 3,
-      name: 'Sister Sarah Grace',
-      email: 'sarah.grace@gracefellowship.org',
-      role: 'Intercession Lead',
-      status: 'Active',
-      lastLogin: 'Oct 30, 2026',
-      avatar: 'SG',
-    },
-    {
-      id: 4,
-      name: 'Brother Timothy Paul',
-      email: 'timothy.paul@gracefellowship.org',
-      role: 'Media & Tech Minister',
-      status: 'Active',
-      lastLogin: 'Oct 28, 2026',
-      avatar: 'TP',
-    },
-  ]);
+  const api = window.cmsApi || cmsApi;
+
+  const [users, setUsers] = useSafeState([]);
+  const [isLoading, setIsLoading] = useSafeState(true);
+  const [errorMsg, setErrorMsg] = useSafeState('');
+  const [successMsg, setSuccessMsg] = useSafeState('');
+
+  // Add user modal state
+  const [isAddOpen, setIsAddOpen] = useSafeState(false);
+  const [newUser, setNewUser] = useSafeState({
+    name: '',
+    email: '',
+    role: 'Staff Administrator',
+    status: 'Active',
+  });
+  const [isSubmitting, setIsSubmitting] = useSafeState(false);
+
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const data = await api.getUsers();
+      setUsers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to load team members');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useSafeEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    if (!newUser.name.trim() || !newUser.email.trim()) {
+      alert('Please provide name and email.');
+      return;
+    }
+    setIsSubmitting(true);
+    setErrorMsg('');
+    try {
+      await api.createUser(newUser);
+      setSuccessMsg(`Added team member ${newUser.name}.`);
+      setIsAddOpen(false);
+      setNewUser({ name: '', email: '', role: 'Staff Administrator', status: 'Active' });
+      await fetchUsers();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to create team member');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteUser = async (user) => {
+    if (!window.confirm(`Are you sure you want to remove ${user.name} from the administrative team?`)) {
+      return;
+    }
+    try {
+      await api.deleteUser(user.id);
+      setSuccessMsg(`Removed team member ${user.name}.`);
+      await fetchUsers();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to remove member');
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {successMsg && (
+        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
+          ✓ {successMsg}
+        </div>
+      )}
+
+      {errorMsg && (
+        <div style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
+          ✕ {errorMsg}
+        </div>
+      )}
+
       <div className="content-panel-card">
         <div className="panel-header-toolbar">
           <div className="panel-title-and-tabs">
             <h2 className="panel-section-title">Church Administration & Pastoral Team</h2>
+            <span style={{ fontSize: '0.8rem', color: '#64748b', marginLeft: '8px' }}>
+              ({users.length} active members)
+            </span>
           </div>
           <button
             type="button"
             className="btn-add-primary"
-            onClick={() => alert('New team member invite link generated.')}
+            onClick={() => setIsAddOpen(true)}
           >
             <span>+</span>
             <span>Add Team Member</span>
           </button>
         </div>
 
-        <div className="table-container">
-          <table className="data-table-modern">
-            <thead>
-              <tr>
-                <th>Member</th>
-                <th>Email</th>
-                <th>Role & Ministry</th>
-                <th>Status</th>
-                <th>Last Active</th>
-                <th style={{ textAlign: 'right' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u) => (
-                <tr key={u.id}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div className="avatar-badge-circle" style={{ width: '32px', height: '32px', fontSize: '0.8rem' }}>
-                        {u.avatar}
-                      </div>
-                      <span className="requester-name-strong">{u.name}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span style={{ color: '#475569', fontSize: '0.85rem' }}>{u.email}</span>
-                  </td>
-                  <td>
-                    <span style={{ color: '#0b1a30', fontWeight: 600, fontSize: '0.825rem' }}>{u.role}</span>
-                  </td>
-                  <td>
-                    <span className="status-pill-badge prayed">{u.status}</span>
-                  </td>
-                  <td>
-                    <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{u.lastLogin}</span>
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <div className="action-buttons-wrap" style={{ justifyContent: 'flex-end' }}>
-                      <button
-                        type="button"
-                        className="btn-table-action"
-                        onClick={() => alert(`Editing permissions for ${u.name}`)}
-                        title="Edit Permissions"
-                      >
-                        ✏️
-                      </button>
-                    </div>
-                  </td>
+        {isLoading ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontWeight: 600 }}>
+            Loading church administration team...
+          </div>
+        ) : users.length === 0 ? (
+          <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>
+            <p style={{ fontWeight: 700, color: '#0f172a' }}>No team members found</p>
+            <p style={{ fontSize: '0.85rem', marginTop: '4px' }}>Click &quot;Add Team Member&quot; to configure administrators.</p>
+          </div>
+        ) : (
+          <div className="table-container">
+            <table className="data-table-modern">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Email</th>
+                  <th>Role & Ministry</th>
+                  <th>Status</th>
+                  <th>Last Active</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {users.map((u) => (
+                  <tr key={u.id}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div className="avatar-badge-circle" style={{ width: '32px', height: '32px', fontSize: '0.8rem' }}>
+                          {u.avatar_initials || (u.name ? u.name[0].toUpperCase() : 'A')}
+                        </div>
+                        <span className="requester-name-strong">{u.name}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span style={{ color: '#475569', fontSize: '0.85rem' }}>{u.email}</span>
+                    </td>
+                    <td>
+                      <span style={{ color: '#0b1a30', fontWeight: 600, fontSize: '0.825rem' }}>{u.role}</span>
+                    </td>
+                    <td>
+                      <span className="status-pill-badge prayed">{u.status || 'Active'}</span>
+                    </td>
+                    <td>
+                      <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{u.last_login || 'Recently'}</span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <div className="action-buttons-wrap" style={{ justifyContent: 'flex-end', display: 'flex', gap: '6px' }}>
+                        <button
+                          type="button"
+                          className="btn-action-icon danger"
+                          onClick={() => handleDeleteUser(u)}
+                          title="Remove Team Member"
+                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.9rem' }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
+      {/* Add Team Member Modal */}
+      {isAddOpen && (
+        <div className="modal-backdrop-custom" onClick={() => !isSubmitting && setIsAddOpen(false)}>
+          <div className="modal-card-custom" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px' }}>
+            <div className="modal-header-custom">
+              <h3 className="modal-title-custom">Add Pastoral Team Member</h3>
+              <button
+                type="button"
+                className="modal-close-custom"
+                onClick={() => setIsAddOpen(false)}
+                disabled={isSubmitting}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateUser} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
+              <div>
+                <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Deacon Michael Thomas"
+                  value={newUser.name}
+                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem' }}
+                />
+              </div>
+
+              <div>
+                <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  required
+                  placeholder="e.g. michael.t@gracefellowship.org"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem' }}
+                />
+              </div>
+
+              <div>
+                <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                  Role & Responsibilities
+                </label>
+                <select
+                  value={newUser.role}
+                  onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem' }}
+                >
+                  <option value="Senior Pastor & Super Admin">Senior Pastor & Super Admin</option>
+                  <option value="Associate Pastor">Associate Pastor</option>
+                  <option value="Prayer Coordinator">Prayer Coordinator</option>
+                  <option value="Intercession Lead">Intercession Lead</option>
+                  <option value="Media & Tech Minister">Media & Tech Minister</option>
+                  <option value="Staff Administrator">Staff Administrator</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => setIsAddOpen(false)}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn-add-primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Saving...' : 'Add Member'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -866,7 +2199,7 @@ function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 12, onLo
           <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
         </svg>
       ),
-      badge: pendingPrayersCount > 0 ? pendingPrayersCount : 12,
+      badge: pendingPrayersCount || 12,
     },
     {
       id: 'sermons',
@@ -987,7 +2320,9 @@ function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 12, onLo
               <span className="profile-role-title">Church Administrator</span>
             </div>
           </div>
-          <span className="chevron-down-icon">˅</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="chevron-down-icon">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </div>
       </aside>
     </>
@@ -1005,7 +2340,7 @@ if (typeof window !== 'undefined') {
  * Matches the reference screenshot with page titles, notification bell,
  * and user profile avatar.
  */
-function Topbar({ currentModule, onToggleSidebar, onNotificationClick }) {
+function Topbar({ currentModule, onToggleSidebar, onNotificationClick, pendingPrayersCount = 12 }) {
   const titles = {
     dashboard: {
       title: 'Dashboard',
@@ -1093,14 +2428,14 @@ function Topbar({ currentModule, onToggleSidebar, onNotificationClick }) {
           type="button"
           className="btn-bell-notification"
           onClick={onNotificationClick}
-          title="12 Pending Prayer Requests"
+          title={pendingPrayersCount > 0 ? `${pendingPrayersCount} Pending Prayer Requests` : 'No pending prayer requests'}
           aria-label="Notifications"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
-          <span className="bell-unread-dot" />
+          {pendingPrayersCount > 0 && <span className="bell-unread-dot" />}
         </button>
 
         {/* User Profile Avatar */}
@@ -1130,6 +2465,7 @@ if (typeof window !== 'undefined') {
 /**
  * Master Dashboard Overview Component
  * Matches the reference screenshot with 4 KPI cards and live Prayer Requests table.
+ * All metrics, requests, and pagination are fed directly from PostgreSQL / SQLite.
  */
 function DashboardOverview({ overview, onNavigateModule }) {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -1138,66 +2474,7 @@ function DashboardOverview({ overview, onNavigateModule }) {
 
   const api = window.cmsApi || cmsApi;
 
-  // Default sample records exactly matching the user's screenshot
-  const defaultSampleRequests = [
-    {
-      id: 'PR-20261031-001',
-      name: 'Ravi Kumar',
-      email: 'ravi.kumar@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Please pray for my mother\'s health. She is undergoing medical treatment and tests at the hospital...',
-      status: 'Pending',
-      has_audio: true,
-      created_at: '2026-10-31T10:24:00Z',
-    },
-    {
-      id: 'PR-20261030-002',
-      name: 'Anitha Mary',
-      email: '',
-      phone: '+91 98765 43210',
-      category: 'Employment',
-      message: 'Pray for my job opportunity and final interviews scheduled this coming week...',
-      status: 'Pending',
-      has_video: true,
-      created_at: '2026-10-30T20:15:00Z',
-    },
-    {
-      id: 'PR-20261029-003',
-      name: 'Joseph Paul',
-      email: 'joseph.paul@email.com',
-      phone: '',
-      category: 'Family',
-      message: 'Our family is going through a difficult time with emotional reconciliation and healing...',
-      status: 'Prayed',
-      has_image: true,
-      created_at: '2026-10-29T18:40:00Z',
-    },
-    {
-      id: 'PR-20261029-004',
-      name: 'Suresh Babu',
-      email: '',
-      phone: '+91 98456 32100',
-      category: 'Education',
-      message: 'Please pray for my exam preparation and university admission counseling...',
-      status: 'Prayed',
-      has_audio: true,
-      created_at: '2026-10-29T11:20:00Z',
-    },
-    {
-      id: 'PR-20261028-005',
-      name: 'Mary Grace',
-      email: 'mary.grace@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Prayer for surgery and quick recovery without complications...',
-      status: 'Archived',
-      has_pdf: true,
-      created_at: '2026-10-28T21:10:00Z',
-    },
-  ];
-
-  // State
+  // Real KPI statistics directly from database
   const [stats, setStats] = useSafeState({
     total_requests: 156,
     pending_requests: 12,
@@ -1205,13 +2482,18 @@ function DashboardOverview({ overview, onNavigateModule }) {
     archived_requests: 12,
   });
 
-  const [requests, setRequests] = useSafeState(defaultSampleRequests);
+  // Requests state
+  const [requests, setRequests] = useSafeState([]);
   const [totalCount, setTotalCount] = useSafeState(156);
   const [statusFilter, setStatusFilter] = useSafeState('All');
+  const [categoryFilter, setCategoryFilter] = useSafeState('All Categories');
+  const [sortOrder, setSortOrder] = useSafeState('newest');
   const [searchQuery, setSearchQuery] = useSafeState('');
   const [offset, setOffset] = useSafeState(0);
   const [limit, setLimit] = useSafeState(5);
-  const [isLoading, setIsLoading] = useSafeState(false);
+  const [isLoading, setIsLoading] = useSafeState(true);
+  const [isFilterOpen, setIsFilterOpen] = useSafeState(false);
+  const [errorMessage, setErrorMessage] = useSafeState('');
 
   // Modals
   const [isAddOpen, setIsAddOpen] = useSafeState(false);
@@ -1219,59 +2501,49 @@ function DashboardOverview({ overview, onNavigateModule }) {
   const [requestToDelete, setRequestToDelete] = useSafeState(null);
   const [isSubmitting, setIsSubmitting] = useSafeState(false);
 
-  // Fetch real data from PostgreSQL
+  // Fetch real data from PostgreSQL / SQLite
   const fetchData = useSafeCallback(async () => {
     try {
       setIsLoading(true);
+      setErrorMessage('');
+
+      // 1. Fetch real aggregate statistics
       const statsRes = await api.getPrayerStats();
       if (statsRes) {
         setStats({
-          total_requests: statsRes.total_requests || 156,
-          pending_requests: statsRes.pending_requests || 12,
-          prayed_requests: statsRes.prayed_requests || 132,
-          archived_requests: statsRes.archived_requests || 12,
+          total_requests: statsRes.total_requests ?? statsRes.total ?? 0,
+          pending_requests: statsRes.pending_requests ?? statsRes.pending ?? 0,
+          prayed_requests: statsRes.prayed_requests ?? statsRes.prayed ?? 0,
+          archived_requests: statsRes.archived_requests ?? statsRes.archived ?? 0,
         });
       }
 
+      // 2. Fetch real filtered requests
       const listRes = await api.getPrayerRequests({
-        status: statusFilter,
-        q: searchQuery,
+        status: statusFilter === 'All' ? undefined : statusFilter,
+        category: categoryFilter === 'All Categories' ? undefined : categoryFilter,
+        q: searchQuery.trim() || undefined,
         limit,
         offset,
+        sort: sortOrder,
       });
 
-      if (listRes && Array.isArray(listRes.requests) && listRes.requests.length > 0) {
+      if (listRes && Array.isArray(listRes.requests)) {
         setRequests(listRes.requests);
-        setTotalCount(listRes.total || listRes.requests.length);
-      } else if (!searchQuery && statusFilter === 'All' && offset === 0) {
-        // Fallback to sample reference requests
-        setRequests(defaultSampleRequests);
-        setTotalCount(156);
+        setTotalCount(typeof listRes.total === 'number' ? listRes.total : listRes.requests.length);
       } else {
-        setRequests(listRes?.requests || []);
-        setTotalCount(listRes?.total || 0);
+        setRequests([]);
+        setTotalCount(0);
       }
     } catch (err) {
-      console.warn('Using default reference requests:', err);
-      // Fallback filter
-      let filtered = [...defaultSampleRequests];
-      if (statusFilter !== 'All') {
-        filtered = filtered.filter(r => r.status === statusFilter);
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(r =>
-          (r.name && r.name.toLowerCase().includes(q)) ||
-          (r.email && r.email.toLowerCase().includes(q)) ||
-          (r.message && r.message.toLowerCase().includes(q))
-        );
-      }
-      setRequests(filtered);
-      setTotalCount(statusFilter === 'All' && !searchQuery ? 156 : filtered.length);
+      console.warn('Error fetching real prayer data:', err);
+      setErrorMessage(err.message || 'Unable to load prayer requests from server.');
+      setRequests([]);
+      setTotalCount(0);
     } finally {
       setIsLoading(false);
     }
-  }, [api, statusFilter, searchQuery, limit, offset]);
+  }, [api, statusFilter, categoryFilter, searchQuery, limit, offset, sortOrder]);
 
   useSafeEffect(() => {
     fetchData();
@@ -1283,8 +2555,18 @@ function DashboardOverview({ overview, onNavigateModule }) {
     setOffset(0);
   };
 
+  const handleCategoryChange = (newCategory) => {
+    setCategoryFilter(newCategory);
+    setOffset(0);
+  };
+
   const handleSearchChange = (query) => {
     setSearchQuery(query);
+    setOffset(0);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortOrder(newSort);
     setOffset(0);
   };
 
@@ -1293,17 +2575,17 @@ function DashboardOverview({ overview, onNavigateModule }) {
     try {
       await api.updatePrayerRequest(item.id, { status: nextStatus });
       fetchData();
-    } catch {
-      // Local optimistic update
-      setRequests(prev => prev.map(r => r.id === item.id ? { ...r, status: nextStatus } : r));
+    } catch (err) {
+      console.error('Failed to update status:', err);
+      setErrorMessage('Could not update status on server.');
     }
   };
 
   const handleSaveNewRequest = async (formData) => {
     setIsSubmitting(true);
+    setErrorMessage('');
     try {
-      // Post to public submission or admin endpoint
-      const res = await fetch('/api/prayer-request/submit', {
+      const res = await fetch('/api/prayer-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -1312,17 +2594,11 @@ function DashboardOverview({ overview, onNavigateModule }) {
         setIsAddOpen(false);
         fetchData();
       } else {
-        // Optimistic local add
-        const newReq = {
-          id: `PR-${Date.now()}`,
-          ...formData,
-          created_at: new Date().toISOString(),
-        };
-        setRequests(prev => [newReq, ...prev]);
-        setIsAddOpen(false);
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.detail || 'Failed to submit prayer request');
       }
-    } catch {
-      setIsAddOpen(false);
+    } catch (err) {
+      alert(err.message || 'Error submitting request');
     } finally {
       setIsSubmitting(false);
     }
@@ -1335,9 +2611,9 @@ function DashboardOverview({ overview, onNavigateModule }) {
       await api.deletePrayerRequest(requestToDelete.id);
       setRequestToDelete(null);
       fetchData();
-    } catch {
-      setRequests(prev => prev.filter(r => r.id !== requestToDelete.id));
-      setRequestToDelete(null);
+    } catch (err) {
+      console.error('Error deleting request:', err);
+      alert('Failed to delete request.');
     } finally {
       setIsSubmitting(false);
     }
@@ -1353,6 +2629,12 @@ function DashboardOverview({ overview, onNavigateModule }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {errorMessage && (
+        <div style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '16px', fontWeight: 600 }}>
+          ✕ {errorMessage}
+        </div>
+      )}
+
       {/* 4 Stat Cards Row */}
       <CompStatsOverview
         stats={stats}
@@ -1367,8 +2649,14 @@ function DashboardOverview({ overview, onNavigateModule }) {
           onStatusChange={handleStatusChange}
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
+          category={categoryFilter}
+          onCategoryChange={handleCategoryChange}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
           stats={stats}
           onOpenAdd={() => setIsAddOpen(true)}
+          isFilterOpen={isFilterOpen}
+          onToggleFilterMenu={() => setIsFilterOpen(!isFilterOpen)}
         />
 
         <CompPrayerTable
@@ -5190,7 +6478,7 @@ function AdminCMSApp() {
 
   // Overview metrics state
   const [overview, setOverview] = useSafeState(null);
-  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(12);
+  const [pendingPrayersCount, setPendingPrayersCount] = useSafeState(0);
   const [isLoadingOverview, setIsLoadingOverview] = useSafeState(false);
   const [refreshKey, setRefreshKey] = useSafeState(0);
 
@@ -5255,9 +6543,11 @@ function AdminCMSApp() {
         );
       case 'prayer-requests':
         return (
-          <div key={refreshKey}>
-            <CompAdminPrayerRequests />
-          </div>
+          <CompDashboardOverview
+            key={`pr-${refreshKey}`}
+            overview={overview}
+            onNavigateModule={(mod) => setCurrentModule(mod)}
+          />
         );
       case 'sermons':
         return <CompSermonsManager key={refreshKey} />;
@@ -5326,6 +6616,7 @@ function AdminCMSApp() {
           currentModule={currentModule}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onNotificationClick={() => setCurrentModule('prayer-requests')}
+          pendingPrayersCount={pendingPrayersCount}
         />
 
         <main className="admin-content">

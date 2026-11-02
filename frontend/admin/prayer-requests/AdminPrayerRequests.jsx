@@ -39,65 +39,6 @@ export function AdminPrayerRequests() {
   const [currentView, setCurrentView] = useSafeState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useSafeState(false);
 
-  // Default sample records matching screenshot
-  const defaultSampleRequests = [
-    {
-      id: 'PR-20261031-001',
-      name: 'Ravi Kumar',
-      email: 'ravi.kumar@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Please pray for my mother\'s health. She is undergoing medical treatment...',
-      status: 'Pending',
-      has_audio: true,
-      created_at: '2026-10-31T10:24:00Z',
-    },
-    {
-      id: 'PR-20261030-002',
-      name: 'Anitha Mary',
-      email: '',
-      phone: '+91 98765 43210',
-      category: 'Employment',
-      message: 'Pray for my job opportunity and interviews...',
-      status: 'Pending',
-      has_video: true,
-      created_at: '2026-10-30T20:15:00Z',
-    },
-    {
-      id: 'PR-20261029-003',
-      name: 'Joseph Paul',
-      email: 'joseph.paul@email.com',
-      phone: '',
-      category: 'Family',
-      message: 'Our family is going through a difficult time...',
-      status: 'Prayed',
-      has_image: true,
-      created_at: '2026-10-29T18:40:00Z',
-    },
-    {
-      id: 'PR-20261029-004',
-      name: 'Suresh Babu',
-      email: '',
-      phone: '+91 98456 32100',
-      category: 'Education',
-      message: 'Please pray for my exam preparation...',
-      status: 'Prayed',
-      has_audio: true,
-      created_at: '2026-10-29T11:20:00Z',
-    },
-    {
-      id: 'PR-20261028-005',
-      name: 'Mary Grace',
-      email: 'mary.grace@email.com',
-      phone: '',
-      category: 'Health',
-      message: 'Prayer for surgery and quick recovery...',
-      status: 'Archived',
-      has_pdf: true,
-      created_at: '2026-10-28T21:10:00Z',
-    },
-  ];
-
   // Data States
   const [stats, setStats] = useSafeState({
     total_requests: 156,
@@ -106,7 +47,7 @@ export function AdminPrayerRequests() {
     archived_requests: 12,
     by_category: {},
   });
-  const [requests, setRequests] = useSafeState(defaultSampleRequests);
+  const [requests, setRequests] = useSafeState([]);
   const [totalRequests, setTotalRequests] = useSafeState(156);
   const [isLoading, setIsLoading] = useSafeState(false);
 
@@ -138,10 +79,10 @@ export function AdminPrayerRequests() {
       const data = await api.getStats();
       if (data) {
         setStats({
-          total_requests: data.total_requests || 156,
-          pending_requests: data.pending_requests || 12,
-          prayed_requests: data.prayed_requests || 132,
-          archived_requests: data.archived_requests || 12,
+          total_requests: data.total_requests ?? data.total ?? 0,
+          pending_requests: data.pending_requests ?? data.pending ?? 0,
+          prayed_requests: data.prayed_requests ?? data.prayed ?? 0,
+          archived_requests: data.archived_requests ?? data.archived ?? 0,
           by_category: data.by_category || {},
         });
       }
@@ -156,39 +97,24 @@ export function AdminPrayerRequests() {
     setIsLoading(true);
     try {
       const data = await api.getPrayerRequests({
-        status: statusFilter,
-        category: categoryFilter,
-        q: searchQuery,
+        status: statusFilter === 'All' ? undefined : statusFilter,
+        category: categoryFilter === 'All Categories' ? undefined : categoryFilter,
+        q: searchQuery.trim() || undefined,
         limit,
         offset,
         sort: 'newest',
       });
-      if (data && Array.isArray(data.requests) && data.requests.length > 0) {
+      if (data && Array.isArray(data.requests)) {
         setRequests(data.requests);
-        setTotalRequests(data.total || data.requests.length);
-      } else if (!searchQuery && statusFilter === 'All' && offset === 0) {
-        setRequests(defaultSampleRequests);
-        setTotalRequests(156);
+        setTotalRequests(typeof data.total === 'number' ? data.total : data.requests.length);
       } else {
-        setRequests(data?.requests || []);
-        setTotalRequests(data?.total || 0);
+        setRequests([]);
+        setTotalRequests(0);
       }
     } catch (err) {
-      console.warn('Fallback to sample requests:', err);
-      let filtered = [...defaultSampleRequests];
-      if (statusFilter !== 'All') {
-        filtered = filtered.filter(r => r.status === statusFilter);
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(r =>
-          (r.name && r.name.toLowerCase().includes(q)) ||
-          (r.email && r.email.toLowerCase().includes(q)) ||
-          (r.message && r.message.toLowerCase().includes(q))
-        );
-      }
-      setRequests(filtered);
-      setTotalRequests(statusFilter === 'All' && !searchQuery ? 156 : filtered.length);
+      console.warn('Error fetching requests from server:', err);
+      setRequests([]);
+      setTotalRequests(0);
     } finally {
       setIsLoading(false);
     }
