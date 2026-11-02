@@ -10,6 +10,7 @@ from app.api.routes import router as api_router
 from app.config import settings
 from app.db.connection import init_db
 from app.services.bible_service import bible_service
+from cms.routes import router as cms_router
 
 
 @asynccontextmanager
@@ -41,6 +42,7 @@ app.add_middleware(
 
 # Register API Router
 app.include_router(api_router)
+app.include_router(cms_router)
 
 
 # Serve documentation file for licensing

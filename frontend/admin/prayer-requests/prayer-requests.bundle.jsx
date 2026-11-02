@@ -11,8 +11,7 @@ const { useState, useEffect, useCallback, useMemo, useRef } = React || window.Re
 
 const TOKEN_KEY = 'grace_church_admin_token';
 const USER_KEY = 'grace_church_admin_user';
-
-export const authService = {
+const authService = {
   getToken() {
     try {
       return localStorage.getItem(TOKEN_KEY);
@@ -93,8 +92,7 @@ async function request(endpoint, options = {}) {
 
   return response.json();
 }
-
-export const apiService = {
+const apiService = {
   /**
    * Pastoral administrator login
    */
@@ -194,8 +192,7 @@ if (typeof window !== 'undefined') {
  * Features church branding crest, admin profile, active navigation states,
  * and placeholder ministry tabs with 'Coming Soon' badges.
  */
-
-export function Sidebar({ currentView, onViewChange, pendingCount = 0, onLogout, isOpen, onClose }) {
+function Sidebar({ currentView, onViewChange, pendingCount = 0, onLogout, isOpen, onClose }) {
   const navItems = [
     {
       id: 'dashboard',
@@ -323,8 +320,7 @@ if (typeof window !== 'undefined') {
  * Provides breadcrumb trail, mobile sidebar drawer toggle,
  * live date/time indicator, and data refresh button.
  */
-
-export function Topbar({ currentView, onToggleSidebar, onRefresh, isLoading }) {
+function Topbar({ currentView, onToggleSidebar, onRefresh, isLoading }) {
   const todayFormatted = new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
     month: 'short',
@@ -388,8 +384,7 @@ if (typeof window !== 'undefined') {
  * Renders 4 metric cards: Total Requests, Pending, Prayed, and Archived.
  * Clicking a card applies the corresponding status filter.
  */
-
-export function StatsOverview({ stats, onSelectStatus, activeStatus }) {
+function StatsOverview({ stats, onSelectStatus, activeStatus }) {
   const statItems = [
     {
       id: 'total',
@@ -479,8 +474,7 @@ const CATEGORIES = [
   'Guidance & Wisdom',
   'General Need',
 ];
-
-export function FilterToolbar({
+function FilterToolbar({
   status,
   onStatusChange,
   category,
@@ -588,8 +582,7 @@ if (typeof window !== 'undefined') {
  * Displays interactive list with requester information, category badge,
  * message preview, media indicators, status pill, and action buttons.
  */
-
-export function PrayerTable({
+function PrayerTable({
   requests = [],
   isLoading,
   onViewRequest,
@@ -802,8 +795,7 @@ if (typeof window !== 'undefined') {
  * Displays complete request text, requester details, embedded audio/video player,
  * photo lightbox, document download links, status changer, and pastoral notes editor.
  */
-
-export function PrayerDetailModal({
+function PrayerDetailModal({
   request,
   onClose,
   onStatusUpdated,
@@ -1184,8 +1176,7 @@ if (typeof window !== 'undefined') {
  * Ensures explicit pastoral administrator confirmation before permanently
  * removing a prayer request and its private media attachments from storage.
  */
-
-export function DeleteConfirmModal({ request, onConfirm, onCancel, isDeleting }) {
+function DeleteConfirmModal({ request, onConfirm, onCancel, isDeleting }) {
   if (!request) return null;
 
   return (
@@ -1268,8 +1259,7 @@ if (typeof window !== 'undefined') {
  * Pagination Controls Component
  * Provides rows-per-page selector, total count indicator, and previous/next page buttons.
  */
-
-export function Pagination({
+function Pagination({
   total = 0,
   limit = 25,
   offset = 0,
@@ -1348,8 +1338,7 @@ if (typeof window !== 'undefined') {
  * Pastoral Administrator Sign-In View
  * Authenticates church administrators and issues JWT Bearer tokens.
  */
-
-export function LoginView({ onLoginSuccess }) {
+function LoginView({ onLoginSuccess }) {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
   const api = window.apiService || apiService;
   const [username, setUsername] = useSafeState('pastor');
@@ -1474,8 +1463,7 @@ if (typeof window !== 'undefined') {
  * Displays KPI summary cards, urgency queue for pending intercessions,
  * and prayer distribution across ministries and categories.
  */
-
-export function DashboardPage({
+function DashboardPage({
   stats,
   recentPending = [],
   onNavigateRequests,
@@ -1664,8 +1652,7 @@ if (typeof window !== 'undefined') {
  * Full Prayer Requests Management Page
  * Encapsulates search, filters, pagination, table view, and status updates.
  */
-
-export function PrayerRequestsPage({
+function PrayerRequestsPage({
   stats,
   requests = [],
   total = 0,
@@ -1765,8 +1752,7 @@ if (typeof window !== 'undefined') {
  * Orchestrates session authentication, view routing (Dashboard vs Requests),
  * data synchronization with PostgreSQL, filters, and modals.
  */
-
-export function AdminPrayerRequests() {
+function AdminPrayerRequests() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
   const useSafeEffect = typeof useEffect !== 'undefined' ? useEffect : (window.React ? window.React.useEffect : null);
   const useSafeCallback = typeof useCallback !== 'undefined' ? useCallback : (window.React ? window.React.useCallback : null);

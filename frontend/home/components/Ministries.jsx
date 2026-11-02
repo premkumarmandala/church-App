@@ -1,10 +1,11 @@
 /* ==========================================================================
    Ministries Component - Grace Fellowship Church
    Ministry departments: Children, Youth, Women, Men, Prayer, and Outreach
+   Dynamically integrated with Church CMS API.
    ========================================================================== */
 
-function Ministries() {
-  const ministryList = [
+function Ministries({ data }) {
+  const fallbackMinistries = [
     {
       id: 1,
       name: "Children's Ministry",
@@ -37,6 +38,15 @@ function Ministries() {
     }
   ];
 
+  const ministryList = (Array.isArray(data) && data.length > 0)
+    ? data.map((m) => ({
+        id: m.id,
+        name: m.name,
+        photo: m.photo || "home/assets/children_ministry.jpg",
+        description: m.short_description || m.full_description,
+      }))
+    : fallbackMinistries;
+
   return (
     <section id="ministries" className="home-container home-section">
       <div className="section-header-row">
@@ -56,18 +66,30 @@ function Ministries() {
             key={m.id}
             className="ministry-unit-card"
             onClick={() => {
-              alert(`Learn more about ${m.name} by contacting our pastoral team or joining our fellowship groups.`);
+              alert(m.description || `Learn more about ${m.name} by contacting our pastoral team or joining our fellowship groups.`);
             }}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                alert(m.description || `Learn more about ${m.name}`);
+              }
+            }}
+            aria-label={`View ${m.name} details`}
           >
-            <div className="ministry-photo-frame">
+            <div className="ministry-avatar-wrapper">
               <img
                 src={m.photo}
                 alt={m.name}
-                className="ministry-photo"
-                loading="eager"
+                className="ministry-circle-img"
+                loading="lazy"
+                onError={(e) => {
+                  e.target.src = "home/assets/children_ministry.jpg";
+                }}
               />
             </div>
-            <h3 className="ministry-label">{m.name}</h3>
+            <h3 className="ministry-card-label">{m.name}</h3>
           </div>
         ))}
       </div>

@@ -1,10 +1,40 @@
 /* ==========================================================================
    HomePage Component - Grace Fellowship Church
    Master React component assembling all Home Page sections
+   Integrated with Central Church CMS API for dynamic content management.
    ========================================================================== */
 
 function HomePage() {
   const [activeSection, setActiveSection] = React.useState("home");
+  const [cmsData, setCmsData] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  // Fetch consolidated CMS content
+  React.useEffect(() => {
+    let mounted = true;
+    const fetchCMS = async () => {
+      try {
+        setIsLoading(true);
+        const apiBase = window.API_BASE_URL || (window.location.protocol === "file:" ? "http://localhost:8000" : "");
+        const res = await fetch(`${apiBase}/api/cms/content`);
+        if (res.ok && mounted) {
+          const data = await res.json();
+          setCmsData(data);
+          // Dynamically update document title if CMS specifies seo_title
+          if (data?.settings?.seo_title) {
+            document.title = data.settings.seo_title;
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load dynamic CMS content; using static fallback defaults:", err);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    fetchCMS();
+    return () => { mounted = false; };
+  }, []);
 
   // Track active section based on scroll position
   React.useEffect(() => {
@@ -50,36 +80,37 @@ function HomePage() {
       <Navbar
         activeSection={activeSection}
         onNavigate={(sec) => setActiveSection(sec)}
+        data={cmsData?.settings}
       />
 
       <main>
         {/* 2. Hero Section */}
-        <Hero />
+        <Hero data={cmsData?.home} />
 
         {/* 3. Announcements Section */}
-        <Announcements />
+        <Announcements data={cmsData?.announcements} />
 
         {/* 4. Verse of the Day Section */}
         <VerseOfTheDay />
 
         {/* 5. Service Timings Section */}
-        <ServiceTimings />
+        <ServiceTimings data={cmsData?.service_timings} />
 
         {/* 6. Latest Sermons Section */}
-        <LatestSermons />
+        <LatestSermons data={cmsData?.sermons} />
 
         {/* 7. Upcoming Events Section */}
-        <UpcomingEvents />
+        <UpcomingEvents data={cmsData?.events} />
 
         {/* 8. Our Ministries Section */}
-        <Ministries />
+        <Ministries data={cmsData?.ministries} />
 
         {/* 9. Visit Our Church Section */}
-        <ChurchLocation />
+        <ChurchLocation data={cmsData?.contact} />
       </main>
 
       {/* 10. Footer Section */}
-      <Footer />
+      <Footer data={{ settings: cmsData?.settings, contact: cmsData?.contact }} />
     </div>
   );
 }

@@ -1,17 +1,19 @@
 /* ==========================================================================
    UpcomingEvents Component - Grace Fellowship Church
    Upcoming church events, posters, dates, venues, and registration buttons
+   Dynamically integrated with Church CMS API.
    ========================================================================== */
 
-function UpcomingEvents() {
-  const events = [
+function UpcomingEvents({ data }) {
+  const fallbackEvents = [
     {
       id: 1,
       title: "Church Picnic",
       date: "Sep 14, 2024",
       location: "Riverside Park",
       image: "home/assets/church_picnic.jpg",
-      actionText: "Register Now"
+      actionText: "Register Now",
+      registration_link: "#contact"
     },
     {
       id: 2,
@@ -19,7 +21,8 @@ function UpcomingEvents() {
       date: "Oct 5 – 7, 2024",
       location: "Camp Grace",
       image: "home/assets/bible_camp.jpg",
-      actionText: "Register Now"
+      actionText: "Register Now",
+      registration_link: "#contact"
     },
     {
       id: 3,
@@ -27,9 +30,22 @@ function UpcomingEvents() {
       date: "Dec 25, 2024",
       location: "Church Main Hall",
       image: "home/assets/christmas_celebration.jpg",
-      actionText: "Learn More"
+      actionText: "Learn More",
+      registration_link: "#contact"
     }
   ];
+
+  const events = (Array.isArray(data) && data.length > 0)
+    ? data.map((e) => ({
+        id: e.id,
+        title: e.title,
+        date: e.date_text,
+        location: e.location,
+        image: e.image || "home/assets/church_picnic.jpg",
+        actionText: e.action_text || "Register Now",
+        registration_link: e.registration_link || "#contact",
+      }))
+    : fallbackEvents;
 
   return (
     <section id="events" className="home-container home-section">
@@ -53,27 +69,36 @@ function UpcomingEvents() {
                 alt={event.title}
                 className="event-thumb-img"
                 loading="lazy"
+                onError={(e) => {
+                  e.target.src = "home/assets/church_picnic.jpg";
+                }}
               />
             </div>
             <div className="event-card-details">
               <h3 className="event-heading">{event.title}</h3>
               <p className="event-meta-line">
-                <span>📅</span>
-                <span>{event.date}</span>
+                <span className="event-date">📅 {event.date}</span>
+                <span className="event-venue">📍 {event.location}</span>
               </p>
-              <p className="event-meta-line">
-                <span>📍</span>
-                <span>{event.location}</span>
-              </p>
-              <button
-                type="button"
-                className="btn-event-action"
-                onClick={() => {
-                  alert(`Registration for "${event.title}" is open. Please contact the church office or visit the sanctuary entrance.`);
-                }}
-              >
-                {event.actionText}
-              </button>
+              {event.registration_link && event.registration_link.startsWith("http") ? (
+                <a
+                  href={event.registration_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-event-register"
+                  style={{ textAlign: "center", textDecoration: "none" }}
+                >
+                  {event.actionText}
+                </a>
+              ) : (
+                <a
+                  href={event.registration_link || "#contact"}
+                  className="btn-event-register"
+                  style={{ textAlign: "center", textDecoration: "none" }}
+                >
+                  {event.actionText}
+                </a>
+              )}
             </div>
           </div>
         ))}

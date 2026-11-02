@@ -1,10 +1,11 @@
 /* ==========================================================================
    ServiceTimings Component - Grace Fellowship Church
    Worship schedules, languages, and service timings in pastel cards
+   Dynamically integrated with Church CMS API.
    ========================================================================== */
 
-function ServiceTimings() {
-  const serviceSchedules = [
+function ServiceTimings({ data }) {
+  const fallbackSchedules = [
     {
       id: 1,
       cardClass: "card-blue",
@@ -42,6 +43,35 @@ function ServiceTimings() {
       subtitle: "English & Telugu"
     }
   ];
+
+  const getStyleClasses = (cls, idx) => {
+    if (cls === "highlight") return { card: "card-peach", icon: "timing-icon-peach" };
+    if (cls === "gold") return { card: "card-purple", icon: "timing-icon-purple" };
+    if (cls === "card-blue" || cls === "standard") return { card: "card-blue", icon: "timing-icon-blue" };
+    if (cls === "card-green") return { card: "card-green", icon: "timing-icon-green" };
+    const palette = [
+      { card: "card-blue", icon: "timing-icon-blue" },
+      { card: "card-peach", icon: "timing-icon-peach" },
+      { card: "card-purple", icon: "timing-icon-purple" },
+      { card: "card-green", icon: "timing-icon-green" },
+    ];
+    return palette[idx % palette.length];
+  };
+
+  const serviceSchedules = (Array.isArray(data) && data.length > 0)
+    ? data.map((schedule, idx) => {
+        const styles = getStyleClasses(schedule.card_class, idx);
+        return {
+          id: schedule.id,
+          cardClass: styles.card,
+          iconClass: styles.icon,
+          icon: schedule.icon_name === "people" ? "👥" : schedule.icon_name === "prayer" ? "🙏" : schedule.icon_name === "bible" ? "📖" : "⛪",
+          title: schedule.title,
+          hours: schedule.hours,
+          subtitle: schedule.subtitle,
+        };
+      })
+    : fallbackSchedules;
 
   return (
     <section id="service-timings" className="home-container home-section">

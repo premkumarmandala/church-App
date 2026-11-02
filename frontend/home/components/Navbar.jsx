@@ -1,9 +1,10 @@
 /* ==========================================================================
    Navbar Component - Grace Fellowship Church
    Fixed floating navigation bar with mobile responsive drawer
+   Dynamically integrated with Church CMS API.
    ========================================================================== */
 
-function Navbar({ activeSection = "home", onNavigate }) {
+function Navbar({ activeSection = "home", onNavigate, data }) {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -20,12 +21,17 @@ function Navbar({ activeSection = "home", onNavigate }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const churchName = data?.church_name || "Grace Fellowship Church";
+  const churchTagline = data?.church_tagline || "Worship • Grow • Serve • Share";
+
   const navItems = [
     { id: "home", label: "Home", href: "#home" },
     { id: "about", label: "About", href: "#about" },
     { id: "bible", label: "Bible", href: "bible/index.html" },
     { id: "prayer", label: "Prayer", href: "prayer-request/index.html" },
-    { id: "contact", label: "Contact", href: "#contact" }
+    { id: "sermons", label: "Sermons", href: "#sermons" },
+    { id: "events", label: "Events", href: "#events" },
+    { id: "contact", label: "Contact", href: "#contact" },
   ];
 
   const handleLinkClick = (id, href, e) => {
@@ -46,11 +52,15 @@ function Navbar({ activeSection = "home", onNavigate }) {
         {/* Brand */}
         <a href="#home" className="nav-brand" onClick={(e) => handleLinkClick("home", "#home", e)}>
           <div className="nav-brand-logo">
-            <span className="nav-cross-icon">✝</span>
+            {data?.logo_url ? (
+              <img src={data.logo_url} alt="" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
+            ) : (
+              <span className="nav-cross-icon">✝</span>
+            )}
           </div>
           <div className="nav-brand-text">
-            <span className="nav-church-name">Grace Fellowship Church</span>
-            <span className="nav-church-tagline">Worship • Grow • Serve • Share</span>
+            <span className="nav-church-name">{churchName}</span>
+            <span className="nav-church-tagline">{churchTagline}</span>
           </div>
         </a>
 
@@ -67,57 +77,57 @@ function Navbar({ activeSection = "home", onNavigate }) {
               </a>
             </li>
           ))}
-
-          {/* Donate Button */}
-          <a
-            href="#donate"
-            className="btn-nav-donate"
-            onClick={(e) => handleLinkClick("donate", "#donate", e)}
-          >
-            Donate
-          </a>
         </nav>
 
-        {/* Mobile Hamburger Toggle */}
+        {/* Action Buttons */}
+        <div className="nav-actions-desktop">
+          <a href="admin/index.html" className="btn-nav-outline" title="Admin Portal & Content Manager">
+            Portal
+          </a>
+          <a href="prayer-request/index.html" className="btn-nav-cta">
+            Prayer Request
+          </a>
+        </div>
+
+        {/* Mobile Hamburger Button */}
         <button
           type="button"
-          className="hamburger-toggle"
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileMenuOpen}
+          className="mobile-hamburger"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle mobile menu"
+          aria-expanded={mobileMenuOpen}
         >
-          <span className="hamburger-bar" />
-          <span className="hamburger-bar" />
-          <span className="hamburger-bar" />
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
         </button>
       </div>
 
-      {/* Mobile Drawer Menu */}
-      <div className={`mobile-nav-drawer ${mobileMenuOpen ? "open" : ""}`} aria-hidden={!mobileMenuOpen}>
-        <ul className="mobile-nav-list">
-          {navItems.map((item) => (
-            <li key={item.id}>
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="mobile-drawer open">
+          <nav className="mobile-nav-list" aria-label="Mobile Navigation">
+            {navItems.map((item) => (
               <a
+                key={item.id}
                 href={item.href}
-                className={activeSection === item.id ? "active" : ""}
+                className={`mobile-nav-link ${activeSection === item.id ? "active" : ""}`}
                 onClick={(e) => handleLinkClick(item.id, item.href, e)}
               >
                 {item.label}
               </a>
-            </li>
-          ))}
-          <li style={{ marginTop: "8px" }}>
-            <a
-              href="#donate"
-              className="btn-nav-donate"
-              style={{ display: "inline-block", textAlign: "center", width: "100%" }}
-              onClick={(e) => handleLinkClick("donate", "#donate", e)}
-            >
-              Donate Online
-            </a>
-          </li>
-        </ul>
-      </div>
+            ))}
+            <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+              <a href="admin/index.html" className="btn-nav-outline" style={{ textAlign: "center" }}>
+                Admin Portal (CMS)
+              </a>
+              <a href="prayer-request/index.html" className="btn-nav-cta" style={{ textAlign: "center" }}>
+                Submit Prayer Request
+              </a>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

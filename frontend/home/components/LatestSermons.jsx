@@ -1,12 +1,13 @@
 /* ==========================================================================
    LatestSermons Component - Grace Fellowship Church
    Sermon video cards with duration badges, speaker info, and audio player
+   Dynamically integrated with Church CMS API.
    ========================================================================== */
 
-function LatestSermons() {
+function LatestSermons({ data }) {
   const [activeSermon, setActiveSermon] = React.useState(null);
 
-  const sermons = [
+  const fallbackSermons = [
     {
       id: 1,
       title: "Walking in Faith",
@@ -45,6 +46,21 @@ function LatestSermons() {
     }
   ];
 
+  const sermons = (Array.isArray(data) && data.length > 0)
+    ? data.map((s) => ({
+        id: s.id,
+        title: s.title,
+        speaker: s.speaker || "Ps. John Samuel",
+        date: s.date_text ? `• ${s.date_text}` : "",
+        duration: s.duration || "45:00",
+        thumbnail: s.thumbnail || "home/assets/sermon_pastor.jpg",
+        passage: s.passage || "",
+        video_url: s.video_url,
+        audio_url: s.audio_url,
+        description: s.description,
+      }))
+    : fallbackSermons;
+
   const handlePlaySermon = (sermon) => {
     setActiveSermon(sermon);
   };
@@ -68,70 +84,104 @@ function LatestSermons() {
             key={sermon.id}
             className="sermon-video-card"
             onClick={() => handlePlaySermon(sermon)}
-            title={`Listen to ${sermon.title}`}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handlePlaySermon(sermon);
+              }
+            }}
+            aria-label={`Watch sermon: ${sermon.title}`}
           >
-            <div className="sermon-thumb-box">
+            {/* Thumbnail with Overlay & Duration */}
+            <div className="sermon-thumb-wrap">
               <img
                 src={sermon.thumbnail}
                 alt={sermon.title}
                 className="sermon-thumb-img"
                 loading="lazy"
+                onError={(e) => {
+                  e.target.src = "home/assets/sermon_pastor.jpg";
+                }}
               />
-              <span className="sermon-duration-tag">{sermon.duration}</span>
-              <div className="sermon-play-overlay">
-                <div className="sermon-play-icon">▶</div>
+              <div className="sermon-play-pill" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
               </div>
+              <span className="sermon-duration-tag">{sermon.duration}</span>
             </div>
 
-            <div className="sermon-info-box">
+            {/* Sermon Metadata */}
+            <div className="sermon-details">
               <h3 className="sermon-card-title">{sermon.title}</h3>
-              <p className="sermon-card-speaker">{sermon.speaker}</p>
-              <p className="sermon-card-date">{sermon.date}</p>
+              <p className="sermon-speaker-line">
+                <span className="speaker-name">{sermon.speaker}</span>
+                <span className="speaker-date">{sermon.date}</span>
+              </p>
+              {sermon.passage && (
+                <p className="sermon-passage-line" style={{ fontSize: "0.78rem", color: "#64748b", marginTop: "4px" }}>
+                  📖 {sermon.passage}
+                </p>
+              )}
             </div>
           </article>
         ))}
       </div>
 
-      {/* Active Sermon Audio Player Modal / Drawer */}
+      {/* Sermon Player Modal */}
       {activeSermon && (
         <div
-          style={{
-            marginTop: "20px",
-            padding: "16px 20px",
-            background: "#0f1e36",
-            borderRadius: "12px",
-            color: "#ffffff",
-            display: "flex",
-            alignitems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "12px"
-          }}
+          className="sermon-modal-overlay"
+          onClick={() => setActiveSermon(null)}
+          role="dialog"
+          aria-modal="true"
         >
-          <div>
-            <span style={{ fontSize: "0.8rem", color: "#c59b27", fontWeight: 700, textTransform: "uppercase" }}>
-              Now Playing
-            </span>
-            <h4 style={{ margin: "2px 0", fontSize: "1.05rem" }}>
-              {activeSermon.title} — {activeSermon.speaker}
-            </h4>
-            <span style={{ fontSize: "0.85rem", color: "#94a3b8" }}>
-              Scripture: {activeSermon.passage}
-            </span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <audio controls autoPlay style={{ height: "36px" }}>
-              <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav" />
-              Your browser does not support audio playback.
-            </audio>
-            <button
-              type="button"
-              onClick={() => setActiveSermon(null)}
-              style={{ color: "#ffffff", fontSize: "1.2rem", padding: "4px 8px" }}
-              title="Close player"
-            >
-              ✕
-            </button>
+          <div
+            className="sermon-modal-box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sermon-modal-header">
+              <h3 className="sermon-modal-title">{activeSermon.title}</h3>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setActiveSermon(null)}
+                aria-label="Close sermon video"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="sermon-modal-player">
+              {activeSermon.video_url && activeSermon.video_url.includes("youtube.com") ? (
+                <iframe
+                  src={activeSermon.video_url.replace("watch?v=", "embed/")}
+                  title={activeSermon.title}
+                  style={{ width: "100%", height: "360px", border: 0 }}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <div style={{ position: "relative", width: "100%", height: "280px", background: "#081220", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <img
+                    src={activeSermon.thumbnail}
+                    alt={activeSermon.title}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.6 }}
+                  />
+                  <div style={{ position: "absolute", textAlign: "center", color: "#fff", padding: "16px" }}>
+                    <div style={{ fontSize: "2.5rem", color: "#c59b27" }}>▶</div>
+                    <div style={{ fontWeight: 700, fontSize: "1.1rem", marginTop: "8px" }}>{activeSermon.title}</div>
+                    <div style={{ fontSize: "0.85rem", color: "#cbd5e1" }}>Preached by {activeSermon.speaker} {activeSermon.date}</div>
+                  </div>
+                </div>
+              )}
+              {activeSermon.description && (
+                <div style={{ padding: "16px 20px", background: "#fff", fontSize: "0.875rem", color: "#334155", lineHeight: 1.6 }}>
+                  {activeSermon.description}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

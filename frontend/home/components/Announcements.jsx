@@ -1,12 +1,13 @@
 /* ==========================================================================
    Announcements Component - Grace Fellowship Church
    Carousel of announcements, event posters, and conference notices
+   Dynamically integrated with Church CMS API.
    ========================================================================== */
 
-function Announcements() {
+function Announcements({ data }) {
   const [startIndex, setStartIndex] = React.useState(0);
 
-  const announcementsData = [
+  const fallbackData = [
     {
       id: 1,
       title: "YOUTH CONFERENCE 2024",
@@ -45,6 +46,22 @@ function Announcements() {
     }
   ];
 
+  const announcementsData = (Array.isArray(data) && data.length > 0)
+    ? data.map((item) => ({
+        id: item.id,
+        title: item.title,
+        subtitle: item.subtitle,
+        date: item.date_text,
+        time: item.time_text,
+        location: item.location,
+        image: item.image || "home/assets/open_bible_banner.jpg",
+        actionText: item.action_text || "Learn More",
+        actionLink: item.action_link || "#contact",
+        tag: item.tag || "Announcement",
+        tagClass: item.tag_class === "blue" ? "badge-youth" : item.tag_class === "emerald" ? "badge-outreach" : "badge-fellowship",
+      }))
+    : fallbackData;
+
   const handlePrev = () => {
     setStartIndex((prev) => (prev === 0 ? announcementsData.length - 1 : prev - 1));
   };
@@ -52,6 +69,8 @@ function Announcements() {
   const handleNext = () => {
     setStartIndex((prev) => (prev === announcementsData.length - 1 ? 0 : prev + 1));
   };
+
+  if (announcementsData.length === 0) return null;
 
   return (
     <section id="announcements" className="home-container" style={{ marginTop: "24px" }}>
@@ -97,15 +116,25 @@ function Announcements() {
                     <span>{item.date} {item.time ? `• ${item.time}` : ""}</span>
                     <span>{item.location}</span>
                   </div>
-                  <button
-                    type="button"
-                    className="announcement-btn"
-                    onClick={() => {
-                      alert(`Thank you for your interest in ${item.title}! Registration is open at church office.`);
-                    }}
-                  >
-                    {item.actionText}
-                  </button>
+                  {item.actionLink && item.actionLink.startsWith("http") ? (
+                    <a
+                      href={item.actionLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-announcement-action"
+                      style={{ textAlign: "center", textDecoration: "none" }}
+                    >
+                      {item.actionText}
+                    </a>
+                  ) : (
+                    <a
+                      href={item.actionLink || "#contact"}
+                      className="btn-announcement-action"
+                      style={{ textAlign: "center", textDecoration: "none" }}
+                    >
+                      {item.actionText}
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
@@ -124,5 +153,3 @@ function Announcements() {
     </section>
   );
 }
-
-window.Announcements = Announcements;

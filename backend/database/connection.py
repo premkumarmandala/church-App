@@ -60,6 +60,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def init_db() -> None:
     """Initialize database tables."""
     try:
+        import cms.models  # noqa: F401
         Base.metadata.create_all(bind=engine)
         logger.info("Database tables initialized successfully in backend/database/.")
     except Exception as e:
