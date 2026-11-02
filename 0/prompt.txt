@@ -1,0 +1,21 @@
+explore the project.
+
+---
+
+run the test cases.
+
+---
+
+ok solve theses two test failures.
+
+---
+
+about prayer request site to send message to clint.
+
+---
+
+> i am sending deployed render link so give me short message just describe about this feature clear.
+
+---
+
+give commit message.
