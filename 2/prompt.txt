@@ -1,0 +1,89 @@
+## Task: Build Prayer Request Admin Dashboard
+
+Implement a professional Prayer Request Admin Dashboard using the uploaded screenshot as the UI reference.
+
+### 1. Existing Project
+- Inspect the existing project, admin frontend, backend, PostgreSQL database, and APIs.
+- Replace the existing admin dashboard UI.
+- Preserve existing authentication and reusable functionality.
+- Do not modify unrelated features.
+
+### 2. Folder Structure
+
+Keep frontend and backend code separate.
+
+**Frontend: `frontend/admin/`**
+
+```text
+frontend/admin/prayer-requests/
+├── components/
+├── pages/
+├── services/
+├── styles/
+└── AdminPrayerRequests.jsx
+```
+
+**Backend: `backend/`**
+
+Keep all Prayer Request backend code in a dedicated `prayer_requests/` feature folder containing routes, models, schemas, services, and repository files.
+
+### 3. Dashboard UI
+
+Match the uploaded screenshot.
+
+Create:
+- Clean corporate design with white background and navy sidebar.
+- Church branding and admin profile.
+- Dashboard and Prayer Requests navigation.
+- Total Requests, Pending, Prayed, and Archived statistics.
+- Prayer request table with ID, requester, category, message preview, media, date, status, and actions.
+- Search, filters, tabs, and pagination.
+- Responsive desktop, tablet, and mobile layouts.
+
+Keep Sermons, Events, Announcements, Users, and Settings as placeholders. Implement only Dashboard and Prayer Requests.
+
+### 4. Prayer Request Management
+
+Allow authorized admins to:
+- View complete prayer request details.
+- Read messages and requester information.
+- Play audio and video attachments.
+- Preview photos and documents.
+- Securely download attachments.
+- Change status to Pending, Prayed, or Archived.
+- Delete requests with confirmation.
+
+### 5. Backend and PostgreSQL
+- Use the existing PostgreSQL database and Prayer Request tables.
+- Reuse existing database connections and authentication.
+- Implement required admin APIs for listing, searching, filtering, pagination, statistics, viewing, and updating requests.
+- Keep attachments in private storage.
+- Enforce admin authorization on every protected endpoint.
+- Do not create duplicate tables or connections.
+
+### 6. Development Rules
+- Use React and JavaScript (JSX), not TypeScript.
+- Frontend code must remain inside `frontend/admin/`.
+- Backend code must remain inside `backend/`.
+- Use descriptive filenames and avoid duplicate code.
+- Do not hardcode production data.
+- Do not modify the public Prayer Request page.
+
+### 7. Acceptance Criteria
+- Dashboard matches the reference screenshot.
+- Statistics come from PostgreSQL.
+- Search, filters, tabs, and pagination work.
+- All supported attachments can be viewed securely.
+- Status changes persist in PostgreSQL.
+- Unauthorized users cannot access admin data.
+- Existing website features continue working.
+
+### 8. Execution Permission
+
+I authorize you to execute necessary commands without repeatedly asking for permission, including installing dependencies, creating files, modifying code, running migrations, and executing tests.
+
+Do not overwrite unrelated work, delete important data, expose secrets, or make irreversible production changes without informing me.
+
+Implement, test, fix errors, and report the files created, modified, removed, and test results.
+
+**Scope: Replace the existing admin UI and implement only the Prayer Request Admin Dashboard with its required backend integration.**

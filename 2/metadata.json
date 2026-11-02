@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DV4J2MF9TS8T70ZKKCBBYE",
+  "session_id": "56ed5020-26fa-4fd5-bf52-2389935caba1",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-02T09:58:40.3053429Z",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "files_touched": [],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "2faa00fae939",
+  "checkpoint_transcript_start": 66,
+  "transcript_lines_at_start": 66,
+  "session_metrics": {
+    "turn_count": 3
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 107,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_removed_per_file": {
+        "docs/BIBLE_SOURCES_AND_LICENSING.md": 107
+      }
+    }
+  ]
+}
