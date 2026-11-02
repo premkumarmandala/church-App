@@ -18,6 +18,7 @@ function PrayerForm({ initialAttachments = [] }) {
   const [phone, setPhone] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [isAnonymous, setIsAnonymous] = React.useState(false);
+  const [contactPermission, setContactPermission] = React.useState(true);
   const [requestText, setRequestText] = React.useState("");
   const [attachments, setAttachments] = React.useState(initialAttachments || []);
 
@@ -102,30 +103,33 @@ function PrayerForm({ initialAttachments = [] }) {
     setIsSubmitting(true);
     setErrors({});
 
-    const requesterName = isAnonymous ? "Anonymous" : (name.trim() || "Friend in Christ");
-    const contactInfo = isAnonymous 
-      ? "Anonymous" 
-      : [email.trim(), phone.trim()].filter(Boolean).join(" | ") || "Not provided";
-
-    let detailedMessage = `[Category: ${category}] ${requestText.trim()}`;
-    if (attachments.length > 0) {
-      detailedMessage += `\n[Attachments (${attachments.length})]: ${attachments.map((a) => `${a.name} (${a.formattedSize})`).join(", ")}`;
+    const formData = new FormData();
+    if (!isAnonymous && name.trim()) {
+      formData.append("name", name.trim());
     }
+    if (!isAnonymous && email.trim()) {
+      formData.append("email", email.trim());
+    }
+    if (!isAnonymous && phone.trim()) {
+      formData.append("phone", phone.trim());
+    }
+    formData.append("category", category || "General Need");
+    formData.append("message", requestText.trim());
+    formData.append("is_anonymous", isAnonymous ? "true" : "false");
+    formData.append("contact_permission", contactPermission ? "true" : "false");
 
-    const payload = {
-      name: requesterName,
-      contact: contactInfo,
-      request: detailedMessage
-    };
+    // Append all real files / audio recording blobs
+    attachments.forEach((att) => {
+      if (att.file) {
+        formData.append("attachments", att.file, att.name || "attachment");
+      }
+    });
 
     try {
       const apiBase = (window.location.origin && window.location.origin.includes(":8000")) ? "" : "http://localhost:8000";
       const response = await fetch(`${apiBase}/api/prayer-request`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
+        body: formData
       });
 
       if (response.ok) {
@@ -138,6 +142,12 @@ function PrayerForm({ initialAttachments = [] }) {
           isAnonymous: isAnonymous,
           attachmentsCount: attachments.length
         });
+        setIsSubmitting(false);
+        return;
+      }
+    } catch (err) {
+      console.warn("Backend API not reachable. Creating safe offline confirmation.", err);
+    }
         setIsSubmitting(false);
         return;
       }
@@ -165,6 +175,7 @@ function PrayerForm({ initialAttachments = [] }) {
     setPhone("");
     setCategory("");
     setIsAnonymous(false);
+    setContactPermission(true);
     setRequestText("");
     setAttachments([]);
     setErrors({});
@@ -395,6 +406,22 @@ function PrayerForm({ initialAttachments = [] }) {
             onToggleAnonymous={setIsAnonymous}
             error={errors.category}
           />
+
+          {/* Contact Permission Checkbox (shown when not anonymous) */}
+          {!isAnonymous && (
+            <div className="contact-permission-row" style={{ display: "flex", alignItems: "center", gap: "8px", margin: "10px 0 16px" }}>
+              <input
+                type="checkbox"
+                id="contact-permission"
+                checked={contactPermission}
+                onChange={(e) => setContactPermission(e.target.checked)}
+                style={{ width: "16px", height: "16px", cursor: "pointer", accentColor: "#0284c7" }}
+              />
+              <label htmlFor="contact-permission" style={{ fontSize: "0.88rem", color: "#475569", cursor: "pointer", userSelect: "none" }}>
+                I allow the pastoral prayer team to contact me regarding this prayer request.
+              </label>
+            </div>
+          )}
 
           {/* Row 4: Prayer Request Textarea */}
           <div className={`prayer-form-group textarea-group ${errors.requestText ? "has-error" : ""}`}>

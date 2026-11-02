@@ -23,3 +23,7 @@ Thumbs.db
 node_modules/
 dist/
 .parcel-cache/
+
+# Local databases & private storage
+*.db
+backend/storage/

@@ -8,13 +8,15 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import router as api_router
 from app.config import settings
+from app.db.connection import init_db
 from app.services.bible_service import bible_service
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan event handler to pre-load Scripture data on application startup."""
+    """Lifespan event handler to pre-load Scripture data and initialize database on startup."""
     bible_service.load_data()
+    init_db()
     yield
 
 

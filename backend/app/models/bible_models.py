@@ -120,3 +120,71 @@ class PrayerRequestResponse(BaseModel):
     request_id: str
     timestamp: str
 
+
+class PrayerAttachmentModel(BaseModel):
+    """Attachment metadata model."""
+    id: str
+    request_id: str
+    original_filename: str
+    file_type: str
+    file_size: int
+    mime_type: str
+    created_at: Optional[str] = None
+    download_url: str
+
+
+class PrayerRequestDetail(BaseModel):
+    """Full prayer request record returned for pastoral review."""
+    id: str
+    request_id: str
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    category: str
+    message: str
+    is_anonymous: bool
+    contact_permission: bool
+    status: str
+    pastoral_notes: Optional[str] = None
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    attachments: list[PrayerAttachmentModel] = []
+
+
+class PrayerRequestListResponse(BaseModel):
+    """Paginated list of prayer requests for pastoral care."""
+    total: int
+    limit: int
+    offset: int
+    requests: list[PrayerRequestDetail]
+
+
+class PrayerRequestStatusUpdate(BaseModel):
+    """Payload to update prayer request status or add pastoral notes."""
+    status: Optional[str] = Field(None, pattern="^(Pending|Prayed|Archived)$")
+    pastoral_notes: Optional[str] = None
+
+
+class PrayerStatsResponse(BaseModel):
+    """Summary metrics of church prayer requests."""
+    total_requests: int
+    pending_requests: int
+    prayed_requests: int
+    archived_requests: int
+    by_category: dict[str, int]
+
+
+class AdminLoginInput(BaseModel):
+    """Pastoral administrator login credentials."""
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
+
+
+class AdminLoginResponse(BaseModel):
+    """Response containing JWT access token."""
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+    username: str
+    role: str = "admin"
+
