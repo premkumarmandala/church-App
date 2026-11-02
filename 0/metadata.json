@@ -1,0 +1,82 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6DB28NQ1RX908W7A1SP0BR6",
+  "session_id": "186c5ea2-6349-4c07-b53d-5f2ebe401b0d",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-02T05:17:46.7764028Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "backend/app/api/routes.py",
+    "backend/app/config.py",
+    "backend/app/main.py",
+    "backend/app/models/__init__.py",
+    "backend/app/models/bible_models.py",
+    "backend/app/services/__init__.py",
+    "backend/requirements.txt",
+    "frontend/prayer-request/components/PrayerForm.jsx",
+    "frontend/prayer-request/index.html"
+  ],
+  "agent": "Antigravity",
+  "model": "",
+  "turn_id": "1de20b0598e9",
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-11-02T05:17:46.7618523Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 4,
+    "human_removed": 49,
+    "total_committed": 0,
+    "total_lines_changed": 53,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 2192,
+      "user_lines_removed": 53,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".env.example": 30,
+        "backend/app/api/routes.py": 315,
+        "backend/app/auth/__init__.py": 4,
+        "backend/app/auth/security.py": 83,
+        "backend/app/config.py": 62,
+        "backend/app/db/__init__.py": 13,
+        "backend/app/db/connection.py": 72,
+        "backend/app/db/models.py": 122,
+        "backend/app/main.py": 3,
+        "backend/app/models/__init__.py": 14,
+        "backend/app/models/bible_models.py": 68,
+        "backend/app/services/__init__.py": 2,
+        "backend/app/services/prayer_service.py": 321,
+        "backend/requirements.txt": 7,
+        "backend/storage/prayer_attachments/PR-20261102-5F8742/att-5f22b86e8d8a_prayer_voice.wav": 1,
+        "backend/storage/prayer_attachments/PR-20261102-A954C1/att-8dc803f37a40_prayer_letter.txt": 1,
+        "backend/storage/prayer_attachments/PR-20261102-CD590D/att-d146b2c1f8e2_prayer_letter.txt": 1,
+        "backend/storage/prayer_attachments/PR-20261102-CDE99D/att-7576d3df7ba4_prayer_voice.wav": 1,
+        "backend/storage/prayer_attachments/PR-20261102-F9327A/att-654f5da073c5_prayer_voice.wav": 1,
+        "backend/storage/prayer_attachments/PR-20261102-FBD4B5/att-5782f470a73b_prayer_letter.txt": 1,
+        "backend/tests/test_prayer_postgres.py": 348,
+        "frontend/prayer-request/admin.html": 640,
+        "frontend/prayer-request/components/PrayerForm.jsx": 44,
+        "frontend/prayer-request/index.html": 38
+      },
+      "user_removed_per_file": {
+        "backend/app/api/routes.py": 11,
+        "backend/app/config.py": 6,
+        "backend/app/main.py": 1,
+        "backend/app/services/__init__.py": 1,
+        "frontend/prayer-request/components/PrayerForm.jsx": 17,
+        "frontend/prayer-request/index.html": 17
+      }
+    }
+  ]
+}
