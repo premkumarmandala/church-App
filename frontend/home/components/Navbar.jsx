@@ -113,7 +113,7 @@ function Navbar({ activeSection = "home", onNavigate }) {
               style={{ display: "inline-block", textAlign: "center", width: "100%" }}
               onClick={(e) => handleLinkClick("donate", "#donate", e)}
             >
-              Donate Online 💝
+              Donate Online
             </a>
           </li>
         </ul>

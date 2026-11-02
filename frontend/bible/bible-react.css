@@ -1,57 +1,57 @@
 /* ==========================================================================
    Grace Church Bible - React Frontend UI Design System
-   Matches uploaded screenshot with extreme visual fidelity.
+   Refined Production Polish with Centralized Design Tokens
    Warm Neutral Alabaster Canvas, Royal Navy, Sky Tint, Clean Modern Typography
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+Telugu:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('../design-tokens.css');
 
 :root {
-  /* Core Color Palette matching screenshot */
-  --bg-page: #f8f9fa;
-  --bg-sidebar: #ffffff;
-  --bg-card: #ffffff;
-  --bg-subtle: #f1f5f9;
-  --bg-hover: #f8fafc;
+  /* Centralized Token Mappings */
+  --bg-page: var(--color-bg-page);
+  --bg-sidebar: var(--color-surface);
+  --bg-card: var(--color-surface);
+  --bg-subtle: var(--color-surface-subtle);
+  --bg-hover: var(--color-surface-hover);
   
-  --border-subtle: #e2e8f0;
-  --border-divider: #e9ecef;
+  --border-subtle: var(--color-border);
+  --border-divider: var(--color-border-subtle);
   
-  --text-navy: #0f1e36;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
+  --text-navy: var(--color-primary-800);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --text-light: var(--color-text-light);
   
-  --accent-blue: #2563eb;
-  --accent-blue-hover: #1d4ed8;
-  --accent-blue-light: #eff6ff;
-  --accent-blue-subtle: #e0edff;
+  --accent-blue: var(--color-action);
+  --accent-blue-hover: var(--color-action-hover);
+  --accent-blue-light: var(--color-action-light);
+  --accent-blue-subtle: rgba(0, 102, 204, 0.12);
   
-  --accent-green: #059669;
-  --accent-green-bg: #ecfdf5;
-  --accent-green-border: #a7f3d0;
+  --accent-green: var(--color-success);
+  --accent-green-bg: var(--color-success-bg);
+  --accent-green-border: var(--color-success-border);
   
-  --accent-gold: #b8860b;
-  --accent-gold-light: rgba(184, 134, 11, 0.15);
+  --accent-gold: var(--color-gold-500);
+  --accent-gold-light: var(--color-gold-100);
   
-  --shadow-xs: 0 1px 2px rgba(15, 30, 54, 0.04);
-  --shadow-sm: 0 1px 3px rgba(15, 30, 54, 0.05), 0 1px 2px rgba(15, 30, 54, 0.03);
-  --shadow-md: 0 4px 16px rgba(15, 30, 54, 0.05), 0 2px 4px rgba(15, 30, 54, 0.02);
-  --shadow-lg: 0 10px 25px -3px rgba(15, 30, 54, 0.08);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Lora', Georgia, serif;
-  --font-brand: 'Plus Jakarta Sans', sans-serif;
-  --font-telugu: 'Noto Serif Telugu', Georgia, serif;
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-brand: var(--font-display);
+  --font-telugu: var(--font-telugu);
   
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
-  --radius-full: 9999px;
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
   
-  --sidebar-width: 270px;
-  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 280px;
+  --transition: all var(--transition-base);
 }
 
 [data-theme="dark"] {
@@ -69,10 +69,10 @@
   --text-muted: #8899ac;
   --text-light: #64748b;
   
-  --accent-blue: #60a5fa;
-  --accent-blue-hover: #93c5fd;
-  --accent-blue-light: rgba(96, 165, 250, 0.15);
-  --accent-blue-subtle: rgba(96, 165, 250, 0.25);
+  --accent-blue: #38bdf8;
+  --accent-blue-hover: #7dd3fc;
+  --accent-blue-light: rgba(56, 189, 248, 0.15);
+  --accent-blue-subtle: rgba(56, 189, 248, 0.25);
   
   --accent-green-bg: rgba(16, 185, 129, 0.15);
   --accent-green-border: rgba(16, 185, 129, 0.3);
@@ -201,21 +201,29 @@ select {
 }
 
 .brand-cross-box {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #0f1e36;
-  color: #ffffff;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-800);
+  border: 1px solid rgba(197, 155, 39, 0.35);
+  color: var(--color-gold-500);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
-  box-shadow: 0 3px 10px rgba(15, 30, 54, 0.15);
+  font-size: 1.45rem;
+  box-shadow: 0 2px 8px rgba(15, 30, 54, 0.15);
   flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.brand-badge-link:hover .brand-cross-box {
+  transform: scale(1.05);
 }
 
 [data-theme="dark"] .brand-cross-box {
-  background: #1e3a8a;
+  background: var(--color-surface);
+  border-color: rgba(223, 178, 53, 0.4);
+  color: var(--color-gold-500);
 }
 
 .brand-info {

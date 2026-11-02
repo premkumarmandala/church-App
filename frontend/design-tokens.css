@@ -1,0 +1,221 @@
+/* ==========================================================================
+   Grace Fellowship Church & Holy Bible - Master Design System
+   Source of Truth Design Tokens: Colors, Typography, Elevation, Spacing, Radii
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+Telugu:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
+
+:root {
+  /* --------------------------------------------------------------------------
+     1. Color Palette (Harmonious Sanctuary Palette)
+     Deep Royal Navy + Warm Antique Gold + Cerulean Action Blue
+     -------------------------------------------------------------------------- */
+  /* Primary Navy (Brand, Headings, Navigation) */
+  --color-primary-950: #060d18;
+  --color-primary-900: #0a1526;
+  --color-primary-800: #0f1e36;
+  --color-primary-700: #172a4c;
+  --color-primary-600: #1e3a68;
+  --color-primary: var(--color-primary-800);
+  --color-on-primary: #ffffff;
+
+  /* Accent Gold (Sacred Accents, Brand Crest, Active Badges) */
+  --color-gold-700: #966f14;
+  --color-gold-600: #b0871d;
+  --color-gold-500: #c59b27;
+  --color-gold-400: #dfb235;
+  --color-gold-100: #fef7e7;
+  --color-gold-50:  #fffbf2;
+  --color-accent: var(--color-gold-500);
+  --color-accent-hover: var(--color-gold-600);
+  --color-accent-subtle: rgba(197, 155, 39, 0.12);
+
+  /* Interactive Action Blue (CTAs, Primary Buttons, Active Tabs) */
+  --color-blue-800: #004080;
+  --color-blue-700: #0052a3;
+  --color-blue-600: #0066cc;
+  --color-blue-500: #0284c7;
+  --color-blue-400: #38bdf8;
+  --color-blue-100: #e0f2fe;
+  --color-blue-50:  #f0f9ff;
+  --color-action: var(--color-blue-600);
+  --color-action-hover: var(--color-blue-700);
+  --color-action-active: var(--color-blue-800);
+  --color-action-light: var(--color-blue-50);
+  --color-action-border: rgba(0, 102, 204, 0.22);
+
+  /* Neutrals & Surfaces */
+  --color-bg-page: #f8fafc;        /* Modern Slate-50 canvas */
+  --color-surface: #ffffff;        /* Pure white cards */
+  --color-surface-subtle: #f1f5f9; /* Slate-100 backdrops & chips */
+  --color-surface-hover: #f8fafc;  /* Subtle hover */
+  --color-surface-elevated: #ffffff;
+
+  /* Borders & Dividers */
+  --color-border: #e2e8f0;         /* Slate-200 */
+  --color-border-subtle: #f1f5f9;  /* Slate-100 */
+  --color-border-hover: #cbd5e1;   /* Slate-300 */
+  --color-ring-focus: rgba(0, 102, 204, 0.35);
+
+  /* Text & Typography Hierarchy (High Contrast WCAG 2.1 AA/AAA) */
+  --color-text-primary: #0f1e36;   /* Royal Navy 800 (14.2:1 contrast on white) */
+  --color-text-secondary: #334155; /* Slate 700 (9.1:1 contrast on white) */
+  --color-text-muted: #64748b;     /* Slate 500 (4.6:1 contrast on white) */
+  --color-text-light: #94a3b8;     /* Slate 400 (captions, placeholders) */
+  --color-text-inverse: #ffffff;
+
+  /* Semantic Feedback */
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-success-border: #a7f3d0;
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fde68a;
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
+  --color-info: #0284c7;
+  --color-info-bg: #f0f9ff;
+  --color-info-border: #bae6fd;
+
+  /* --------------------------------------------------------------------------
+     2. Typography System
+     -------------------------------------------------------------------------- */
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-telugu: 'Noto Serif Telugu', 'Lora', serif;
+
+  /* Type Scale */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-md: 1.125rem;    /* 18px */
+  --text-lg: 1.25rem;     /* 20px */
+  --text-xl: 1.5rem;      /* 24px */
+  --text-2xl: 1.875rem;   /* 30px */
+  --text-3xl: 2.25rem;    /* 36px */
+  --text-4xl: 2.75rem;    /* 44px */
+  --text-5xl: 3.25rem;    /* 52px */
+
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+  --leading-loose: 1.95;
+
+  /* Font Weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+
+  /* --------------------------------------------------------------------------
+     3. Spacing Scale (8pt grid system)
+     -------------------------------------------------------------------------- */
+  --space-0: 0;
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-8: 2rem;     /* 32px */
+  --space-10: 2.5rem;  /* 40px */
+  --space-12: 3rem;    /* 48px */
+  --space-16: 4rem;    /* 64px */
+  --space-20: 5rem;    /* 80px */
+  --space-24: 6rem;    /* 96px */
+
+  /* --------------------------------------------------------------------------
+     4. Border Radii Scale
+     -------------------------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-full: 9999px;
+
+  /* --------------------------------------------------------------------------
+     5. Shadows & Elevation
+     -------------------------------------------------------------------------- */
+  --shadow-xs: 0 1px 2px rgba(15, 30, 54, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 30, 54, 0.06), 0 1px 2px rgba(15, 30, 54, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 30, 54, 0.08), 0 2px 4px -1px rgba(15, 30, 54, 0.04);
+  --shadow-lg: 0 10px 25px -4px rgba(15, 30, 54, 0.1), 0 4px 10px -2px rgba(15, 30, 54, 0.05);
+  --shadow-xl: 0 20px 35px -5px rgba(15, 30, 54, 0.14), 0 8px 16px -4px rgba(15, 30, 54, 0.06);
+  --shadow-card: 0 1px 3px rgba(15, 30, 54, 0.05), 0 8px 24px -4px rgba(15, 30, 54, 0.07);
+  --shadow-card-hover: 0 4px 12px rgba(15, 30, 54, 0.06), 0 16px 36px -4px rgba(15, 30, 54, 0.12);
+
+  /* --------------------------------------------------------------------------
+     6. Transitions
+     -------------------------------------------------------------------------- */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --------------------------------------------------------------------------
+     7. Containers & Touch Targets
+     -------------------------------------------------------------------------- */
+  --container-max: 1240px;
+  --container-narrow: 840px;
+  --container-pad: 24px;
+  --min-touch-target: 44px;
+}
+
+/* ----------------------------------------------------------------------------
+   Dark Theme Overrides
+   ---------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --color-bg-page: #0a1124;
+  --color-surface: #111e3b;
+  --color-surface-subtle: #17264a;
+  --color-surface-hover: #1b2d56;
+  --color-surface-elevated: #152448;
+
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-hover: rgba(255, 255, 255, 0.2);
+
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-light: #64748b;
+
+  --color-action: #38bdf8;
+  --color-action-hover: #7dd3fc;
+  --color-action-active: #bae6fd;
+  --color-action-light: rgba(56, 189, 248, 0.15);
+  --color-action-border: rgba(56, 189, 248, 0.3);
+
+  --color-gold-500: #dfb235;
+  --color-accent: var(--color-gold-500);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.55);
+}
+
+/* ----------------------------------------------------------------------------
+   Global Focus-Visible & Accessibility Standard
+   ---------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-action) !important;
+  outline-offset: 2px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

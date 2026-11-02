@@ -16,7 +16,8 @@ function Announcements() {
       location: "Sanctuary & Youth Hall",
       image: "home/assets/youth_conference.jpg",
       actionText: "Register Now",
-      btnClass: "btn-yellow"
+      tag: "Youth Ministry",
+      tagClass: "badge-youth"
     },
     {
       id: 2,
@@ -27,7 +28,8 @@ function Announcements() {
       location: "Church Main Hall",
       image: "home/assets/womens_fellowship.jpg",
       actionText: "Register Now",
-      btnClass: "btn-rose"
+      tag: "Fellowship",
+      tagClass: "badge-fellowship"
     },
     {
       id: 3,
@@ -38,7 +40,8 @@ function Announcements() {
       location: "Church Sanctuary",
       image: "home/assets/open_bible_banner.jpg",
       actionText: "Join In-Person",
-      btnClass: "btn-navy"
+      tag: "Prayer & Care",
+      tagClass: "badge-outreach"
     }
   ];
 
@@ -56,7 +59,9 @@ function Announcements() {
         {/* Header */}
         <div className="announcements-header">
           <div className="section-title-wrap">
-            <span className="section-title-icon" style={{ color: "#e11d48" }}>📢</span>
+            <span className="section-title-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </span>
             <h2 className="section-title-text">Announcements</h2>
           </div>
           <a href="#events" className="section-view-all">
@@ -86,14 +91,15 @@ function Announcements() {
                   loading="lazy"
                 />
                 <div className="announcement-body">
+                  <span className={`announcement-tag ${item.tagClass}`}>{item.tag}</span>
                   <h3 className="announcement-card-title">{item.title}</h3>
                   <div className="announcement-meta">
-                    <span>📅 {item.date} {item.time ? `• ${item.time}` : ""}</span>
-                    <span>📍 {item.location}</span>
+                    <span>{item.date} {item.time ? `• ${item.time}` : ""}</span>
+                    <span>{item.location}</span>
                   </div>
                   <button
                     type="button"
-                    className={`announcement-btn ${item.btnClass}`}
+                    className="announcement-btn"
                     onClick={() => {
                       alert(`Thank you for your interest in ${item.title}! Registration is open at church office.`);
                     }}
@@ -118,3 +124,5 @@ function Announcements() {
     </section>
   );
 }
+
+window.Announcements = Announcements;

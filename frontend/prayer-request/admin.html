@@ -6,10 +6,11 @@
   <title>Pastoral Prayer Admin Portal - Grace Fellowship Church</title>
   <meta name="robots" content="noindex, nofollow">
 
-  <!-- Fonts -->
+  <!-- Master Design System Tokens & Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../design-tokens.css">
 
   <!-- React 18 & Babel CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -18,223 +19,315 @@
 
   <style>
     :root {
-      --navy: #0f1e36;
-      --navy-light: #1e293b;
-      --gold: #c59b27;
-      --gold-light: #dfb235;
-      --blue: #0284c7;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --success: #16a34a;
-      --warning: #f59e0b;
-      --danger: #dc2626;
+      --navy: var(--color-primary-800);
+      --navy-dark: var(--color-primary-950);
+      --navy-light: var(--color-primary-700);
+      --gold: var(--color-gold-500);
+      --gold-light: var(--color-gold-400);
+      --blue: var(--color-action);
+      --blue-hover: var(--color-action-hover);
+      --bg: var(--color-bg-page);
+      --card-bg: var(--color-surface);
+      --text: var(--color-text-primary);
+      --text-muted: var(--color-text-muted);
+      --border: var(--color-border);
+      --border-subtle: var(--color-border-subtle);
+      --success: var(--color-success);
+      --warning: var(--color-warning);
+      --danger: var(--color-danger);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: var(--font-sans);
       background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
+      line-height: var(--leading-normal);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* Admin Header */
     .admin-header {
-      background: var(--navy);
+      background: var(--navy-dark);
       color: #fff;
-      padding: 16px 24px;
+      padding: 14px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow-md);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     .admin-brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-family: 'Cinzel', serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-    .admin-brand span { color: var(--gold); }
-    .btn-logout {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      text-decoration: none;
       color: #fff;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
     }
-    .btn-logout:hover { background: rgba(255,255,255,0.2); }
+    .admin-brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--navy);
+      border: 1px solid rgba(197, 155, 39, 0.35);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .admin-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .admin-brand-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+    .admin-brand-sub {
+      font-size: 0.75rem;
+      color: var(--gold-light);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .btn-logout {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      transition: all var(--transition-fast);
+      min-height: 36px;
+    }
+    .btn-logout:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: #fff;
+    }
 
     .admin-container {
-      max-width: 1200px;
-      margin: 24px auto;
-      padding: 0 20px;
+      max-width: var(--container-max);
+      margin: 28px auto 60px auto;
+      padding: 0 var(--container-pad);
     }
 
     /* Login Card */
     .login-wrapper {
-      max-width: 420px;
+      max-width: 440px;
       margin: 80px auto;
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border-radius: var(--radius-xl);
+      padding: 36px 32px;
+      box-shadow: var(--shadow-card);
+    }
+    .login-logo-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--navy);
+      border: 1px solid rgba(197, 155, 39, 0.4);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 4px 12px rgba(15, 30, 54, 0.2);
     }
     .login-title {
-      font-family: 'Cinzel', serif;
+      font-family: var(--font-display);
       color: var(--navy);
       font-size: 1.5rem;
-      margin-bottom: 8px;
+      font-weight: 700;
+      margin-bottom: 6px;
       text-align: center;
     }
     .login-subtitle {
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       text-align: center;
       margin-bottom: 24px;
     }
-    .form-group { margin-bottom: 16px; }
+    .form-group { margin-bottom: 18px; }
     .form-group label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 600;
       margin-bottom: 6px;
+      color: var(--color-text-secondary);
     }
     .form-control {
       width: 100%;
       padding: 10px 14px;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       font-family: inherit;
       font-size: 0.95rem;
+      color: var(--text);
+      background: #fff;
+      transition: all var(--transition-fast);
+      min-height: 42px;
     }
     .form-control:focus {
       outline: none;
       border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(2,132,199,0.15);
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.18);
     }
     .btn-primary {
       width: 100%;
-      background: var(--navy);
+      background: var(--blue);
       color: #fff;
       padding: 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       font-weight: 700;
+      font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all var(--transition-fast);
+      box-shadow: 0 2px 8px rgba(0, 102, 204, 0.25);
+      min-height: 44px;
     }
-    .btn-primary:hover { background: #1a365d; }
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.35);
+    }
     .login-error {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
+      background: var(--color-danger-bg);
+      border: 1px solid var(--color-danger-border);
       color: var(--danger);
-      padding: 10px;
-      border-radius: 6px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
       font-size: 0.88rem;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     /* Stats Grid */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
       margin-bottom: 24px;
     }
     .stat-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: var(--radius-lg);
+      padding: 20px;
       text-align: center;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
     }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .stat-card.card-total { border-top: 4px solid var(--navy); }
+    .stat-card.card-pending { border-top: 4px solid var(--warning); }
+    .stat-card.card-prayed { border-top: 4px solid var(--success); }
+    .stat-card.card-archived { border-top: 4px solid var(--text-muted); }
+
     .stat-value {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 800;
       color: var(--navy);
+      line-height: 1.1;
+      margin-bottom: 4px;
     }
     .stat-label {
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
     }
 
     /* Filters Bar */
     .filters-bar {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 24px;
       align-items: center;
+      box-shadow: var(--shadow-xs);
     }
     .search-input {
       flex: 1;
-      min-width: 240px;
+      min-width: 260px;
     }
 
-    /* Requests Table / Cards */
+    /* Requests Cards */
     .requests-list {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
     }
     .request-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-      transition: border-color 0.2s;
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
-    .request-card:hover { border-color: #cbd5e1; }
+    .request-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: var(--shadow-md);
+    }
     .card-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
     .ref-badge {
       font-family: monospace;
       font-weight: 700;
-      background: #f1f5f9;
+      background: var(--color-surface-subtle);
       color: var(--navy);
-      padding: 3px 8px;
-      border-radius: 4px;
+      padding: 4px 10px;
+      border-radius: var(--radius-xs);
       font-size: 0.85rem;
+      border: 1px solid var(--border);
     }
     .status-badge {
       font-size: 0.75rem;
       font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
       text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
-    .status-pending { background: #fef3c7; color: #92400e; }
-    .status-prayed { background: #dcfce7; color: #166534; }
-    .status-archived { background: #f1f5f9; color: #475569; }
+    .status-pending { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .status-prayed { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+    .status-archived { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
 
     .req-message {
-      font-size: 1rem;
-      color: #334155;
+      font-size: 1.02rem;
+      color: var(--color-text-secondary);
       margin-bottom: 16px;
       white-space: pre-wrap;
+      line-height: var(--leading-relaxed);
     }
     .req-meta {
       display: flex;
@@ -243,22 +336,27 @@
       font-size: 0.85rem;
       color: var(--text-muted);
       border-top: 1px solid var(--border);
-      padding-top: 12px;
+      padding-top: 14px;
       align-items: center;
     }
+    .req-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
     .attachments-box {
-      margin: 12px 0;
-      background: #f8fafc;
+      margin: 14px 0;
+      background: var(--color-surface-subtle);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
     }
     .attachment-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      margin-top: 4px;
+      gap: 10px;
+      font-size: 0.88rem;
+      margin-top: 6px;
     }
     .card-actions {
       display: flex;
@@ -266,19 +364,46 @@
       margin-left: auto;
     }
     .btn-sm {
-      padding: 6px 12px;
+      padding: 7px 14px;
       font-size: 0.82rem;
       font-weight: 600;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
       border: 1px solid var(--border);
       background: #fff;
+      color: var(--color-text-secondary);
+      transition: all var(--transition-fast);
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
     }
-    .btn-sm:hover { background: #f8fafc; }
-    .btn-status-prayed { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
-    .btn-status-prayed:hover { background: #d1fae5; }
-    .btn-delete { color: var(--danger); }
-    .btn-delete:hover { background: #fef2f2; border-color: #fecaca; }
+    .btn-sm:hover {
+      background: var(--color-surface-hover);
+      border-color: #cbd5e1;
+    }
+    .btn-status-prayed {
+      background: #ecfdf5;
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+    .btn-status-prayed:hover {
+      background: #d1fae5;
+    }
+    .btn-delete {
+      color: var(--danger);
+    }
+    .btn-delete:hover {
+      background: var(--color-danger-bg);
+      border-color: var(--color-danger-border);
+    }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .card-actions { margin-left: 0; width: 100%; justify-content: flex-end; }
+    }
   </style>
 </head>
 <body>
@@ -412,12 +537,13 @@
       if (!token) {
         return (
           <div className="login-wrapper">
+            <div className="login-logo-badge">✝</div>
             <h1 className="login-title">Pastoral Portal</h1>
             <p className="login-subtitle">Sign in to manage church prayer intercession</p>
             {loginError && <div className="login-error">{loginError}</div>}
             <form onSubmit={handleLogin}>
               <div className="form-group">
-                <label>Username</label>
+                <label>Pastoral Username</label>
                 <input
                   type="text"
                   className="form-control"
@@ -437,7 +563,7 @@
                   required
                 />
               </div>
-              <button type="submit" className="btn-primary">Sign In</button>
+              <button type="submit" className="btn-primary">Sign In to Dashboard</button>
             </form>
           </div>
         );
@@ -447,11 +573,15 @@
       return (
         <div>
           <header className="admin-header">
-            <div className="admin-brand">
-              <span>✝</span> Grace Fellowship Church &bull; Pastoral Intercession
-            </div>
+            <a href="index.html" className="admin-brand">
+              <div className="admin-brand-logo">✝</div>
+              <div className="admin-brand-text">
+                <span className="admin-brand-title">Grace Fellowship Church</span>
+                <span className="admin-brand-sub">Pastoral Care & Intercession</span>
+              </div>
+            </a>
             <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              <a href="index.html" style={{ color: "#94a3b8", fontSize: "0.88rem", textDecoration: "none" }}>
+              <a href="index.html" style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.88rem", textDecoration: "none", fontWeight: 500 }}>
                 &larr; View Public Form
               </a>
               <button className="btn-logout" onClick={handleLogout}>Log Out</button>
@@ -462,20 +592,20 @@
             {/* Stats Overview */}
             {stats && (
               <div className="stats-grid">
-                <div className="stat-card">
+                <div className="stat-card card-total">
                   <div className="stat-value">{stats.total_requests}</div>
                   <div className="stat-label">Total Requests</div>
                 </div>
-                <div className="stat-card">
-                  <div className="stat-value" style={{ color: "#d97706" }}>{stats.pending_requests}</div>
+                <div className="stat-card card-pending">
+                  <div className="stat-value" style={{ color: "var(--warning)" }}>{stats.pending_requests}</div>
                   <div className="stat-label">Pending Intercession</div>
                 </div>
-                <div className="stat-card">
-                  <div className="stat-value" style={{ color: "#16a34a" }}>{stats.prayed_requests}</div>
+                <div className="stat-card card-prayed">
+                  <div className="stat-value" style={{ color: "var(--success)" }}>{stats.prayed_requests}</div>
                   <div className="stat-label">Prayed & Interceded</div>
                 </div>
-                <div className="stat-card">
-                  <div className="stat-value" style={{ color: "#64748b" }}>{stats.archived_requests}</div>
+                <div className="stat-card card-archived">
+                  <div className="stat-value" style={{ color: "var(--text-muted)" }}>{stats.archived_requests}</div>
                   <div className="stat-label">Archived</div>
                 </div>
               </div>
@@ -529,10 +659,10 @@
 
             {/* Requests List */}
             {loading ? (
-              <p style={{ textAlign: "center", color: "#64748b", margin: "40px 0" }}>Loading prayer requests from PostgreSQL...</p>
+              <p style={{ textAlign: "center", color: "var(--text-muted)", margin: "40px 0" }}>Loading prayer requests from PostgreSQL...</p>
             ) : requests.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "60px 20px", background: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-                <p style={{ fontSize: "1.1rem", color: "#64748b" }}>No prayer requests found matching your filters.</p>
+              <div style={{ textAlign: "center", padding: "60px 20px", background: "#fff", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }}>
+                <p style={{ fontSize: "1.1rem", color: "var(--text-muted)" }}>No prayer requests found matching your filters.</p>
               </div>
             ) : (
               <div className="requests-list">
@@ -541,10 +671,10 @@
                     <div className="card-top">
                       <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                         <span className="ref-badge">{req.id}</span>
-                        <span style={{ fontWeight: "700", color: "#0f1e36" }}>{req.category}</span>
+                        <span style={{ fontWeight: "700", color: "var(--navy)" }}>{req.category}</span>
                         {req.is_anonymous && (
-                          <span style={{ background: "#f1f5f9", fontSize: "0.75rem", padding: "2px 8px", borderRadius: "4px" }}>
-                            Anonymous
+                          <span style={{ background: "var(--color-surface-subtle)", fontSize: "0.75rem", padding: "2px 8px", borderRadius: "4px", color: "var(--text-muted)", fontWeight: "600" }}>
+                            Anonymous Requester
                           </span>
                         )}
                       </div>
@@ -558,12 +688,15 @@
                     {/* Attachments Section */}
                     {req.attachments && req.attachments.length > 0 && (
                       <div className="attachments-box">
-                        <strong style={{ fontSize: "0.82rem", color: "#475569" }}>
+                        <strong style={{ fontSize: "0.82rem", color: "var(--color-text-secondary)" }}>
                           Attachments ({req.attachments.length}):
                         </strong>
                         {req.attachments.map((att) => (
                           <div key={att.id} className="attachment-item">
-                            <span>📎 {att.original_filename} ({att.file_type})</span>
+                            <span>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: "-2px", marginRight: "4px" }}><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                              {att.original_filename} ({att.file_type})
+                            </span>
                             {att.file_type === "audio" && (
                               <audio
                                 controls
@@ -575,7 +708,7 @@
                               href={`${apiBase}${att.download_url}?token=${token}`}
                               target="_blank"
                               rel="noreferrer"
-                              style={{ color: "#0284c7", fontSize: "0.82rem", marginLeft: "8px" }}
+                              style={{ color: "var(--blue)", fontSize: "0.82rem", marginLeft: "8px", fontWeight: "600" }}
                             >
                               Download / Open
                             </a>
@@ -586,17 +719,35 @@
 
                     {/* Pastoral Notes if present */}
                     {req.pastoral_notes && (
-                      <div style={{ background: "#fffbeb", borderLeft: "3px solid #f59e0b", padding: "8px 12px", margin: "10px 0", fontSize: "0.85rem" }}>
+                      <div style={{ background: "var(--color-warning-bg)", borderLeft: "3px solid var(--warning)", padding: "10px 14px", margin: "12px 0", fontSize: "0.88rem", borderRadius: "var(--radius-xs)" }}>
                         <strong>Pastoral Notes:</strong> {req.pastoral_notes}
                       </div>
                     )}
 
                     <div className="req-meta">
-                      <span>👤 {req.name || "Anonymous"}</span>
-                      {req.email && <span>✉️ {req.email}</span>}
-                      {req.phone && <span>📞 {req.phone}</span>}
-                      <span>📅 {new Date(req.created_at).toLocaleString()}</span>
-                      <span>{req.contact_permission ? "✓ Follow-up allowed" : "✕ No follow-up requested"}</span>
+                      <span className="req-meta-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        {req.name || "Anonymous"}
+                      </span>
+                      {req.email && (
+                        <span className="req-meta-item">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                          {req.email}
+                        </span>
+                      )}
+                      {req.phone && (
+                        <span className="req-meta-item">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                          {req.phone}
+                        </span>
+                      )}
+                      <span className="req-meta-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        {new Date(req.created_at).toLocaleString()}
+                      </span>
+                      <span className="req-meta-item" style={{ color: req.contact_permission ? "var(--success)" : "var(--text-muted)" }}>
+                        {req.contact_permission ? "✓ Follow-up allowed" : "✕ Confidential"}
+                      </span>
 
                       <div className="card-actions">
                         {req.status !== "Prayed" && (
