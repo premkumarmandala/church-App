@@ -44,15 +44,15 @@
   --color-action-light: var(--color-blue-50);
   --color-action-border: rgba(0, 102, 204, 0.22);
 
-  /* Neutrals & Surfaces */
-  --color-bg-page: #f8fafc;        /* Modern Slate-50 canvas */
+  /* Neutrals & Surfaces (Warm Sacred Alabaster Canvas) */
+  --color-bg-page: #faf5ea;        /* Warm parchment canvas */
   --color-surface: #ffffff;        /* Pure white cards */
-  --color-surface-subtle: #f1f5f9; /* Slate-100 backdrops & chips */
-  --color-surface-hover: #f8fafc;  /* Subtle hover */
+  --color-surface-subtle: #f4eee2; /* Warm parchment subtle backdrop */
+  --color-surface-hover: #faf6ee;  /* Subtle hover */
   --color-surface-elevated: #ffffff;
 
   /* Borders & Dividers */
-  --color-border: #e2e8f0;         /* Slate-200 */
+  --color-border: #ede5d8;         /* Warm stone border */
   --color-border-subtle: #f1f5f9;  /* Slate-100 */
   --color-border-hover: #cbd5e1;   /* Slate-300 */
   --color-ring-focus: rgba(0, 102, 204, 0.35);
