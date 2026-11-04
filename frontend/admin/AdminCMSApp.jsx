@@ -17,6 +17,7 @@ import { WebsiteSettingsManager } from './settings/WebsiteSettingsManager.jsx';
 import { UsersManager } from './users/UsersManager.jsx';
 import { LoginView } from './prayer-requests/components/LoginView.jsx';
 import { AdminPrayerRequests } from './prayer-requests/AdminPrayerRequests.jsx';
+import { PrayerRequestsManager } from './prayer-requests/PrayerRequestsManager.jsx';
 
 /**
  * Master Church Website Admin CMS Application
@@ -50,6 +51,7 @@ export function AdminCMSApp() {
   const CompWebsiteSettingsManager = window.WebsiteSettingsManager || WebsiteSettingsManager;
   const CompUsersManager = window.UsersManager || UsersManager;
   const CompAdminPrayerRequests = window.AdminPrayerRequests || AdminPrayerRequests;
+  const CompPrayerRequestsManager = window.PrayerRequestsManager || PrayerRequestsManager;
 
   // Session state
   const [isAuthenticated, setIsAuthenticated] = useSafeState(() => auth.isAuthenticated());
@@ -122,15 +124,16 @@ export function AdminCMSApp() {
           <CompDashboardOverview
             key={refreshKey}
             overview={overview}
+            pendingPrayersCount={pendingPrayersCount}
             onNavigateModule={(mod) => setCurrentModule(mod)}
+            onRefresh={fetchOverviewData}
           />
         );
       case 'prayer-requests':
         return (
-          <CompDashboardOverview
+          <CompPrayerRequestsManager
             key={`pr-${refreshKey}`}
-            overview={overview}
-            onNavigateModule={(mod) => setCurrentModule(mod)}
+            onStatsChange={fetchOverviewData}
           />
         );
       case 'sermons':
@@ -176,7 +179,9 @@ export function AdminCMSApp() {
         return (
           <CompDashboardOverview
             overview={overview}
+            pendingPrayersCount={pendingPrayersCount}
             onNavigateModule={(mod) => setCurrentModule(mod)}
+            onRefresh={fetchOverviewData}
           />
         );
     }
