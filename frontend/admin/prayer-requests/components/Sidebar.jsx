@@ -3,7 +3,7 @@
  * Features clean white corporate styling, church branding, navy active pills,
  * and user administrator profile matching the reference screenshot.
  */
-export function Sidebar({ currentView, onViewChange, pendingCount = 12, onLogout, isOpen, onClose }) {
+export function Sidebar({ currentView, onViewChange, pendingCount = 0, onLogout, isOpen, onClose }) {
   const navItems = [
     {
       id: 'dashboard',
@@ -26,7 +26,7 @@ export function Sidebar({ currentView, onViewChange, pendingCount = 12, onLogout
           <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
         </svg>
       ),
-      badge: pendingCount || 12,
+      badge: (typeof pendingCount === 'number' && pendingCount > 0) ? pendingCount : null,
     },
     {
       id: 'sermons',
@@ -124,7 +124,7 @@ export function Sidebar({ currentView, onViewChange, pendingCount = 12, onLogout
                   <span className="sidebar-nav-icon">{item.icon}</span>
                   <span>{item.label}</span>
                 </div>
-                {item.badge !== undefined && item.badge !== null && (
+                {typeof item.badge === 'number' && item.badge > 0 && (
                   <span className="sidebar-badge-red">{item.badge}</span>
                 )}
               </button>

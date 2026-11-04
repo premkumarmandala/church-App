@@ -81,6 +81,10 @@ export function AdminCMSApp() {
       const prayerStats = await api.getPrayerStats();
       if (prayerStats && typeof prayerStats.pending_requests === 'number') {
         setPendingPrayersCount(prayerStats.pending_requests);
+      } else if (prayerStats && typeof prayerStats.pending === 'number') {
+        setPendingPrayersCount(prayerStats.pending);
+      } else {
+        setPendingPrayersCount(0);
       }
     } catch (err) {
       console.warn('Overview fetch error:', err);

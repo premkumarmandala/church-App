@@ -3,7 +3,7 @@
  * Matches the reference screenshot with page titles, notification bell,
  * and user profile avatar.
  */
-export function Topbar({ currentView = 'dashboard', onToggleSidebar, onNotificationClick, pendingCount = 12 }) {
+export function Topbar({ currentView = 'dashboard', onToggleSidebar, onNotificationClick, pendingCount = 0 }) {
   const titles = {
     dashboard: {
       title: 'Dashboard',

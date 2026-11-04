@@ -41,14 +41,14 @@ export function AdminPrayerRequests() {
 
   // Data States
   const [stats, setStats] = useSafeState({
-    total_requests: 156,
-    pending_requests: 12,
-    prayed_requests: 132,
-    archived_requests: 12,
+    total_requests: 0,
+    pending_requests: 0,
+    prayed_requests: 0,
+    archived_requests: 0,
     by_category: {},
   });
   const [requests, setRequests] = useSafeState([]);
-  const [totalRequests, setTotalRequests] = useSafeState(156);
+  const [totalRequests, setTotalRequests] = useSafeState(0);
   const [isLoading, setIsLoading] = useSafeState(false);
 
   // Filters & Pagination State
@@ -205,7 +205,7 @@ export function AdminPrayerRequests() {
       <CompSidebar
         currentView={currentView}
         onViewChange={setCurrentView}
-        pendingCount={stats?.pending_requests ?? stats?.pending ?? 12}
+        pendingCount={stats?.pending_requests ?? stats?.pending ?? 0}
         onLogout={handleLogout}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
@@ -268,6 +268,10 @@ export function AdminPrayerRequests() {
           onStatusUpdated={() => {
             fetchStats();
             fetchRequests();
+          }}
+          onDelete={(req) => {
+            setSelectedRequest(null);
+            setRequestToDelete(req);
           }}
         />
       )}

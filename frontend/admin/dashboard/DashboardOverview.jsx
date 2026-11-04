@@ -22,15 +22,15 @@ export function DashboardOverview({ overview, onNavigateModule }) {
 
   // Real KPI statistics directly from database
   const [stats, setStats] = useSafeState({
-    total_requests: 156,
-    pending_requests: 12,
-    prayed_requests: 132,
-    archived_requests: 12,
+    total_requests: 0,
+    pending_requests: 0,
+    prayed_requests: 0,
+    archived_requests: 0,
   });
 
   // Requests state
   const [requests, setRequests] = useSafeState([]);
-  const [totalCount, setTotalCount] = useSafeState(156);
+  const [totalCount, setTotalCount] = useSafeState(0);
   const [statusFilter, setStatusFilter] = useSafeState('All');
   const [categoryFilter, setCategoryFilter] = useSafeState('All Categories');
   const [sortOrder, setSortOrder] = useSafeState('newest');
@@ -244,6 +244,11 @@ export function DashboardOverview({ overview, onNavigateModule }) {
             } catch (e) {
               console.error(e);
             }
+          }}
+          onStatusUpdated={() => fetchData()}
+          onDelete={(req) => {
+            setSelectedRequest(null);
+            setRequestToDelete(req);
           }}
           onSaveNotes={async (reqId, notes) => {
             try {
