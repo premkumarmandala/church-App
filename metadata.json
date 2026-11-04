@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6JMP68GYCSE54XZ3PX211YS",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 4,
+  "files_touched": [
+    ".env.example",
+    "frontend/design-tokens.css",
+    "frontend/home/assets/parchment_paper_bg.jpg",
+    "frontend/home/assets/sacred_alabaster_texture.jpg",
+    "frontend/home/assets/sunrise_cross_dawn.jpg",
+    "frontend/home/assets/uploads/71988841_poster_test.png",
+    "frontend/home/assets/uploads/7eaa3bcd_poster_test.png",
+    "frontend/home/assets/warm_sanctuary_background.jpg",
+    "scripts/show_schema.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ]
+}
