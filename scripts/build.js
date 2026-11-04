@@ -53,6 +53,7 @@ const cmsBundleFiles = [
   path.join(adminFeatureDir, 'components', 'Pagination.jsx'),
   path.join(adminFeatureDir, 'components', 'PrayerDetailModal.jsx'),
   path.join(adminFeatureDir, 'components', 'AddPrayerModal.jsx'),
+  path.join(adminFeatureDir, 'PrayerRequestsManager.jsx'),
   path.join(adminDir, 'users', 'UsersManager.jsx'),
   path.join(adminDir, 'layout', 'Sidebar.jsx'),
   path.join(adminDir, 'layout', 'Topbar.jsx'),
