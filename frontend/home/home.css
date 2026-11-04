@@ -62,7 +62,12 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-bg-page);
+  background-color: #faf5ea;
+  background-image: url('assets/parchment_paper_bg.jpg');
+  background-repeat: repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
   color: var(--color-text-primary);
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
