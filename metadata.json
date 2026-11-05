@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M6N9AEK55V05CRCNT376CTHS",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 9,
+  "files_touched": [
+    "backend/app/main.py",
+    "frontend/admin/AdminCMSApp.jsx",
+    "frontend/admin/about/AboutManager.jsx",
+    "frontend/admin/announcements/AnnouncementsManager.jsx",
+    "frontend/admin/bible/BibleSettingsManager.jsx",
+    "frontend/admin/cms.bundle.jsx",
+    "frontend/admin/components/ConfirmModal.jsx",
+    "frontend/admin/components/MediaUploadField.jsx",
+    "frontend/admin/components/PageHeader.jsx",
+    "frontend/admin/components/StatusBadge.jsx",
+    "frontend/admin/contact/ContactManager.jsx",
+    "frontend/admin/dashboard/DashboardOverview.jsx",
+    "frontend/admin/events/EventsManager.jsx",
+    "frontend/admin/gallery/GalleryManager.jsx",
+    "frontend/admin/home/HomeManager.jsx",
+    "frontend/admin/layout/Sidebar.jsx",
+    "frontend/admin/layout/Topbar.jsx",
+    "frontend/admin/ministries/MinistriesManager.jsx",
+    "frontend/admin/prayer-requests/components/FilterToolbar.jsx",
+    "frontend/admin/prayer-requests/components/Pagination.jsx",
+    "frontend/admin/prayer-requests/components/Sidebar.jsx",
+    "frontend/admin/prayer-requests/components/Topbar.jsx",
+    "frontend/admin/prayer-requests/prayer-requests.bundle.jsx",
+    "frontend/admin/prayer-requests/styles/admin.css",
+    "frontend/admin/sermons/SermonsManager.jsx",
+    "frontend/admin/service-timings/ServiceTimingsManager.jsx",
+    "frontend/admin/settings/WebsiteSettingsManager.jsx",
+    "frontend/admin/users/UsersManager.jsx",
+    "frontend/home/assets/uploads/128890db_poster_test.png"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ]
+}
