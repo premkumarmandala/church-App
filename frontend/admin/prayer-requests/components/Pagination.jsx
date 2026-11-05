@@ -1,20 +1,21 @@
 /**
- * Modern Pagination Component
- * Displays 'Showing X – Y of Z requests' and pagination buttons
- * matching the reference screenshot.
+ * Standardized Pagination Component
+ * Displays 'Showing X – Y of Z records' with accessible SVG chevron navigation buttons.
  */
 export function Pagination({
-  total = 156,
-  limit = 5,
+  total = 0,
+  limit = 10,
   offset = 0,
   onPageChange,
+  entityLabel = 'records',
 }) {
-  const safeTotal = typeof total === 'number' && total >= 0 ? total : 156;
-  const currentPage = Math.floor(offset / limit) + 1;
-  const totalPages = Math.max(1, Math.ceil(safeTotal / limit));
+  const safeTotal = typeof total === 'number' && total >= 0 ? total : 0;
+  const safeLimit = Math.max(1, limit);
+  const currentPage = Math.floor(offset / safeLimit) + 1;
+  const totalPages = Math.max(1, Math.ceil(safeTotal / safeLimit));
 
   const startRecord = safeTotal === 0 ? 0 : offset + 1;
-  const endRecord = Math.min(offset + limit, safeTotal);
+  const endRecord = Math.min(offset + safeLimit, safeTotal);
 
   // Generate page numbers dynamically
   const getPageNumbers = () => {
@@ -36,8 +37,8 @@ export function Pagination({
     <div className="table-pagination-footer">
       <div className="showing-count-text">
         {safeTotal === 0
-          ? 'Showing 0 requests'
-          : `Showing ${startRecord} – ${endRecord} of ${safeTotal} requests`}
+          ? `No ${entityLabel} found`
+          : `Showing ${startRecord} – ${endRecord} of ${safeTotal} ${entityLabel}`}
       </div>
 
       <div className="pagination-controls-row">
@@ -45,11 +46,14 @@ export function Pagination({
         <button
           type="button"
           className="btn-pagination-nav"
-          onClick={() => onPageChange(Math.max(0, offset - limit))}
+          onClick={() => onPageChange(Math.max(0, offset - safeLimit))}
           disabled={currentPage <= 1 || safeTotal === 0}
           aria-label="Previous Page"
+          title="Previous Page"
         >
-          &lt;
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
         </button>
 
         {/* Page Numbers */}
@@ -68,7 +72,8 @@ export function Pagination({
                 key={`page-${p}`}
                 type="button"
                 className={`btn-pagination-nav ${isCurrent ? 'active' : ''}`}
-                onClick={() => onPageChange((p - 1) * limit)}
+                onClick={() => onPageChange((p - 1) * safeLimit)}
+                aria-current={isCurrent ? 'page' : undefined}
               >
                 {p}
               </button>
@@ -79,11 +84,14 @@ export function Pagination({
         <button
           type="button"
           className="btn-pagination-nav"
-          onClick={() => onPageChange(offset + limit)}
+          onClick={() => onPageChange(offset + safeLimit)}
           disabled={currentPage >= totalPages || safeTotal === 0}
           aria-label="Next Page"
+          title="Next Page"
         >
-          &gt;
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
         </button>
       </div>
     </div>

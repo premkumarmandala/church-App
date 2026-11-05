@@ -372,25 +372,32 @@ if (typeof window !== 'undefined') {
 
 /* === Source: PageHeader.jsx === */
 /**
- * Section Action Header Component
- * Provides clean module-level toolbar with section title and primary action button,
- * aligning with the unified white & navy corporate dashboard theme.
+ * Standardized Section Action Header Component
+ * Provides clean module-level toolbar with section title, subtitle metadata,
+ * and primary action button styled in the unified Navy & White corporate design system.
  */
-function PageHeader({ title, subtitle, actionLabel, onAction, actionIcon = '+' }) {
+function PageHeader({ title, subtitle, actionLabel, onAction, actionIcon }) {
+  const defaultPlusIcon = (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+
   return (
-    <div className="panel-header-toolbar" style={{ marginBottom: '8px' }}>
+    <div className="panel-header-toolbar" style={{ marginBottom: '16px', background: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
       <div className="panel-title-and-tabs">
-        {title && <h2 className="panel-section-title">{title}</h2>}
+        {title && <h2 className="panel-section-title" style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>{title}</h2>}
         {subtitle && (
-          <span style={{ fontSize: '0.8rem', color: '#64748b', marginLeft: '6px' }}>
-            — {subtitle}
+          <span style={{ fontSize: '0.825rem', color: '#64748b' }}>
+            {subtitle}
           </span>
         )}
       </div>
       {actionLabel && onAction && (
         <div className="panel-right-tools">
-          <button type="button" className="btn-add-primary" onClick={onAction}>
-            <span>{actionIcon}</span>
+          <button type="button" className="btn-add-primary" onClick={onAction} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            <span>{actionIcon || defaultPlusIcon}</span>
             <span>{actionLabel}</span>
           </button>
         </div>
@@ -404,19 +411,94 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: StatusBadge.jsx === */
 /**
- * Reusable Status Pill Badge Component
+ * Standardized Status Badge Component
+ * Renders consistent, subtle, accessible semantic status pills across all modules.
+ * Strict palette: Mint Green (Active/Published/Prayed), Amber (Pending/Draft), Slate (Archived/Inactive).
  */
-function StatusBadge({ isPublished, label }) {
-  const published = isPublished ?? true;
-  const text = label || (published ? 'Published' : 'Draft');
-  const badgeClass = published ? 'prayed' : 'pending';
+function StatusBadge({ isPublished, status, label }) {
+  let text = label;
+  let theme = 'published';
+
+  if (typeof isPublished === 'boolean') {
+    text = text || (isPublished ? 'Published' : 'Draft');
+    theme = isPublished ? 'published' : 'draft';
+  } else if (status) {
+    const s = String(status).toLowerCase();
+    text = text || status;
+    if (s === 'active' || s === 'prayed' || s === 'published') {
+      theme = 'published';
+    } else if (s === 'pending' || s === 'draft') {
+      theme = 'draft';
+    } else if (s === 'archived' || s === 'inactive') {
+      theme = 'archived';
+    } else if (s === 'danger' || s === 'rejected') {
+      theme = 'danger';
+    }
+  } else {
+    text = text || 'Published';
+    theme = 'published';
+  }
+
+  const styles = {
+    published: {
+      bg: '#ecfdf5',
+      text: '#059669',
+      border: '#a7f3d0',
+      dot: '#10b981',
+    },
+    draft: {
+      bg: '#fef3c7',
+      text: '#b45309',
+      border: '#fde68a',
+      dot: '#f59e0b',
+    },
+    archived: {
+      bg: '#f1f5f9',
+      text: '#475569',
+      border: '#e2e8f0',
+      dot: '#94a3b8',
+    },
+    danger: {
+      bg: '#fef2f2',
+      text: '#dc2626',
+      border: '#fee2e2',
+      dot: '#ef4444',
+    },
+  }[theme] || {
+    bg: '#f1f5f9',
+    text: '#475569',
+    border: '#e2e8f0',
+    dot: '#94a3b8',
+  };
 
   return (
-    <span className={`status-pill ${badgeClass}`}>
-      <span className="status-dot" />
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '3px 10px',
+        borderRadius: '9999px',
+        fontSize: '0.75rem',
+        fontWeight: 700,
+        backgroundColor: styles.bg,
+        color: styles.text,
+        border: `1px solid ${styles.border}`,
+        lineHeight: 1.4,
+        userSelect: 'none',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <span
+        style={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          backgroundColor: styles.dot,
+        }}
+      />
       <span>{text}</span>
     </span>
   );
@@ -427,17 +509,33 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: MediaUploadField.jsx === */
 
 
 /**
- * Reusable Media Upload & URL Selector Field
+ * Standardized Media Upload & Asset Selector Field
+ * Supports direct file uploading to server/cloud storage and manual URL assignment.
+ * Renders thumbnail preview, upload progress spinner, and clear action.
  */
-function MediaUploadField({ label, value, onChange, placeholder = 'e.g. home/assets/photo.jpg', accept = 'image/*' }) {
+function MediaUploadField({
+  label,
+  value,
+  onChange,
+  placeholder = 'e.g. home/assets/photo.jpg or https://...',
+  accept = 'image/*',
+  helpText,
+}) {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
   const [isUploading, setIsUploading] = useSafeState(false);
   const [uploadError, setUploadError] = useSafeState('');
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
@@ -462,25 +560,26 @@ function MediaUploadField({ label, value, onChange, placeholder = 'e.g. home/ass
     <div className="form-group" style={{ marginBottom: '16px' }}>
       {label && <label className="form-label">{label}</label>}
 
-      <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-        {/* Preview Frame */}
+      <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+        {/* Thumbnail Preview Box */}
         <div
           style={{
-            width: '84px',
-            height: '84px',
-            borderRadius: '8px',
-            border: '1px solid #cbd5e1',
-            background: '#f1f5f9',
+            width: '80px',
+            height: '80px',
+            borderRadius: '10px',
+            border: '1px solid #e2e8f0',
+            background: '#f8fafc',
             overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
+            position: 'relative',
           }}
         >
           {value ? (
             <img
-              src={value}
+              src={formatMediaUrl(value)}
               alt="Media Preview"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               onError={(e) => {
@@ -488,23 +587,74 @@ function MediaUploadField({ label, value, onChange, placeholder = 'e.g. home/ass
               }}
             />
           ) : (
-            <span style={{ fontSize: '1.5rem', color: '#94a3b8' }}>🖼️</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          )}
+          {isUploading && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'rgba(255, 255, 255, 0.85)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <svg className="login-spinner-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
+                <path d="M12 2a10 10 0 0 1 10 10" />
+              </svg>
+            </div>
           )}
         </div>
 
-        {/* Input Controls */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <input
-            type="text"
-            className="form-input"
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-          />
+        {/* Inputs and Controls */}
+        <div style={{ flex: 1, minWidth: '220px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <input
+              type="text"
+              className="form-input"
+              value={value || ''}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={placeholder}
+              style={{ flex: 1 }}
+            />
+            {value && (
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => onChange('')}
+                title="Remove Asset"
+                style={{ padding: '8px 12px', color: '#dc2626' }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <label className="btn-secondary" style={{ cursor: 'pointer', padding: '6px 12px', fontSize: '0.8rem' }}>
-              <span>📁 {isUploading ? 'Uploading...' : 'Choose File to Upload'}</span>
+            <label
+              className="btn-secondary"
+              style={{
+                cursor: isUploading ? 'not-allowed' : 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                fontSize: '0.8rem',
+                margin: 0,
+              }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span>{isUploading ? 'Uploading...' : 'Upload Image File'}</span>
               <input
                 type="file"
                 accept={accept}
@@ -513,18 +663,14 @@ function MediaUploadField({ label, value, onChange, placeholder = 'e.g. home/ass
                 style={{ display: 'none' }}
               />
             </label>
-            {value && (
-              <button
-                type="button"
-                className="btn-secondary"
-                style={{ padding: '6px 10px', fontSize: '0.8rem', color: '#dc2626' }}
-                onClick={() => onChange('')}
-              >
-                Clear
-              </button>
-            )}
+
+            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              JPG, PNG, WEBP up to 100 MB
+            </span>
           </div>
-          {uploadError && <span style={{ color: '#dc2626', fontSize: '0.75rem' }}>{uploadError}</span>}
+
+          {helpText && <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{helpText}</div>}
+          {uploadError && <div style={{ fontSize: '0.75rem', color: '#dc2626', fontWeight: 600 }}>{uploadError}</div>}
         </div>
       </div>
     </div>
@@ -536,33 +682,71 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: ConfirmModal.jsx === */
 /**
- * Reusable Confirmation & Deletion Modal Component
+ * Standardized Confirmation & Deletion Modal Component
+ * Displays clean accessible prompt with SVG warning indicator and explicit Cancel / Confirm actions.
  */
-function ConfirmModal({ title = 'Confirm Action', message, onConfirm, onCancel, isProcessing, confirmLabel = 'Delete', isDanger = true }) {
+function ConfirmModal({
+  title = 'Confirm Action',
+  message,
+  onConfirm,
+  onCancel,
+  isProcessing = false,
+  confirmLabel = 'Delete',
+  isDanger = true,
+}) {
   return (
     <div className="modal-backdrop" onClick={onCancel}>
-      <div className="modal-container" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header" style={{ background: isDanger ? '#fef2f2' : '#f8fafc' }}>
-          <div className="modal-title-wrap">
-            <span style={{ fontSize: '1.3rem' }}>{isDanger ? '⚠️' : 'ℹ️'}</span>
-            <h3 className="modal-title" style={{ color: isDanger ? '#dc2626' : '#0f1e36', fontSize: '1.1rem' }}>
+      <div
+        className="modal-container"
+        style={{ maxWidth: '440px', borderRadius: '16px', overflow: 'hidden' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-header" style={{ padding: '18px 22px', borderBottom: '1px solid #e2e8f0', background: isDanger ? '#fef2f2' : '#f8fafc' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ color: isDanger ? '#dc2626' : '#2563eb', display: 'flex', alignItems: 'center' }}>
+              {isDanger ? (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+              ) : (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+              )}
+            </span>
+            <h3 className="modal-title" style={{ fontSize: '1.05rem', fontWeight: 800, color: isDanger ? '#dc2626' : '#0f172a', margin: 0 }}>
               {title}
             </h3>
           </div>
-          <button type="button" className="btn-modal-close" onClick={onCancel} aria-label="Close">
+          <button
+            type="button"
+            className="btn-modal-close"
+            onClick={onCancel}
+            aria-label="Close"
+            disabled={isProcessing}
+          >
             ×
           </button>
         </div>
 
-        <div className="modal-body" style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.6 }}>
+        <div className="modal-body" style={{ padding: '20px 22px', fontSize: '0.9rem', color: '#334155', lineHeight: 1.6 }}>
           {message}
         </div>
 
-        <div className="modal-footer" style={{ justifyContent: 'flex-end', gap: '10px' }}>
-          <button type="button" className="btn-secondary" onClick={onCancel} disabled={isProcessing}>
+        <div className="modal-footer" style={{ padding: '14px 22px', background: '#f8fafc', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={onCancel}
+            disabled={isProcessing}
+            style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+          >
             Cancel
           </button>
           <button
@@ -570,6 +754,7 @@ function ConfirmModal({ title = 'Confirm Action', message, onConfirm, onCancel, 
             className={isDanger ? 'btn-danger' : 'btn-primary'}
             onClick={onConfirm}
             disabled={isProcessing}
+            style={{ padding: '8px 18px', fontSize: '0.85rem' }}
           >
             {isProcessing ? 'Processing...' : confirmLabel}
           </button>
@@ -582,7 +767,6 @@ function ConfirmModal({ title = 'Confirm Action', message, onConfirm, onCancel, 
 if (typeof window !== 'undefined') {
   window.ConfirmModal = ConfirmModal;
 }
-
 
 
 /* === Source: StatsOverview.jsx === */
@@ -788,7 +972,7 @@ function FilterToolbar({
             onClick={onToggleFilterMenu}
             title="Filter by category and sort"
             aria-label="Filter"
-            style={category && category !== 'All Categories' ? { borderColor: '#0b1a30', background: '#eff6ff', color: '#0052cc' } : {}}
+            style={category && category !== 'All Categories' ? { borderColor: '#0f172a', background: '#eff6ff', color: '#2563eb' } : {}}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
@@ -827,7 +1011,7 @@ function FilterToolbar({
                         padding: '6px 10px',
                         borderRadius: '6px',
                         border: 'none',
-                        background: category === cat ? '#0b1a30' : 'transparent',
+                        background: category === cat ? '#0f172a' : 'transparent',
                         color: category === cat ? '#ffffff' : '#334155',
                         textAlign: 'left',
                         fontSize: '0.8rem',
@@ -861,7 +1045,7 @@ function FilterToolbar({
                         fontSize: '0.75rem',
                         fontWeight: 600,
                         border: '1px solid #e2e8f0',
-                        background: sortOrder === 'newest' ? '#0b1a30' : '#ffffff',
+                        background: sortOrder === 'newest' ? '#0f172a' : '#ffffff',
                         color: sortOrder === 'newest' ? '#ffffff' : '#475569',
                         cursor: 'pointer',
                       }}
@@ -881,7 +1065,7 @@ function FilterToolbar({
                         fontSize: '0.75rem',
                         fontWeight: 600,
                         border: '1px solid #e2e8f0',
-                        background: sortOrder === 'oldest' ? '#0b1a30' : '#ffffff',
+                        background: sortOrder === 'oldest' ? '#0f172a' : '#ffffff',
                         color: sortOrder === 'oldest' ? '#ffffff' : '#475569',
                         cursor: 'pointer',
                       }}
@@ -1269,22 +1453,23 @@ if (typeof window !== 'undefined') {
 
 /* === Source: Pagination.jsx === */
 /**
- * Modern Pagination Component
- * Displays 'Showing X – Y of Z requests' and pagination buttons
- * matching the reference screenshot.
+ * Standardized Pagination Component
+ * Displays 'Showing X – Y of Z records' with accessible SVG chevron navigation buttons.
  */
 function Pagination({
-  total = 156,
-  limit = 5,
+  total = 0,
+  limit = 10,
   offset = 0,
   onPageChange,
+  entityLabel = 'records',
 }) {
-  const safeTotal = typeof total === 'number' && total >= 0 ? total : 156;
-  const currentPage = Math.floor(offset / limit) + 1;
-  const totalPages = Math.max(1, Math.ceil(safeTotal / limit));
+  const safeTotal = typeof total === 'number' && total >= 0 ? total : 0;
+  const safeLimit = Math.max(1, limit);
+  const currentPage = Math.floor(offset / safeLimit) + 1;
+  const totalPages = Math.max(1, Math.ceil(safeTotal / safeLimit));
 
   const startRecord = safeTotal === 0 ? 0 : offset + 1;
-  const endRecord = Math.min(offset + limit, safeTotal);
+  const endRecord = Math.min(offset + safeLimit, safeTotal);
 
   // Generate page numbers dynamically
   const getPageNumbers = () => {
@@ -1306,8 +1491,8 @@ function Pagination({
     <div className="table-pagination-footer">
       <div className="showing-count-text">
         {safeTotal === 0
-          ? 'Showing 0 requests'
-          : `Showing ${startRecord} – ${endRecord} of ${safeTotal} requests`}
+          ? `No ${entityLabel} found`
+          : `Showing ${startRecord} – ${endRecord} of ${safeTotal} ${entityLabel}`}
       </div>
 
       <div className="pagination-controls-row">
@@ -1315,11 +1500,14 @@ function Pagination({
         <button
           type="button"
           className="btn-pagination-nav"
-          onClick={() => onPageChange(Math.max(0, offset - limit))}
+          onClick={() => onPageChange(Math.max(0, offset - safeLimit))}
           disabled={currentPage <= 1 || safeTotal === 0}
           aria-label="Previous Page"
+          title="Previous Page"
         >
-          &lt;
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
         </button>
 
         {/* Page Numbers */}
@@ -1338,7 +1526,8 @@ function Pagination({
                 key={`page-${p}`}
                 type="button"
                 className={`btn-pagination-nav ${isCurrent ? 'active' : ''}`}
-                onClick={() => onPageChange((p - 1) * limit)}
+                onClick={() => onPageChange((p - 1) * safeLimit)}
+                aria-current={isCurrent ? 'page' : undefined}
               >
                 {p}
               </button>
@@ -1349,11 +1538,14 @@ function Pagination({
         <button
           type="button"
           className="btn-pagination-nav"
-          onClick={() => onPageChange(offset + limit)}
+          onClick={() => onPageChange(offset + safeLimit)}
           disabled={currentPage >= totalPages || safeTotal === 0}
           aria-label="Next Page"
+          title="Next Page"
         >
-          &gt;
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
         </button>
       </div>
     </div>
@@ -2440,10 +2632,14 @@ if (typeof window !== 'undefined') {
 /* === Source: UsersManager.jsx === */
 
 
+
+
+
 /**
  * Users & Pastoral Team Management Component
  * Allows viewing and managing administrators, pastoral intercessors, and church leaders.
  * All data persists directly to PostgreSQL / SQLite database.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function UsersManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -2458,6 +2654,7 @@ function UsersManager() {
 
   // Add user modal state
   const [isAddOpen, setIsAddOpen] = useSafeState(false);
+  const [deleteTarget, setDeleteTarget] = useSafeState(null);
   const [newUser, setNewUser] = useSafeState({
     name: '',
     email: '',
@@ -2504,182 +2701,188 @@ function UsersManager() {
     }
   };
 
-  const handleDeleteUser = async (user) => {
-    if (!window.confirm(`Are you sure you want to remove ${user.name} from the administrative team?`)) {
-      return;
-    }
+  const handleDeleteUserConfirm = async () => {
+    if (!deleteTarget) return;
+    setIsSubmitting(true);
     try {
-      await api.deleteUser(user.id);
-      setSuccessMsg(`Removed team member ${user.name}.`);
+      await api.deleteUser(deleteTarget.id);
+      setSuccessMsg(`Removed team member ${deleteTarget.name}.`);
+      setDeleteTarget(null);
       await fetchUsers();
       setTimeout(() => setSuccessMsg(''), 4000);
     } catch (err) {
       setErrorMsg(err.message || 'Failed to remove member');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  const CompHeader = window.PageHeader || PageHeader;
+  const CompStatusBadge = window.StatusBadge || StatusBadge;
+  const CompConfirm = window.ConfirmModal || ConfirmModal;
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <CompHeader
+        title="Administrative & Pastoral Team"
+        subtitle="Manage church administrators, pastoral intercessors, elders, and staff account privileges."
+        actionLabel="Add Team Member"
+        onAction={() => setIsAddOpen(true)}
+      />
+
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✕ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
-      <div className="content-panel-card">
-        <div className="panel-header-toolbar">
-          <div className="panel-title-and-tabs">
-            <h2 className="panel-section-title">Church Administration & Pastoral Team</h2>
-            <span style={{ fontSize: '0.8rem', color: '#64748b', marginLeft: '8px' }}>
-              ({users.length} active members)
-            </span>
-          </div>
-          <button
-            type="button"
-            className="btn-add-primary"
-            onClick={() => setIsAddOpen(true)}
-          >
-            <span>+</span>
-            <span>Add Team Member</span>
-          </button>
-        </div>
-
+      <div className="panel-card" style={{ overflowX: 'auto' }}>
         {isLoading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontWeight: 600 }}>
-            Loading church administration team...
-          </div>
+          <div className="empty-state">Loading team members...</div>
         ) : users.length === 0 ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>
+          <div className="empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+            </div>
             <p style={{ fontWeight: 700, color: '#0f172a' }}>No team members found</p>
-            <p style={{ fontSize: '0.85rem', marginTop: '4px' }}>Click &quot;Add Team Member&quot; to configure administrators.</p>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Add Team Member&quot; to configure administrators.</p>
           </div>
         ) : (
-          <div className="table-container">
-            <table className="data-table-modern">
-              <thead>
-                <tr>
-                  <th>Member</th>
-                  <th>Email</th>
-                  <th>Role & Ministry</th>
-                  <th>Status</th>
-                  <th>Last Active</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Email Address</th>
+                <th>Role & Ministry</th>
+                <th>Status</th>
+                <th>Last Active</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((u) => (
+                <tr key={u.id}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#0f172a', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.8rem' }}>
+                        {u.avatar_initials || (u.name ? u.name[0].toUpperCase() : 'A')}
+                      </div>
+                      <span style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.9rem' }}>{u.name}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span style={{ color: '#64748b', fontSize: '0.85rem' }}>{u.email}</span>
+                  </td>
+                  <td>
+                    <span style={{ color: '#0f172a', fontWeight: 600, fontSize: '0.825rem' }}>{u.role}</span>
+                  </td>
+                  <td>
+                    <CompStatusBadge status={u.status || 'Active'} />
+                  </td>
+                  <td>
+                    <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{u.last_login || 'Recently active'}</span>
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <div style={{ display: 'inline-flex', gap: '8px' }}>
+                      <button
+                        type="button"
+                        className="btn-icon-action delete"
+                        onClick={() => setDeleteTarget(u)}
+                        title="Remove Team Member"
+                        aria-label="Remove Team Member"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {users.map((u) => (
-                  <tr key={u.id}>
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <div className="avatar-badge-circle" style={{ width: '32px', height: '32px', fontSize: '0.8rem' }}>
-                          {u.avatar_initials || (u.name ? u.name[0].toUpperCase() : 'A')}
-                        </div>
-                        <span className="requester-name-strong">{u.name}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span style={{ color: '#475569', fontSize: '0.85rem' }}>{u.email}</span>
-                    </td>
-                    <td>
-                      <span style={{ color: '#0b1a30', fontWeight: 600, fontSize: '0.825rem' }}>{u.role}</span>
-                    </td>
-                    <td>
-                      <span className="status-pill-badge prayed">{u.status || 'Active'}</span>
-                    </td>
-                    <td>
-                      <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{u.last_login || 'Recently'}</span>
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div className="action-buttons-wrap" style={{ justifyContent: 'flex-end', display: 'flex', gap: '6px' }}>
-                        <button
-                          type="button"
-                          className="btn-action-icon danger"
-                          onClick={() => handleDeleteUser(u)}
-                          title="Remove Team Member"
-                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '0.9rem' }}
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 
       {/* Add Team Member Modal */}
       {isAddOpen && (
-        <div className="modal-backdrop-custom" onClick={() => !isSubmitting && setIsAddOpen(false)}>
-          <div className="modal-card-custom" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px' }}>
-            <div className="modal-header-custom">
-              <h3 className="modal-title-custom">Add Pastoral Team Member</h3>
+        <div className="modal-backdrop" onClick={() => !isSubmitting && setIsAddOpen(false)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px' }}>
+            <div className="modal-header">
+              <h3 className="modal-title">Add Pastoral Team Member</h3>
               <button
                 type="button"
-                className="modal-close-custom"
+                className="btn-modal-close"
                 onClick={() => setIsAddOpen(false)}
                 disabled={isSubmitting}
               >
-                ✕
+                ×
               </button>
             </div>
 
-            <form onSubmit={handleCreateUser} style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
-              <div>
-                <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Deacon Michael Thomas"
-                  value={newUser.name}
-                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem' }}
-                />
+            <form onSubmit={handleCreateUser}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="form-group">
+                  <label className="form-label">Full Name *</label>
+                  <input
+                    type="text"
+                    required
+                    className="form-input"
+                    value={newUser.name}
+                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                    placeholder="e.g. Pastor John Samuel"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Email Address *</label>
+                  <input
+                    type="email"
+                    required
+                    className="form-input"
+                    value={newUser.email}
+                    onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                    placeholder="e.g. pastor.john@church.org"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Role & Ministry Access</label>
+                  <select
+                    className="form-input"
+                    value={newUser.role}
+                    onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                  >
+                    <option value="Senior Pastor">Senior Pastor (Full System Access)</option>
+                    <option value="Staff Administrator">Staff Administrator (CMS & Content)</option>
+                    <option value="Pastoral Intercessor">Pastoral Intercessor (Prayer Ministry)</option>
+                    <option value="Media Coordinator">Media Coordinator (Sermons & Gallery)</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Account Status</label>
+                  <select
+                    className="form-input"
+                    value={newUser.status}
+                    onChange={(e) => setNewUser({ ...newUser, status: e.target.value })}
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
               </div>
 
-              <div>
-                <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="e.g. michael.t@gracefellowship.org"
-                  value={newUser.email}
-                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem' }}
-                />
-              </div>
-
-              <div>
-                <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Role & Responsibilities
-                </label>
-                <select
-                  value={newUser.role}
-                  onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.875rem' }}
-                >
-                  <option value="Senior Pastor & Super Admin">Senior Pastor & Super Admin</option>
-                  <option value="Associate Pastor">Associate Pastor</option>
-                  <option value="Prayer Coordinator">Prayer Coordinator</option>
-                  <option value="Intercession Lead">Intercession Lead</option>
-                  <option value="Media & Tech Minister">Media & Tech Minister</option>
-                  <option value="Staff Administrator">Staff Administrator</option>
-                </select>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
+              <div className="modal-footer" style={{ justifyContent: 'flex-end', gap: '12px' }}>
                 <button
                   type="button"
                   className="btn-secondary"
@@ -2690,15 +2893,27 @@ function UsersManager() {
                 </button>
                 <button
                   type="submit"
-                  className="btn-add-primary"
+                  className="btn-primary"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Saving...' : 'Add Member'}
+                  {isSubmitting ? 'Adding...' : 'Add Team Member'}
                 </button>
               </div>
             </form>
           </div>
         </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && (
+        <CompConfirm
+          title="Remove Team Member"
+          message={`Are you sure you want to remove ${deleteTarget.name} from the administrative team? They will no longer have access to manage church data.`}
+          confirmLabel="Remove Member"
+          isProcessing={isSubmitting}
+          onConfirm={handleDeleteUserConfirm}
+          onCancel={() => setDeleteTarget(null)}
+        />
       )}
     </div>
   );
@@ -2714,86 +2929,182 @@ if (typeof window !== 'undefined') {
  * CMS Master Sidebar Navigation Component
  * Features clean white corporate styling, church branding, navy active pills,
  * and user administrator profile matching the reference screenshot.
+ * Categorized into 4 logical sections for instant, effortless administrative navigation.
  */
 function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 0, onLogout, isOpen, onClose }) {
-  const navItems = [
+  const navSections = [
     {
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-      ),
+      heading: 'Main',
+      items: [
+        {
+          id: 'dashboard',
+          label: 'Dashboard',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          ),
+        },
+        {
+          id: 'prayer-requests',
+          label: 'Prayer Requests',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+              <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+              <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+            </svg>
+          ),
+          badge: (typeof pendingPrayersCount === 'number' && pendingPrayersCount > 0) ? pendingPrayersCount : null,
+        },
+      ],
     },
     {
-      id: 'prayer-requests',
-      label: 'Prayer Requests',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
-          <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
-          <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
-          <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
-        </svg>
-      ),
-      badge: (typeof pendingPrayersCount === 'number' && pendingPrayersCount > 0) ? pendingPrayersCount : null,
+      heading: 'Ministries & Media',
+      items: [
+        {
+          id: 'sermons',
+          label: 'Sermons',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="10 8 16 12 10 16 10 8" />
+            </svg>
+          ),
+        },
+        {
+          id: 'events',
+          label: 'Events & Calendar',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          ),
+        },
+        {
+          id: 'announcements',
+          label: 'Announcements',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              <line x1="2" y1="8" x2="4" y2="8" />
+            </svg>
+          ),
+        },
+        {
+          id: 'ministries',
+          label: 'Ministries',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          ),
+        },
+        {
+          id: 'gallery',
+          label: 'Photo Gallery',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          ),
+        },
+      ],
     },
     {
-      id: 'sermons',
-      label: 'Sermons',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10" />
-          <polygon points="10 8 16 12 10 16 10 8" />
-        </svg>
-      ),
+      heading: 'Website Content',
+      items: [
+        {
+          id: 'home',
+          label: 'Home Page',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          ),
+        },
+        {
+          id: 'about',
+          label: 'About Us',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+          ),
+        },
+        {
+          id: 'service-timings',
+          label: 'Service Timings',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          ),
+        },
+        {
+          id: 'contact',
+          label: 'Contact & Location',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+          ),
+        },
+      ],
     },
     {
-      id: 'events',
-      label: 'Events',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-          <line x1="16" y1="2" x2="16" y2="6" />
-          <line x1="8" y1="2" x2="8" y2="6" />
-          <line x1="3" y1="10" x2="21" y2="10" />
-        </svg>
-      ),
-    },
-    {
-      id: 'announcements',
-      label: 'Announcements',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          <line x1="2" y1="8" x2="4" y2="8" />
-        </svg>
-      ),
-    },
-    {
-      id: 'users',
-      label: 'Users',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      ),
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
-      ),
+      heading: 'System & Settings',
+      items: [
+        {
+          id: 'bible',
+          label: 'Bible Settings',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              <line x1="12" y1="6" x2="12" y2="12" />
+              <line x1="9" y1="9" x2="15" y2="9" />
+            </svg>
+          ),
+        },
+        {
+          id: 'users',
+          label: 'Users & Team',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+          ),
+        },
+        {
+          id: 'settings',
+          label: 'Website Settings',
+          icon: (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          ),
+        },
+      ],
     },
   ];
 
@@ -2804,7 +3115,8 @@ function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 0, onLog
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.4)',
+            background: 'rgba(15, 23, 42, 0.45)',
+            backdropFilter: 'blur(3px)',
             zIndex: 999,
           }}
           onClick={onClose}
@@ -2815,38 +3127,43 @@ function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 0, onLog
         <div className="sidebar-header">
           <div className="sidebar-brand-cross">✝</div>
           <div className="sidebar-brand-text">
-            <span className="sidebar-church-title">Grace Fellowship Church</span>
-            <span className="sidebar-portal-tag">Admin Portal</span>
+            <span className="sidebar-church-title">Grace Fellowship</span>
+            <span className="sidebar-portal-tag">Pastoral Admin Portal</span>
           </div>
         </div>
 
-        {/* Clean Vertical Navigation */}
+        {/* Clean Categorized Vertical Navigation */}
         <nav className="sidebar-nav">
-          {navItems.map((item) => {
-            const isActive = currentModule === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
-                onClick={() => {
-                  onSelectModule(item.id);
-                  if (onClose) onClose();
-                }}
-              >
-                <div className="sidebar-nav-left">
-                  <span className="sidebar-nav-icon">{item.icon}</span>
-                  <span>{item.label}</span>
-                </div>
-                {typeof item.badge === 'number' && item.badge > 0 && (
-                  <span className="sidebar-badge-red">{item.badge}</span>
-                )}
-              </button>
-            );
-          })}
+          {navSections.map((section) => (
+            <div key={section.heading}>
+              <div className="sidebar-group-heading">{section.heading}</div>
+              {section.items.map((item) => {
+                const isActive = currentModule === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
+                    onClick={() => {
+                      onSelectModule(item.id);
+                      if (onClose) onClose();
+                    }}
+                  >
+                    <div className="sidebar-nav-left">
+                      <span className="sidebar-nav-icon">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </div>
+                    {typeof item.badge === 'number' && item.badge > 0 && (
+                      <span className="sidebar-badge-red">{item.badge}</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
-        {/* Administrator Profile Card at Bottom */}
+        {/* User Administrator Profile Footer */}
         <div
           className="sidebar-footer-profile"
           onClick={onLogout}
@@ -2855,13 +3172,17 @@ function Sidebar({ currentModule, onSelectModule, pendingPrayersCount = 0, onLog
           <div className="profile-left">
             <div className="avatar-badge-circle">A</div>
             <div className="profile-meta">
-              <span className="profile-admin-name">Admin</span>
-              <span className="profile-role-title">Church Administrator</span>
+              <span className="profile-admin-name">Administrator</span>
+              <span className="profile-role-title">Pastoral Staff</span>
             </div>
           </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="chevron-down-icon">
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
+          <span className="chevron-down-icon" title="Sign out">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </span>
         </div>
       </aside>
     </>
@@ -2954,7 +3275,11 @@ function Topbar({ currentModule, onToggleSidebar, onNotificationClick, pendingPr
             onClick={onToggleSidebar}
             aria-label="Toggle Navigation"
           >
-            ☰
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
           </button>
           <h1 className="admin-page-heading">{currentInfo.title}</h1>
         </div>
@@ -2998,8 +3323,8 @@ if (typeof window !== 'undefined') {
  * Church CMS Master Dashboard Overview Component
  * Provides an executive operations summary across all church website modules:
  * published sermons, upcoming events, active announcements, and pending prayer petitions.
- * Features quick-action navigation, system activity audit log, and a high-priority
- * pending prayer petitions widget with direct navigation to the dedicated Prayer Requests module.
+ * Features strict Navy & White color consistency, clean SVG icons, quick-action shortcuts,
+ * system audit trail, and high-priority pending prayer petitions.
  */
 function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule, onRefresh }) {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -3071,38 +3396,39 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
   const recentActivities = Array.isArray(overview?.recent_activities) ? overview.recent_activities : [];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Welcome Banner */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {/* Welcome Banner - Strict Navy & White */}
       <div
         className="content-panel-card"
         style={{
           padding: '24px 28px',
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+          background: '#0f172a',
           color: '#ffffff',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '16px',
-          borderRadius: '12px',
+          borderRadius: '14px',
+          border: '1px solid #1e293b',
         }}
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span style={{ color: '#c59b27', fontSize: '1.25rem' }}>✝</span>
-            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', fontWeight: 600 }}>
+            <span style={{ fontSize: '1rem', color: '#94a3b8' }}>✝</span>
+            <span style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8', fontWeight: 700 }}>
               Grace Fellowship Church
             </span>
           </div>
-          <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: '#f8fafc' }}>
+          <h2 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 800, color: '#ffffff' }}>
             Pastoral Administration Hub
           </h2>
-          <p style={{ margin: '6px 0 0', color: '#cbd5e1', fontSize: '0.875rem' }}>
-            System overview of all active website ministries, content publications, and pastoral intercession petitions.
+          <p style={{ margin: '6px 0 0', color: '#94a3b8', fontSize: '0.86rem' }}>
+            Central management of church ministries, digital media, congregation petitions, and website content.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           {typeof onRefresh === 'function' && (
             <button
               type="button"
@@ -3112,18 +3438,22 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                 fetchPendingPrayers();
               }}
               style={{
-                background: 'rgba(255, 255, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.08)',
                 color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                display: 'flex',
+                borderColor: 'rgba(255, 255, 255, 0.18)',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '8px',
                 padding: '8px 14px',
-                borderRadius: '6px',
-                cursor: 'pointer',
+                fontSize: '0.825rem',
               }}
             >
-              🔄 Refresh Data
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <polyline points="1 20 1 14 7 14" />
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+              </svg>
+              <span>Refresh</span>
             </button>
           )}
           <button
@@ -3133,31 +3463,41 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
             style={{
               padding: '8px 16px',
               fontSize: '0.85rem',
+              background: '#2563eb',
+              borderColor: '#1d4ed8',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
           >
-            🙏 Review Prayers ({pendingCount})
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+              <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+              <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+            </svg>
+            <span>Review Prayers ({pendingCount})</span>
           </button>
         </div>
       </div>
 
-      {/* 4 Primary Church KPI Cards */}
-      <div className="stats-overview-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+      {/* 4 Standardized KPI Cards - Strict White & Navy Consistency */}
+      <div className="stats-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '16px' }}>
         {/* Sermons Card */}
         <div
           className="kpi-card"
           onClick={() => onNavigateModule('sermons')}
-          style={{ cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease' }}
           title="Click to manage Sermons Library"
         >
-          <div className="kpi-icon-box" style={{ background: '#eff6ff', color: '#2563eb' }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="kpi-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
               <polygon points="10 8 16 12 10 16 10 8" />
             </svg>
           </div>
           <div className="kpi-meta-box">
             <span className="kpi-label">Published Sermons</span>
-            <span className="kpi-number" style={{ color: '#0f172a' }}>{sermonsCount}</span>
+            <span className="kpi-number">{sermonsCount}</span>
             <span style={{ fontSize: '0.75rem', color: '#2563eb', marginTop: '2px', fontWeight: 600 }}>Manage Library →</span>
           </div>
         </div>
@@ -3166,11 +3506,10 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
         <div
           className="kpi-card"
           onClick={() => onNavigateModule('events')}
-          style={{ cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease' }}
           title="Click to manage Events & Calendar"
         >
-          <div className="kpi-icon-box" style={{ background: '#fdf2f8', color: '#db2777' }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="kpi-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
@@ -3179,8 +3518,8 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
           </div>
           <div className="kpi-meta-box">
             <span className="kpi-label">Upcoming Events</span>
-            <span className="kpi-number" style={{ color: '#0f172a' }}>{eventsCount}</span>
-            <span style={{ fontSize: '0.75rem', color: '#db2777', marginTop: '2px', fontWeight: 600 }}>Manage Calendar →</span>
+            <span className="kpi-number">{eventsCount}</span>
+            <span style={{ fontSize: '0.75rem', color: '#2563eb', marginTop: '2px', fontWeight: 600 }}>Manage Calendar →</span>
           </div>
         </div>
 
@@ -3188,104 +3527,145 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
         <div
           className="kpi-card"
           onClick={() => onNavigateModule('announcements')}
-          style={{ cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease' }}
-          title="Click to manage Announcements & Alerts"
+          title="Click to manage Announcements & Bulletins"
         >
-          <div className="kpi-icon-box" style={{ background: '#fef3c7', color: '#d97706' }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="kpi-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </div>
           <div className="kpi-meta-box">
             <span className="kpi-label">Active Notices</span>
-            <span className="kpi-number" style={{ color: '#0f172a' }}>{announcementsCount}</span>
-            <span style={{ fontSize: '0.75rem', color: '#d97706', marginTop: '2px', fontWeight: 600 }}>Manage Notices →</span>
+            <span className="kpi-number">{announcementsCount}</span>
+            <span style={{ fontSize: '0.75rem', color: '#2563eb', marginTop: '2px', fontWeight: 600 }}>Manage Notices →</span>
           </div>
         </div>
 
         {/* Pending Prayers Card */}
         <div
-          className="kpi-card pending"
+          className="kpi-card"
           onClick={() => onNavigateModule('prayer-requests')}
-          style={{ cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease', borderLeft: '4px solid #f59e0b' }}
           title="Click to view and intercede for community prayer requests"
         >
-          <div className="kpi-icon-box" style={{ background: '#fffbeb', color: '#b45309' }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="9.5" />
-              <polyline points="12 6.5 12 12 15.5 14" />
+          <div className="kpi-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
             </svg>
           </div>
           <div className="kpi-meta-box">
             <span className="kpi-label">Pending Prayers</span>
-            <span className="kpi-number" style={{ color: '#b45309' }}>{pendingCount}</span>
-            <span style={{ fontSize: '0.75rem', color: '#b45309', marginTop: '2px', fontWeight: 600 }}>Needs Pastoral Prayer →</span>
+            <span className="kpi-number" style={{ color: pendingCount > 0 ? '#b45309' : '#0f172a' }}>{pendingCount}</span>
+            <span style={{ fontSize: '0.75rem', color: '#2563eb', marginTop: '2px', fontWeight: 600 }}>Needs Pastoral Prayer →</span>
           </div>
         </div>
       </div>
 
       {/* Quick Action Shortcuts Panel */}
-      <div className="content-panel-card" style={{ padding: '18px 24px' }}>
-        <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>
-          Quick Management Shortcuts
+      <div className="content-panel-card" style={{ padding: '20px 24px' }}>
+        <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '14px' }}>
+          Management Shortcuts
         </div>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => onNavigateModule('sermons')}
-            style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            🎙️ Add Sermon
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg>
+            <span>Add Sermon</span>
           </button>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => onNavigateModule('events')}
-            style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            📅 Create Event
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+            <span>Create Event</span>
           </button>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => onNavigateModule('announcements')}
-            style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            📢 Post Announcement
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+            <span>Post Notice</span>
           </button>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => onNavigateModule('prayer-requests')}
-            style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            🙏 Prayer Requests Portal
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" /><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" /></svg>
+            <span>Prayer Requests ({pendingCount})</span>
           </button>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => onNavigateModule('ministries')}
-            style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            👥 Ministries ({ministriesCount})
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+            <span>Ministries ({ministriesCount})</span>
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => onNavigateModule('gallery')}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+            <span>Photo Gallery</span>
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => onNavigateModule('home')}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+            <span>Home Page</span>
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => onNavigateModule('about')}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
+            <span>About Us</span>
           </button>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => onNavigateModule('service-timings')}
-            style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            ⏰ Service Timings
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+            <span>Service Timings</span>
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => onNavigateModule('contact')}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+            <span>Contact & Map</span>
           </button>
           <button
             type="button"
             className="btn-secondary"
             onClick={() => onNavigateModule('settings')}
-            style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ padding: '8px 14px', fontSize: '0.825rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            ⚙️ Website Settings
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+            <span>Website Settings</span>
           </button>
         </div>
       </div>
@@ -3293,32 +3673,40 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
       {/* Two-Column Lower Layout: Recent Activities & Needs Attention Prayers */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
         {/* Left Column: Recent Audit Log Feed */}
-        <div className="content-panel-card" style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div className="content-panel-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.1rem' }}>📋</span>
-              <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#0f172a' }}>
-                Recent System Activity
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: '#0f172a', display: 'flex' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+              </span>
+              <h3 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 800, color: '#0f172a' }}>
+                System Activity Log
               </h3>
             </div>
-            <span style={{ fontSize: '0.75rem', background: '#f1f5f9', color: '#475569', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.75rem', background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0', padding: '3px 8px', borderRadius: '6px', fontWeight: 700 }}>
               {totalContent} Items Total
             </span>
           </div>
 
-          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {recentActivities.length === 0 ? (
-              <div style={{ padding: '24px 12px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
+              <div style={{ padding: '32px 12px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
                 No recent administrative activity recorded.
               </div>
             ) : (
               recentActivities.slice(0, 8).map((log, index) => {
                 const actionBadgeColors = {
-                  CREATE: { bg: '#dcfce7', text: '#15803d' },
-                  UPDATE: { bg: '#e0f2fe', text: '#0369a1' },
-                  DELETE: { bg: '#fee2e2', text: '#b91c1c' },
+                  CREATE: { bg: '#ecfdf5', text: '#059669', border: '#a7f3d0' },
+                  UPDATE: { bg: '#eff6ff', text: '#2563eb', border: '#bfdbfe' },
+                  DELETE: { bg: '#fef2f2', text: '#dc2626', border: '#fee2e2' },
                 };
-                const badgeStyle = actionBadgeColors[log.action] || { bg: '#f1f5f9', text: '#475569' };
+                const badgeStyle = actionBadgeColors[log.action] || { bg: '#f1f5f9', text: '#475569', border: '#e2e8f0' };
 
                 return (
                   <div
@@ -3327,21 +3715,22 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '12px',
-                      padding: '10px 12px',
+                      padding: '10px 14px',
                       borderRadius: '8px',
                       background: '#f8fafc',
-                      border: '1px solid #f1f5f9',
+                      border: '1px solid #e2e8f0',
                     }}
                   >
                     <span
                       style={{
                         fontSize: '0.675rem',
-                        fontWeight: 700,
+                        fontWeight: 800,
                         textTransform: 'uppercase',
-                        padding: '3px 8px',
+                        padding: '2px 8px',
                         borderRadius: '4px',
                         background: badgeStyle.bg,
                         color: badgeStyle.text,
+                        border: `1px solid ${badgeStyle.border}`,
                         letterSpacing: '0.04em',
                       }}
                     >
@@ -3351,8 +3740,8 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                       <p style={{ margin: 0, fontSize: '0.825rem', fontWeight: 600, color: '#1e293b' }}>
                         {log.description || `${log.action} on ${log.entity_type}`}
                       </p>
-                      <div style={{ display: 'flex', gap: '8px', marginTop: '2px', fontSize: '0.75rem', color: '#64748b' }}>
-                        <span>👤 {log.admin_user || 'admin'}</span>
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '2px', fontSize: '0.72rem', color: '#64748b' }}>
+                        <span>Staff: {log.admin_user || 'admin'}</span>
                         {log.created_at && <span>• {formatDate(log.created_at)}</span>}
                       </div>
                     </div>
@@ -3363,22 +3752,30 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
           </div>
         </div>
 
-        {/* Right Column: Pending Prayer Petitions (Needs Attention) */}
-        <div className="content-panel-card" style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
+        {/* Right Column: Pending Prayer Petitions */}
+        <div className="content-panel-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.1rem' }}>🙏</span>
-              <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#0f172a' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: '#0f172a', display: 'flex' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+                  <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+                  <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+                  <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+                </svg>
+              </span>
+              <h3 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 800, color: '#0f172a' }}>
                 Pending Prayer Petitions
               </h3>
             </div>
             <span
               style={{
                 fontSize: '0.75rem',
-                background: '#fffbeb',
+                background: '#fef3c7',
                 color: '#b45309',
-                padding: '4px 8px',
-                borderRadius: '4px',
+                border: '1px solid #fde68a',
+                padding: '3px 8px',
+                borderRadius: '6px',
                 fontWeight: 700,
               }}
             >
@@ -3388,15 +3785,14 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {isLoadingPrayers ? (
-              <div style={{ padding: '24px 12px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
-                Loading pending prayer requests...
+              <div style={{ padding: '32px 12px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
+                Loading pending prayer petitions...
               </div>
             ) : pendingList.length === 0 ? (
-              <div style={{ padding: '32px 16px', textAlign: 'center', color: '#10b981', background: '#f0fdf4', borderRadius: '8px' }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '6px' }}>✓</div>
-                <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>All Caught Up!</div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>
-                  No pending prayer requests awaiting pastoral intercession.
+              <div style={{ padding: '32px 16px', textAlign: 'center', color: '#059669', background: '#ecfdf5', borderRadius: '10px', border: '1px solid #a7f3d0' }}>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '4px' }}>All Petitions Interceded</div>
+                <div style={{ fontSize: '0.78rem', color: '#047857' }}>
+                  No pending prayer requests awaiting pastoral prayer.
                 </div>
               </div>
             ) : (
@@ -3407,7 +3803,7 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                     padding: '12px 14px',
                     borderRadius: '8px',
                     background: '#f8fafc',
-                    border: '1px solid #f1f5f9',
+                    border: '1px solid #e2e8f0',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '6px',
@@ -3416,15 +3812,15 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a' }}>
-                        {req.is_anonymous ? 'Anonymous' : (req.name || 'Anonymous')}
+                        {req.is_anonymous ? 'Anonymous Believer' : (req.name || 'Anonymous')}
                       </span>
                       {req.category && (
-                        <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '12px', background: '#e0f2fe', color: '#0284c7', fontWeight: 600 }}>
+                        <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '9999px', background: '#fee2e2', color: '#dc2626', fontWeight: 700 }}>
                           {req.category}
                         </span>
                       )}
                     </div>
-                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
                       {formatDate(req.created_at)}
                     </span>
                   </div>
@@ -3433,8 +3829,8 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                     style={{
                       margin: 0,
                       fontSize: '0.825rem',
-                      color: '#475569',
-                      lineHeight: 1.4,
+                      color: '#334155',
+                      lineHeight: 1.5,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       display: '-webkit-box',
@@ -3442,7 +3838,7 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                       WebkitBoxOrient: 'vertical',
                     }}
                   >
-                    "{req.request}"
+                    "{req.request || req.message}"
                   </p>
 
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
@@ -3454,14 +3850,18 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
                         padding: '4px 10px',
                         fontSize: '0.75rem',
                         fontWeight: 600,
-                        background: '#f0fdf4',
-                        color: '#16a34a',
-                        border: '1px solid #bbf7d0',
-                        borderRadius: '4px',
+                        background: '#ecfdf5',
+                        color: '#059669',
+                        border: '1px solid #a7f3d0',
+                        borderRadius: '6px',
                         cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
                       }}
                     >
-                      ✓ Mark as Prayed
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                      <span>Mark as Prayed</span>
                     </button>
                   </div>
                 </div>
@@ -3469,7 +3869,6 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
             )}
           </div>
 
-          {/* Action button leading to the dedicated Prayer Requests module */}
           <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #f1f5f9' }}>
             <button
               type="button"
@@ -3478,15 +3877,15 @@ function DashboardOverview({ overview, pendingPrayersCount = 0, onNavigateModule
               style={{
                 width: '100%',
                 padding: '10px 16px',
-                fontSize: '0.875rem',
+                fontSize: '0.85rem',
                 justifyContent: 'center',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
               }}
             >
-              <span>Go to Prayer Requests Portal</span>
-              <span>→</span>
+              <span>View All Prayer Petitions</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
             </button>
           </div>
         </div>
@@ -3508,6 +3907,7 @@ if (typeof window !== 'undefined') {
 /**
  * Homepage CMS Manager Component
  * Enables editing welcome text, hero image, headline, Scripture, and CTAs.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function HomeManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -3582,19 +3982,21 @@ function HomeManager() {
       />
 
       {saveSuccess && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {saveSuccess}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{saveSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
           Hero Section Content
         </h3>
 
@@ -3653,7 +4055,7 @@ function HomeManager() {
           placeholder="home/assets/hero_cross_sunset.jpg"
         />
 
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px', marginTop: '12px' }}>
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginTop: '12px' }}>
           Action Buttons (Call to Actions)
         </h3>
 
@@ -3704,8 +4106,9 @@ function HomeManager() {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '14px' }}>
-          <button type="submit" className="btn-primary" disabled={isSaving} style={{ padding: '10px 24px', fontSize: '0.95rem' }}>
-            {isSaving ? 'Saving Changes...' : '💾 Save & Publish Home Changes'}
+          <button type="submit" className="btn-primary" disabled={isSaving} style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+            <span>{isSaving ? 'Saving Changes...' : 'Save & Publish Home Changes'}</span>
           </button>
         </div>
       </form>
@@ -3718,7 +4121,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: AboutManager.jsx === */
 
 
@@ -3728,6 +4130,7 @@ if (typeof window !== 'undefined') {
  * About Us CMS Manager Component
  * Allows pastors and administrators to customize church history, mission, vision,
  * core doctrinal beliefs, leadership profile, and church campus images.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function AboutManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -3828,21 +4231,23 @@ function AboutManager() {
       />
 
       {saveSuccess && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {saveSuccess}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{saveSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Section 1: Vision & Mission */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Mission, Vision & History
           </h3>
 
@@ -3883,7 +4288,7 @@ function AboutManager() {
 
         {/* Section 2: Core Doctrinal Beliefs */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Core Doctrinal Beliefs
           </h3>
           <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
@@ -3919,16 +4324,20 @@ function AboutManager() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.875rem' }}>
-                  <span style={{ fontWeight: 700, color: '#c59b27' }}>#{idx + 1}</span>
-                  <span>{belief}</span>
+                  <span style={{ fontWeight: 700, color: '#2563eb', fontSize: '0.8rem', background: '#eff6ff', padding: '2px 8px', borderRadius: '4px' }}>#{idx + 1}</span>
+                  <span style={{ color: '#0f172a' }}>{belief}</span>
                 </div>
                 <button
                   type="button"
                   className="btn-icon-action delete"
                   onClick={() => handleRemoveBelief(idx)}
                   title="Remove belief"
+                  aria-label="Remove belief"
                 >
-                  ✕
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
                 </button>
               </div>
             ))}
@@ -3942,7 +4351,7 @@ function AboutManager() {
 
         {/* Section 3: Leadership Profile & Campus */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Pastoral Leadership & Campus Media
           </h3>
 
@@ -4002,9 +4411,10 @@ function AboutManager() {
             type="submit"
             className="btn-primary"
             disabled={isSaving}
-            style={{ padding: '12px 28px', fontSize: '0.95rem' }}
+            style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            {isSaving ? 'Saving Changes...' : '💾 Save About Us Changes'}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+            <span>{isSaving ? 'Saving Changes...' : 'Save About Us Changes'}</span>
           </button>
         </div>
       </form>
@@ -4017,7 +4427,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: BibleSettingsManager.jsx === */
 
 
@@ -4026,6 +4435,7 @@ if (typeof window !== 'undefined') {
  * Bible Settings CMS Manager Component
  * Configures default scripture translation and public reader display settings.
  * Strictly preserves the integrity of raw Bible scripture JSON files.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function BibleSettingsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -4094,13 +4504,17 @@ function BibleSettingsManager() {
       />
 
       {/* Advisory notice regarding Scripture integrity */}
-      <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '16px 20px', display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-        <span style={{ fontSize: '1.4rem' }}>🛡️</span>
+      <div className="panel-card" style={{ padding: '16px 20px', display: 'flex', gap: '14px', alignItems: 'flex-start', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+        <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb', flexShrink: 0 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
         <div>
-          <div style={{ fontWeight: 700, color: '#0f1e36', fontSize: '0.95rem', marginBottom: '2px' }}>
+          <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.92rem', marginBottom: '2px' }}>
             Sacred Scripture Integrity Protection
           </div>
-          <div style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
+          <div style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>
             Original Bible text repositories (King James Version and Telugu Holy Bible) are immutable and securely versioned.
             This manager controls presentation preferences and default reader views on the public website.
           </div>
@@ -4108,101 +4522,101 @@ function BibleSettingsManager() {
       </div>
 
       {saveSuccess && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {saveSuccess}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{saveSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
-          Reader Defaults & Navigation
+      <form onSubmit={handleSubmit} className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+          Reader Defaults & Translation Selection
         </h3>
 
-        {/* Translation Choice */}
-        <div className="form-group" style={{ maxWidth: '480px' }}>
-          <label className="form-label">Default Church Bible Translation</label>
+        <div className="form-group" style={{ maxWidth: '420px' }}>
+          <label className="form-label">Default Scripture Translation</label>
           <select
             className="form-input"
-            value={formData.default_translation || 'kjv'}
+            value={formData.default_translation}
             onChange={(e) => setFormData({ ...formData, default_translation: e.target.value })}
           >
             <option value="kjv">King James Version (KJV) - English</option>
-            <option value="telugu">Holy Bible (పరిశుద్ధ గ్రంథము) - Telugu</option>
+            <option value="telugu">Telugu Holy Bible (పరిశుద్ధ గ్రంథము)</option>
           </select>
-          <span style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '4px' }}>
-            Specifies which translation opens initially when members click "Read Bible" on the navigation bar.
+          <span style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '4px', display: 'block' }}>
+            Specifies which translation visitors see when opening the Bible reader.
           </span>
         </div>
 
-        {/* Display Toggles */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', userSelect: 'none' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingTop: '8px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
             <input
               type="checkbox"
-              style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
               checked={Boolean(formData.allow_parallel_reading)}
               onChange={(e) => setFormData({ ...formData, allow_parallel_reading: e.target.checked })}
+              style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
             />
             <div>
-              <div style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                Enable Parallel Bilingual Reading (English & Telugu)
+              <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                Allow Parallel Dual-Translation Reading
               </div>
               <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
-                Permits congregants to view verses side-by-side in both languages simultaneously.
+                Enables readers to view English and Telugu passages side-by-side.
               </div>
             </div>
           </label>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', userSelect: 'none' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
             <input
               type="checkbox"
-              style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
               checked={Boolean(formData.show_verse_numbers)}
               onChange={(e) => setFormData({ ...formData, show_verse_numbers: e.target.checked })}
+              style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
             />
             <div>
-              <div style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                Show Verse Numbers in Public Reader
+              <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                Display Scripture Verse Numbers
               </div>
               <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
-                Displays superscript verse numerals alongside Scripture sentences.
+                Shows superscript numbers preceding each biblical verse.
               </div>
             </div>
           </label>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', userSelect: 'none' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
             <input
               type="checkbox"
-              style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
               checked={Boolean(formData.daily_verse_enabled)}
               onChange={(e) => setFormData({ ...formData, daily_verse_enabled: e.target.checked })}
+              style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
             />
             <div>
-              <div style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                Enable "Daily Verse of Inspiration" on Homepage
+              <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                Enable Daily Verse Feature
               </div>
               <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
-                Shows the curated daily scripture quote box prominently on the main landing page.
+                Displays an inspirational daily Scripture passage on the reader banner.
               </div>
             </div>
           </label>
         </div>
 
-        {/* Submit Button */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '12px', borderTop: '1px solid #f1f5f9' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
           <button
             type="submit"
             className="btn-primary"
             disabled={isSaving}
-            style={{ padding: '12px 28px', fontSize: '0.95rem' }}
+            style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            {isSaving ? 'Updating...' : '💾 Save Bible Reader Settings'}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+            <span>{isSaving ? 'Saving Changes...' : 'Save Reader Settings'}</span>
           </button>
         </div>
       </form>
@@ -4215,7 +4629,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: SermonsManager.jsx === */
 
 
@@ -4226,6 +4639,7 @@ if (typeof window !== 'undefined') {
 /**
  * Sermons CMS Manager Component
  * Enables uploading, editing, publishing/unpublishing, and deleting church sermons.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function SermonsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -4274,6 +4688,14 @@ function SermonsManager() {
   useSafeEffect(() => {
     fetchSermons();
   }, []);
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -4371,31 +4793,38 @@ function SermonsManager() {
         subtitle="Upload, edit, publish video & audio recordings, scripture passages, and speaker details."
         actionLabel="Add New Sermon"
         onAction={handleOpenAdd}
-        actionIcon="🎙️"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       {/* Filter and Search Bar */}
       <div className="panel-card" style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1', minWidth: '240px' }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by sermon title, preacher, or scripture passage..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by sermon title, preacher, or scripture passage..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%', paddingLeft: '36px' }}
+            />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
           <button type="submit" className="btn-secondary">Search</button>
           {searchTerm && (
             <button type="button" className="btn-secondary" onClick={() => { setSearchTerm(''); fetchSermons(''); }}>
@@ -4404,7 +4833,7 @@ function SermonsManager() {
           )}
         </form>
         <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
-          Total Sermons: <strong>{sermons.length}</strong>
+          Total Sermons: <strong style={{ color: '#0f172a' }}>{sermons.length}</strong>
         </div>
       </div>
 
@@ -4413,10 +4842,12 @@ function SermonsManager() {
         {isLoading ? (
           <div className="empty-state">Loading Sermons...</div>
         ) : sermons.length === 0 ? (
-          <div className="empty-state">
-            <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🎙️</div>
-            <p style={{ fontWeight: 600 }}>No sermons found</p>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Add New Sermon" to publish your first message.</p>
+          <div className="empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>
+            </div>
+            <p style={{ fontWeight: 700, color: '#0f172a' }}>No sermons found</p>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Add New Sermon&quot; to publish your first message.</p>
           </div>
         ) : (
           <table className="admin-table">
@@ -4434,24 +4865,34 @@ function SermonsManager() {
               {sermons.map((sermon) => (
                 <tr key={sermon.id}>
                   <td>
-                    <div style={{ width: '64px', height: '42px', borderRadius: '6px', overflow: 'hidden', background: '#0f1e36', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '64px', height: '42px', borderRadius: '6px', overflow: 'hidden', background: '#f1f5f9', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {sermon.thumbnail ? (
-                        <img src={sermon.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={formatMediaUrl(sermon.thumbnail)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <span style={{ color: '#c59b27', fontSize: '1.1rem' }}>🎙️</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>
                       )}
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontWeight: 700, color: '#0f1e36', fontSize: '0.92rem' }}>{sermon.title}</div>
+                    <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.92rem' }}>{sermon.title}</div>
                     {sermon.description && (
                       <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '2px', maxWidth: '340px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {sermon.description}
                       </div>
                     )}
-                    <div style={{ display: 'flex', gap: '8px', marginTop: '4px', fontSize: '0.72rem', color: '#0066cc' }}>
-                      {sermon.video_url && <span>▶ Video Link</span>}
-                      {sermon.audio_url && <span>🎧 Audio Link</span>}
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '4px', fontSize: '0.75rem', color: '#2563eb' }}>
+                      {sermon.video_url && (
+                        <a href={sermon.video_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#2563eb', textDecoration: 'none' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
+                          <span>Video</span>
+                        </a>
+                      )}
+                      {sermon.audio_url && (
+                        <a href={sermon.audio_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#2563eb', textDecoration: 'none' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>
+                          <span>Audio</span>
+                        </a>
+                      )}
                     </div>
                   </td>
                   <td>
@@ -4461,7 +4902,7 @@ function SermonsManager() {
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontSize: '0.825rem', color: '#0f1e36', background: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.825rem', color: '#0f172a', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '3px 8px', borderRadius: '6px', fontWeight: 600 }}>
                       {sermon.passage || '—'}
                     </span>
                   </td>
@@ -4481,16 +4922,24 @@ function SermonsManager() {
                         className="btn-icon-action view"
                         onClick={() => handleOpenEdit(sermon)}
                         title="Edit Sermon"
+                        aria-label="Edit Sermon"
                       >
-                        ✏️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
                       </button>
                       <button
                         type="button"
                         className="btn-icon-action delete"
                         onClick={() => setDeleteTarget(sermon)}
                         title="Delete Sermon"
+                        aria-label="Delete Sermon"
                       >
-                        🗑️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
                       </button>
                     </div>
                   </td>
@@ -4617,9 +5066,9 @@ function SermonsManager() {
                     type="checkbox"
                     checked={Boolean(formData.is_published)}
                     onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-                    style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
+                    style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
                   />
-                  <span style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
+                  <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
                     Publish immediately to Church Website
                   </span>
                 </label>
@@ -4658,7 +5107,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: EventsManager.jsx === */
 
 
@@ -4669,6 +5117,7 @@ if (typeof window !== 'undefined') {
 /**
  * Events CMS Manager Component
  * Enables creating, editing, publishing, and scheduling church events and registrations.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function EventsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -4718,6 +5167,14 @@ function EventsManager() {
   useSafeEffect(() => {
     fetchEvents();
   }, []);
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -4818,31 +5275,38 @@ function EventsManager() {
         subtitle="Manage upcoming services, conferences, youth retreats, registrations, and posters."
         actionLabel="Create New Event"
         onAction={handleOpenAdd}
-        actionIcon="📅"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       {/* Filter and Search Bar */}
       <div className="panel-card" style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1', minWidth: '240px' }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by event title, location, or tag..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by event title, location, or tag..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%', paddingLeft: '36px' }}
+            />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
           <button type="submit" className="btn-secondary">Search</button>
           {searchTerm && (
             <button type="button" className="btn-secondary" onClick={() => { setSearchTerm(''); fetchEvents(''); }}>
@@ -4851,7 +5315,7 @@ function EventsManager() {
           )}
         </form>
         <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
-          Total Scheduled Events: <strong>{events.length}</strong>
+          Total Scheduled Events: <strong style={{ color: '#0f172a' }}>{events.length}</strong>
         </div>
       </div>
 
@@ -4860,10 +5324,12 @@ function EventsManager() {
         {isLoading ? (
           <div className="empty-state">Loading Events...</div>
         ) : events.length === 0 ? (
-          <div className="empty-state">
-            <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📅</div>
-            <p style={{ fontWeight: 600 }}>No events scheduled</p>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Create New Event" to publish an upcoming gathering.</p>
+          <div className="empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+            </div>
+            <p style={{ fontWeight: 700, color: '#0f172a' }}>No events scheduled</p>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Create New Event&quot; to publish an upcoming gathering.</p>
           </div>
         ) : (
           <table className="admin-table">
@@ -4882,24 +5348,25 @@ function EventsManager() {
               {events.map((evt) => (
                 <tr key={evt.id}>
                   <td>
-                    <div style={{ width: '64px', height: '48px', borderRadius: '6px', overflow: 'hidden', background: '#0f1e36', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '64px', height: '48px', borderRadius: '6px', overflow: 'hidden', background: '#f1f5f9', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {evt.image ? (
-                        <img src={evt.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={formatMediaUrl(evt.image)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <span style={{ color: '#c59b27', fontSize: '1.2rem' }}>📅</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                       )}
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontWeight: 700, color: '#0f1e36', fontSize: '0.92rem' }}>{evt.title}</div>
+                    <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.92rem' }}>{evt.title}</div>
                     {evt.subtitle && (
                       <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '2px' }}>
                         {evt.subtitle}
                       </div>
                     )}
                     {evt.registration_link && (
-                      <div style={{ fontSize: '0.72rem', color: '#0066cc', marginTop: '3px' }}>
-                        🔗 {evt.registration_open ? 'Open RSVP' : 'Registration Closed'}
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: '#2563eb', marginTop: '3px' }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+                        <span>{evt.registration_open ? 'Open RSVP' : 'Registration Closed'}</span>
                       </div>
                     )}
                   </td>
@@ -4911,7 +5378,7 @@ function EventsManager() {
                     <span style={{ fontSize: '0.825rem', color: '#334155' }}>{evt.location || 'Church Campus'}</span>
                   </td>
                   <td>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f1e36', background: '#e2e8f0', padding: '3px 8px', borderRadius: '6px' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#0f172a', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '3px 8px', borderRadius: '6px' }}>
                       {evt.category_tag || 'Event'}
                     </span>
                   </td>
@@ -4931,16 +5398,24 @@ function EventsManager() {
                         className="btn-icon-action view"
                         onClick={() => handleOpenEdit(evt)}
                         title="Edit Event"
+                        aria-label="Edit Event"
                       >
-                        ✏️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
                       </button>
                       <button
                         type="button"
                         className="btn-icon-action delete"
                         onClick={() => setDeleteTarget(evt)}
                         title="Delete Event"
+                        aria-label="Delete Event"
                       >
-                        🗑️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
                       </button>
                     </div>
                   </td>
@@ -4957,7 +5432,7 @@ function EventsManager() {
           <div className="modal-container" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {editingEvent ? 'Edit Event Details' : 'Create New Event'}
+                {editingEvent ? 'Edit Church Event' : 'Create New Church Event'}
               </h3>
               <button type="button" className="btn-modal-close" onClick={() => setIsFormOpen(false)}>×</button>
             </div>
@@ -4965,7 +5440,7 @@ function EventsManager() {
             <form onSubmit={handleSaveEvent}>
               <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '70vh', overflowY: 'auto' }}>
                 <div className="form-group">
-                  <label className="form-label">Event Headline Title *</label>
+                  <label className="form-label">Event Title *</label>
                   <input
                     type="text"
                     required
@@ -4977,73 +5452,69 @@ function EventsManager() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Event Subtitle / Theme</label>
+                  <label className="form-label">Subtitle / Motto</label>
                   <input
                     type="text"
                     className="form-input"
                     value={formData.subtitle}
                     onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                    placeholder="e.g. Empowered for Kingdom Impact"
+                    placeholder="e.g. Experiencing the fullness of God's presence and power"
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group">
-                    <label className="form-label">Date</label>
+                    <label className="form-label">Date String *</label>
                     <input
                       type="text"
+                      required
                       className="form-input"
                       value={formData.date_text}
                       onChange={(e) => setFormData({ ...formData, date_text: e.target.value })}
-                      placeholder="e.g. Saturday, November 28, 2026"
+                      placeholder="e.g. November 28, 2026"
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Time & Schedule</label>
+                    <label className="form-label">Time String *</label>
                     <input
                       type="text"
+                      required
                       className="form-input"
                       value={formData.time_text}
                       onChange={(e) => setFormData({ ...formData, time_text: e.target.value })}
-                      placeholder="e.g. 6:00 PM - 9:00 PM"
+                      placeholder="e.g. 6:30 PM - 8:30 PM"
                     />
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group">
-                    <label className="form-label">Location / Room</label>
+                    <label className="form-label">Location Venue</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="e.g. Main Sanctuary"
+                      placeholder="e.g. Grace Fellowship Sanctuary"
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Category Tag</label>
-                    <select
+                    <input
+                      type="text"
                       className="form-input"
                       value={formData.category_tag}
                       onChange={(e) => setFormData({ ...formData, category_tag: e.target.value })}
-                    >
-                      <option value="Conference">Conference</option>
-                      <option value="Fellowship">Fellowship</option>
-                      <option value="Youth">Youth Gathering</option>
-                      <option value="Worship">Night of Worship</option>
-                      <option value="Outreach">Community Outreach</option>
-                      <option value="Prayer">Prayer & Fasting</option>
-                      <option value="Special">Special Service</option>
-                    </select>
+                      placeholder="e.g. Conference, Youth, Outreach, Prayer"
+                    />
                   </div>
                 </div>
 
                 <CompMediaUpload
-                  label="Event Poster / Promotional Banner"
+                  label="Event Poster / Hero Banner"
                   value={formData.image}
                   onChange={(url) => setFormData({ ...formData, image: url })}
-                  placeholder="Upload or enter image path (e.g. home/assets/event1.jpg)"
+                  placeholder="Upload or enter poster image URL"
                 />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
@@ -5054,42 +5525,42 @@ function EventsManager() {
                       className="form-input"
                       value={formData.action_text}
                       onChange={(e) => setFormData({ ...formData, action_text: e.target.value })}
-                      placeholder="e.g. Register Online"
+                      placeholder="e.g. Register Now or RSVP"
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Registration / Info URL</label>
+                    <label className="form-label">Registration URL Link</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.registration_link}
                       onChange={(e) => setFormData({ ...formData, registration_link: e.target.value })}
-                      placeholder="e.g. /events/register or https://forms.gle/..."
+                      placeholder="e.g. #register or https://forms.gle/..."
                     />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Full Event Description</label>
+                  <label className="form-label">Event Details & Agenda</label>
                   <textarea
                     rows={3}
                     className="form-input"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Guest ministers, schedule details, meal arrangements, childcare notes..."
+                    placeholder="Full event description, guest speakers, parking, childcare details..."
                   />
                 </div>
 
-                <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginTop: '6px' }}>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                     <input
                       type="checkbox"
                       checked={Boolean(formData.registration_open)}
                       onChange={(e) => setFormData({ ...formData, registration_open: e.target.checked })}
-                      style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
+                      style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
                     />
-                    <span style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                      Registration is Open
+                    <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                      Registration Open for Believers
                     </span>
                   </label>
 
@@ -5098,10 +5569,10 @@ function EventsManager() {
                       type="checkbox"
                       checked={Boolean(formData.is_published)}
                       onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-                      style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
+                      style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
                     />
-                    <span style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                      Publish Immediately to Website
+                    <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                      Publish on Website Calendar
                     </span>
                   </label>
                 </div>
@@ -5124,7 +5595,7 @@ function EventsManager() {
       {deleteTarget && (
         <CompConfirm
           title="Delete Event"
-          message={`Are you sure you want to remove the event "${deleteTarget.title}"? This cannot be undone.`}
+          message={`Are you sure you want to permanently delete the event "${deleteTarget.title}"? This cannot be undone.`}
           confirmLabel="Delete Event"
           isProcessing={isSubmitting}
           onConfirm={handleDeleteConfirm}
@@ -5140,7 +5611,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: MinistriesManager.jsx === */
 
 
@@ -5151,6 +5621,7 @@ if (typeof window !== 'undefined') {
 /**
  * Ministries CMS Manager Component
  * Enables church leadership to manage ministry teams, leaders, meeting times, photos, and descriptions.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function MinistriesManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -5196,6 +5667,14 @@ function MinistriesManager() {
   useSafeEffect(() => {
     fetchMinistries();
   }, []);
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -5291,31 +5770,38 @@ function MinistriesManager() {
         subtitle="Manage church departments, youth fellowship, Sunday school, outreach teams, and meeting hours."
         actionLabel="Add New Ministry"
         onAction={handleOpenAdd}
-        actionIcon="👥"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       {/* Filter and Search Bar */}
       <div className="panel-card" style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1', minWidth: '240px' }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by ministry name or leader..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by ministry name or leader..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%', paddingLeft: '36px' }}
+            />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
           <button type="submit" className="btn-secondary">Search</button>
           {searchTerm && (
             <button type="button" className="btn-secondary" onClick={() => { setSearchTerm(''); fetchMinistries(''); }}>
@@ -5324,7 +5810,7 @@ function MinistriesManager() {
           )}
         </form>
         <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
-          Active Ministries: <strong>{ministries.length}</strong>
+          Active Ministries: <strong style={{ color: '#0f172a' }}>{ministries.length}</strong>
         </div>
       </div>
 
@@ -5332,21 +5818,23 @@ function MinistriesManager() {
       {isLoading ? (
         <div className="empty-state">Loading Ministries...</div>
       ) : ministries.length === 0 ? (
-        <div className="panel-card empty-state">
-          <div style={{ fontSize: '2rem', marginBottom: '8px' }}>👥</div>
-          <p style={{ fontWeight: 600 }}>No ministries found</p>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Add New Ministry" to set up church programs.</p>
+        <div className="panel-card empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+          </div>
+          <p style={{ fontWeight: 700, color: '#0f172a' }}>No ministries found</p>
+          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Add New Ministry&quot; to set up church programs.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
           {ministries.map((min) => (
-            <div key={min.id} className="panel-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <div style={{ height: '160px', position: 'relative', background: '#0f1e36', overflow: 'hidden' }}>
+            <div key={min.id} className="panel-card" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+              <div style={{ height: '160px', position: 'relative', background: '#f1f5f9', borderBottom: '1px solid #e2e8f0', overflow: 'hidden' }}>
                 {min.photo ? (
-                  <img src={min.photo} alt={min.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={formatMediaUrl(min.photo)} alt={min.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c59b27', fontSize: '2.5rem' }}>
-                    👥
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                   </div>
                 )}
                 <div style={{ position: 'absolute', top: '12px', right: '12px' }}>
@@ -5358,42 +5846,48 @@ function MinistriesManager() {
 
               <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f1e36' }}>{min.name}</h4>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700 }}>#{min.order_index}</span>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>{min.name}</h4>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600, background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>#{min.order_index}</span>
                 </div>
 
                 {min.leader_name && (
-                  <div style={{ fontSize: '0.825rem', color: '#c59b27', fontWeight: 700 }}>
+                  <div style={{ fontSize: '0.825rem', color: '#2563eb', fontWeight: 600 }}>
                     Leader: {min.leader_name}
                   </div>
                 )}
 
                 {min.meeting_time && (
                   <div style={{ fontSize: '0.78rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>⏰</span> {min.meeting_time}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                    <span>{min.meeting_time}</span>
                   </div>
                 )}
 
-                <p style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.5, flex: 1 }}>
+                <p style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.5, flex: 1, marginTop: '4px' }}>
                   {min.short_description || min.full_description || 'No description provided.'}
                 </p>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '12px', borderTop: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '14px', borderTop: '1px solid #f1f5f9', marginTop: '10px' }}>
                   <button
                     type="button"
                     className="btn-secondary"
-                    style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                    style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                     onClick={() => handleOpenEdit(min)}
                   >
-                    ✏️ Edit
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                    <span>Edit</span>
                   </button>
                   <button
                     type="button"
                     className="btn-icon-action delete"
                     onClick={() => setDeleteTarget(min)}
                     title="Delete Ministry"
+                    aria-label="Delete Ministry"
                   >
-                    🗑️
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -5402,13 +5896,13 @@ function MinistriesManager() {
         </div>
       )}
 
-      {/* Add / Edit Modal */}
+      {/* Add / Edit Ministry Modal */}
       {isFormOpen && (
         <div className="modal-backdrop" onClick={() => setIsFormOpen(false)}>
-          <div className="modal-container" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal-container" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {editingMinistry ? 'Edit Ministry Department' : 'Add New Ministry'}
+                {editingMinistry ? 'Edit Church Ministry' : 'Add New Ministry'}
               </h3>
               <button type="button" className="btn-modal-close" onClick={() => setIsFormOpen(false)}>×</button>
             </div>
@@ -5423,19 +5917,19 @@ function MinistriesManager() {
                     className="form-input"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Generation Next Youth Ministry"
+                    placeholder="e.g. Youth & Young Adults Fellowship"
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group">
-                    <label className="form-label">Ministry Leader / Pastor</label>
+                    <label className="form-label">Ministry Leader</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.leader_name}
                       onChange={(e) => setFormData({ ...formData, leader_name: e.target.value })}
-                      placeholder="e.g. Deacon David Raj"
+                      placeholder="e.g. Deacon David Paul"
                     />
                   </div>
                   <div className="form-group">
@@ -5444,60 +5938,60 @@ function MinistriesManager() {
                       type="number"
                       className="form-input"
                       value={formData.order_index}
-                      onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value, 10) || 0 })}
                     />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Meeting Schedule & Hours</label>
+                  <label className="form-label">Regular Gathering Time & Location</label>
                   <input
                     type="text"
                     className="form-input"
                     value={formData.meeting_time}
                     onChange={(e) => setFormData({ ...formData, meeting_time: e.target.value })}
-                    placeholder="e.g. Saturdays at 6:00 PM • Youth Hall"
+                    placeholder="e.g. Every Saturday at 6:00 PM in the Fellowship Hall"
                   />
                 </div>
 
                 <CompMediaUpload
-                  label="Ministry Photo / Header"
+                  label="Ministry Group Photo"
                   value={formData.photo}
                   onChange={(url) => setFormData({ ...formData, photo: url })}
-                  placeholder="Upload or enter image path (e.g. home/assets/youth.jpg)"
+                  placeholder="Upload or enter ministry photo URL"
                 />
 
                 <div className="form-group">
-                  <label className="form-label">Short Tagline Description</label>
+                  <label className="form-label">Short Summary (Preview Card)</label>
                   <input
                     type="text"
                     className="form-input"
                     value={formData.short_description}
                     onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
-                    placeholder="Brief 1-line summary for cards on the homepage"
+                    placeholder="e.g. Inspiring the next generation to follow Christ passionately."
                   />
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Full Ministry Details</label>
+                  <label className="form-label">Full Ministry Mission & Activities</label>
                   <textarea
-                    rows={3}
+                    rows={4}
                     className="form-input"
                     value={formData.full_description}
                     onChange={(e) => setFormData({ ...formData, full_description: e.target.value })}
-                    placeholder="Mission, age groups, curriculum, activities, and volunteer contacts..."
+                    placeholder="Detailed description of activities, spiritual goals, and who can join..."
                   />
                 </div>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', marginTop: '6px' }}>
                   <input
                     type="checkbox"
                     checked={Boolean(formData.is_published)}
                     onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-                    style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
+                    style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
                   />
-                  <span style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                    Publish immediately on public website
+                  <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                    Publish to Public Ministries Directory
                   </span>
                 </label>
               </div>
@@ -5519,7 +6013,7 @@ function MinistriesManager() {
       {deleteTarget && (
         <CompConfirm
           title="Delete Ministry"
-          message={`Are you sure you want to delete "${deleteTarget.name}"? This cannot be undone.`}
+          message={`Are you sure you want to permanently delete the ministry "${deleteTarget.name}"?`}
           confirmLabel="Delete Ministry"
           isProcessing={isSubmitting}
           onConfirm={handleDeleteConfirm}
@@ -5535,7 +6029,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: GalleryManager.jsx === */
 
 
@@ -5545,6 +6038,7 @@ if (typeof window !== 'undefined') {
 /**
  * Gallery CMS Manager Component
  * Upload, categorize, organize, and delete church photos and videos.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function GalleryManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -5591,6 +6085,14 @@ function GalleryManager() {
   useSafeEffect(() => {
     fetchGallery(selectedCategory);
   }, [selectedCategory]);
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleOpenAdd = () => {
     setFormData({
@@ -5650,18 +6152,19 @@ function GalleryManager() {
         subtitle="Upload and organize high-resolution photography, baptism captures, youth nights, and worship memories."
         actionLabel="Upload Media"
         onAction={handleOpenAdd}
-        actionIcon="📷"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
@@ -5685,18 +6188,20 @@ function GalleryManager() {
       {isLoading ? (
         <div className="empty-state">Loading Gallery...</div>
       ) : items.length === 0 ? (
-        <div className="panel-card empty-state">
-          <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🖼️</div>
-          <p style={{ fontWeight: 600 }}>No media found in this category</p>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Upload Media" to add photos or video highlights.</p>
+        <div className="panel-card empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+          </div>
+          <p style={{ fontWeight: 700, color: '#0f172a' }}>No media found in this category</p>
+          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Upload Media&quot; to add photos or video highlights.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '18px' }}>
           {items.map((item) => (
             <div key={item.id} className="panel-card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ height: '180px', position: 'relative', background: '#0f1e36' }}>
+              <div style={{ height: '180px', position: 'relative', background: '#0f172a' }}>
                 <img
-                  src={item.thumbnail_url || item.media_url}
+                  src={formatMediaUrl(item.thumbnail_url || item.media_url)}
                   alt={item.title || 'Church Media'}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   onError={(e) => {
@@ -5708,12 +6213,12 @@ function GalleryManager() {
                     position: 'absolute',
                     top: '10px',
                     left: '10px',
-                    background: 'rgba(15, 30, 54, 0.85)',
+                    background: 'rgba(15, 23, 42, 0.85)',
                     color: '#ffffff',
                     padding: '3px 8px',
                     borderRadius: '4px',
                     fontSize: '0.72rem',
-                    fontWeight: 700,
+                    fontWeight: 600,
                   }}
                 >
                   {item.category || 'General'}
@@ -5723,21 +6228,34 @@ function GalleryManager() {
                     position: 'absolute',
                     top: '10px',
                     right: '10px',
-                    background: item.media_type === 'video' ? '#dc2626' : '#0066cc',
+                    background: item.media_type === 'video' ? '#0f172a' : '#2563eb',
                     color: '#ffffff',
                     padding: '3px 8px',
                     borderRadius: '4px',
                     fontSize: '0.72rem',
-                    fontWeight: 700,
+                    fontWeight: 600,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
                   }}
                 >
-                  {item.media_type === 'video' ? '▶ Video' : '📷 Photo'}
+                  {item.media_type === 'video' ? (
+                    <>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
+                      <span>Video</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>
+                      <span>Photo</span>
+                    </>
+                  )}
                 </span>
               </div>
 
               <div style={{ padding: '14px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f1e36' }}>{item.title || 'Untitled Media'}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f172a' }}>{item.title || 'Untitled Media'}</div>
                   {item.caption && (
                     <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '4px', lineHeight: 1.4 }}>
                       {item.caption}
@@ -5751,8 +6269,12 @@ function GalleryManager() {
                     className="btn-icon-action delete"
                     onClick={() => setDeleteTarget(item)}
                     title="Delete Media Item"
+                    aria-label="Delete Media Item"
                   >
-                    🗑️
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -5802,31 +6324,38 @@ function GalleryManager() {
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     >
-                      <option value="Worship">Worship</option>
-                      <option value="Fellowship">Fellowship</option>
-                      <option value="Youth">Youth</option>
-                      <option value="Outreach">Outreach</option>
-                      <option value="Celebration">Celebration</option>
-                      <option value="Baptism">Baptism</option>
+                      {categories.filter(c => c !== 'All').map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
 
                 <CompMediaUpload
-                  label="Select or Upload Image / Video File *"
+                  label="Media Image / Video Poster File"
                   value={formData.media_url}
-                  onChange={(url) => setFormData({ ...formData, media_url: url })}
-                  placeholder="Upload file or enter relative path (e.g. home/assets/gallery1.jpg)"
+                  onChange={(url) => setFormData({ ...formData, media_url: url, thumbnail_url: url })}
+                  placeholder="Upload media file or enter URL"
                 />
 
                 <div className="form-group">
                   <label className="form-label">Caption / Description</label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     className="form-input"
                     value={formData.caption}
                     onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
-                    placeholder="Short description or scripture quotation associated with this photo..."
+                    placeholder="Describe the moment, scripture reference, or community fellowship..."
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Display Order</label>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={formData.order_index}
+                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value, 10) || 0 })}
                   />
                 </div>
               </div>
@@ -5836,7 +6365,7 @@ function GalleryManager() {
                   Cancel
                 </button>
                 <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Uploading...' : 'Save Media Item'}
+                  {isSubmitting ? 'Saving...' : 'Add to Gallery'}
                 </button>
               </div>
             </form>
@@ -5847,8 +6376,8 @@ function GalleryManager() {
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
         <CompConfirm
-          title="Delete Gallery Media"
-          message={`Are you sure you want to delete this media item "${deleteTarget.title || 'Untitled'}"?`}
+          title="Delete Gallery Item"
+          message={`Are you sure you want to remove "${deleteTarget.title || 'this media'}" from the church gallery?`}
           confirmLabel="Delete Media"
           isProcessing={isSubmitting}
           onConfirm={handleDeleteConfirm}
@@ -5864,7 +6393,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: ServiceTimingsManager.jsx === */
 
 
@@ -5874,6 +6402,7 @@ if (typeof window !== 'undefined') {
 /**
  * Service Timings CMS Manager Component
  * Enables adjusting worship service hours, languages, days of week, and styling themes.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function ServiceTimingsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -6004,21 +6533,22 @@ function ServiceTimingsManager() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <CompHeader
         title="Service Timings Management"
-        subtitle="Configure weekly congregation gathering times, prayer meetings, and card highlights."
+        subtitle="Configure weekly congregation gathering times, prayer meetings, and worship schedules."
         actionLabel="Add Service Timing"
         onAction={handleOpenAdd}
-        actionIcon="⏰"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
@@ -6026,90 +6556,95 @@ function ServiceTimingsManager() {
       {isLoading ? (
         <div className="empty-state">Loading Service Schedules...</div>
       ) : timings.length === 0 ? (
-        <div className="panel-card empty-state">
-          <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>⏰</div>
-          <p style={{ fontWeight: 600 }}>No service timings configured</p>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Add Service Timing" to create worship schedules.</p>
+        <div className="panel-card empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+          </div>
+          <p style={{ fontWeight: 700, color: '#0f172a' }}>No service timings configured</p>
+          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Add Service Timing&quot; to create worship schedules.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-          {timings.map((t) => {
-            const isHighlight = t.card_class === 'highlight' || t.card_class === 'gold';
-            return (
-              <div
-                key={t.id}
-                className="panel-card"
-                style={{
-                  borderTop: isHighlight ? '4px solid #c59b27' : '4px solid #0066cc',
-                  padding: '22px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  gap: '16px',
-                  background: isHighlight ? '#fffdf7' : '#ffffff',
-                }}
-              >
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: isHighlight ? '#c59b27' : '#0066cc' }}>
-                      {t.day_of_week || 'Service'}
-                    </span>
-                    <div onClick={() => handleTogglePublish(t)} style={{ cursor: 'pointer' }}>
-                      <CompStatusBadge isPublished={t.is_published} />
-                    </div>
+          {timings.map((t) => (
+            <div
+              key={t.id}
+              className="panel-card"
+              style={{
+                borderTop: '3px solid #0f172a',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '16px',
+                background: '#ffffff',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#2563eb' }}>
+                    {t.day_of_week || 'Service'}
+                  </span>
+                  <div onClick={() => handleTogglePublish(t)} style={{ cursor: 'pointer' }}>
+                    <CompStatusBadge isPublished={t.is_published} />
                   </div>
-
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f1e36', marginBottom: '4px' }}>
-                    {t.title}
-                  </h3>
-
-                  <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f1e36', letterSpacing: '-0.02em', margin: '8px 0' }}>
-                    🕒 {t.hours}
-                  </div>
-
-                  {t.subtitle && (
-                    <div style={{ fontSize: '0.825rem', color: '#64748b' }}>
-                      {t.subtitle}
-                    </div>
-                  )}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid #e2e8f0' }}>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>
-                    Order: #{t.order_index} ({t.card_class})
-                  </span>
-                  <div style={{ display: 'inline-flex', gap: '8px' }}>
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      style={{ padding: '6px 12px', fontSize: '0.8rem' }}
-                      onClick={() => handleOpenEdit(t)}
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-icon-action delete"
-                      onClick={() => setDeleteTarget(t)}
-                      title="Delete Service Timing"
-                    >
-                      🗑️
-                    </button>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+                  {t.title}
+                </h3>
+
+                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em', margin: '8px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                  <span>{t.hours}</span>
+                </div>
+
+                {t.subtitle && (
+                  <div style={{ fontSize: '0.825rem', color: '#64748b' }}>
+                    {t.subtitle}
                   </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
+                  Order: #{t.order_index}
+                </span>
+                <div style={{ display: 'inline-flex', gap: '8px' }}>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    style={{ padding: '6px 12px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    onClick={() => handleOpenEdit(t)}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-icon-action delete"
+                    onClick={() => setDeleteTarget(t)}
+                    title="Delete Timing"
+                    aria-label="Delete Timing"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                  </button>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Add / Edit Timing Modal */}
+      {/* Add / Edit Service Timing Modal */}
       {isFormOpen && (
         <div className="modal-backdrop" onClick={() => setIsFormOpen(false)}>
-          <div className="modal-container" style={{ maxWidth: '540px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal-container" style={{ maxWidth: '560px' }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {editingTiming ? 'Edit Service Schedule' : 'Add New Service Timing'}
+                {editingTiming ? 'Edit Service Timing' : 'Add Service Timing'}
               </h3>
               <button type="button" className="btn-modal-close" onClick={() => setIsFormOpen(false)}>×</button>
             </div>
@@ -6124,66 +6659,69 @@ function ServiceTimingsManager() {
                     className="form-input"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="e.g. Sunday Morning Worship"
+                    placeholder="e.g. Sunday English Worship Service"
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group">
                     <label className="form-label">Day of Week</label>
-                    <input
-                      type="text"
+                    <select
                       className="form-input"
                       value={formData.day_of_week}
                       onChange={(e) => setFormData({ ...formData, day_of_week: e.target.value })}
-                      placeholder="e.g. Sunday / Wednesday"
-                    />
+                    >
+                      <option value="Sunday">Sunday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                      <option value="Daily">Daily</option>
+                    </select>
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Service Hours *</label>
+                    <label className="form-label">Gathering Hours *</label>
                     <input
                       type="text"
                       required
                       className="form-input"
                       value={formData.hours}
                       onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
-                      placeholder="e.g. 9:30 AM - 11:30 AM"
+                      placeholder="e.g. 9:00 AM - 11:00 AM"
                     />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Subtitle / Language / Notes</label>
+                  <label className="form-label">Subtitle / Language / Note</label>
                   <input
                     type="text"
                     className="form-input"
                     value={formData.subtitle}
                     onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                    placeholder="e.g. Bilingual Service (Telugu & English) with Sunday School"
+                    placeholder="e.g. Sanctuary & Live Online Stream • Telugu & English"
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                  <div className="form-group">
-                    <label className="form-label">Card Style Theme</label>
-                    <select
-                      className="form-input"
-                      value={formData.card_class}
-                      onChange={(e) => setFormData({ ...formData, card_class: e.target.value })}
-                    >
-                      <option value="standard">Standard Navy Accent</option>
-                      <option value="highlight">Prominent Highlight</option>
-                      <option value="gold">Warm Gold Border</option>
-                    </select>
-                  </div>
                   <div className="form-group">
                     <label className="form-label">Display Order</label>
                     <input
                       type="number"
                       className="form-input"
                       value={formData.order_index}
-                      onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value, 10) || 0 })}
                     />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Card Emphasis</label>
+                    <select
+                      className="form-input"
+                      value={formData.card_class}
+                      onChange={(e) => setFormData({ ...formData, card_class: e.target.value })}
+                    >
+                      <option value="standard">Standard Card</option>
+                      <option value="highlight">Featured Service</option>
+                    </select>
                   </div>
                 </div>
 
@@ -6192,10 +6730,10 @@ function ServiceTimingsManager() {
                     type="checkbox"
                     checked={Boolean(formData.is_published)}
                     onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-                    style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
+                    style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
                   />
-                  <span style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                    Publish to Public Website
+                  <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                    Publish on Website Schedule
                   </span>
                 </label>
               </div>
@@ -6205,7 +6743,7 @@ function ServiceTimingsManager() {
                   Cancel
                 </button>
                 <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Saving...' : editingTiming ? 'Update Schedule' : 'Create Schedule'}
+                  {isSubmitting ? 'Saving...' : editingTiming ? 'Update Timing' : 'Create Timing'}
                 </button>
               </div>
             </form>
@@ -6233,7 +6771,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: AnnouncementsManager.jsx === */
 
 
@@ -6244,6 +6781,7 @@ if (typeof window !== 'undefined') {
 /**
  * Announcements CMS Manager Component
  * Enables creating, scheduling, publishing, and removing church alerts and bulletins.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function AnnouncementsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -6271,7 +6809,7 @@ function AnnouncementsManager() {
     action_text: 'Learn More',
     action_link: '',
     tag: 'Announcement',
-    tag_class: 'gold',
+    tag_class: 'standard',
     order_index: 0,
     is_published: true,
   };
@@ -6293,6 +6831,14 @@ function AnnouncementsManager() {
   useSafeEffect(() => {
     fetchAnnouncements();
   }, []);
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -6321,7 +6867,7 @@ function AnnouncementsManager() {
       action_text: item.action_text || 'Learn More',
       action_link: item.action_link || '',
       tag: item.tag || 'Announcement',
-      tag_class: item.tag_class || 'gold',
+      tag_class: item.tag_class || 'standard',
       order_index: item.order_index ?? 0,
       is_published: item.is_published ?? true,
     });
@@ -6393,31 +6939,38 @@ function AnnouncementsManager() {
         subtitle="Publish timely church updates, fasting notifications, building project notes, and urgent alerts."
         actionLabel="Create Announcement"
         onAction={handleOpenAdd}
-        actionIcon="📢"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       {/* Filter and Search Bar */}
       <div className="panel-card" style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1', minWidth: '240px' }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search announcements..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search announcements..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%', paddingLeft: '36px' }}
+            />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
           <button type="submit" className="btn-secondary">Search</button>
           {searchTerm && (
             <button type="button" className="btn-secondary" onClick={() => { setSearchTerm(''); fetchAnnouncements(''); }}>
@@ -6426,7 +6979,7 @@ function AnnouncementsManager() {
           )}
         </form>
         <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
-          Active Bulletins: <strong>{announcements.length}</strong>
+          Active Bulletins: <strong style={{ color: '#0f172a' }}>{announcements.length}</strong>
         </div>
       </div>
 
@@ -6435,10 +6988,12 @@ function AnnouncementsManager() {
         {isLoading ? (
           <div className="empty-state">Loading Announcements...</div>
         ) : announcements.length === 0 ? (
-          <div className="empty-state">
-            <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📢</div>
-            <p style={{ fontWeight: 600 }}>No announcements found</p>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Create Announcement" to post your first church bulletin.</p>
+          <div className="empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+            </div>
+            <p style={{ fontWeight: 700, color: '#0f172a' }}>No announcements found</p>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Create Announcement&quot; to post your first church bulletin.</p>
           </div>
         ) : (
           <table className="admin-table">
@@ -6456,24 +7011,25 @@ function AnnouncementsManager() {
               {announcements.map((item) => (
                 <tr key={item.id}>
                   <td>
-                    <div style={{ width: '56px', height: '40px', borderRadius: '6px', overflow: 'hidden', background: '#0f1e36', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '56px', height: '40px', borderRadius: '6px', overflow: 'hidden', background: '#f1f5f9', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {item.image ? (
-                        <img src={item.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={formatMediaUrl(item.image)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <span style={{ color: '#c59b27', fontSize: '1.2rem' }}>📢</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
                       )}
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontWeight: 700, color: '#0f1e36', fontSize: '0.92rem' }}>{item.title}</div>
+                    <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.92rem' }}>{item.title}</div>
                     {item.subtitle && (
                       <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '2px' }}>
                         {item.subtitle}
                       </div>
                     )}
                     {item.action_link && (
-                      <div style={{ fontSize: '0.72rem', color: '#0066cc', marginTop: '3px' }}>
-                        Button: {item.action_text || 'Link'} → {item.action_link}
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: '#2563eb', marginTop: '3px' }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+                        <span>{item.action_text || 'Link'} &rarr; {item.action_link}</span>
                       </div>
                     )}
                   </td>
@@ -6484,17 +7040,7 @@ function AnnouncementsManager() {
                     </div>
                   </td>
                   <td>
-                    <span
-                      style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        padding: '3px 8px',
-                        borderRadius: '6px',
-                        background: item.tag_class === 'gold' ? '#fffbeb' : item.tag_class === 'blue' ? '#eff6ff' : '#f0fdf4',
-                        color: item.tag_class === 'gold' ? '#b45309' : item.tag_class === 'blue' ? '#1d4ed8' : '#15803d',
-                        border: `1px solid ${item.tag_class === 'gold' ? '#fde68a' : item.tag_class === 'blue' ? '#bfdbfe' : '#bbf7d0'}`,
-                      }}
-                    >
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, padding: '3px 8px', borderRadius: '6px', background: '#f1f5f9', color: '#0f172a', border: '1px solid #e2e8f0' }}>
                       {item.tag || 'Announcement'}
                     </span>
                   </td>
@@ -6514,16 +7060,24 @@ function AnnouncementsManager() {
                         className="btn-icon-action view"
                         onClick={() => handleOpenEdit(item)}
                         title="Edit Announcement"
+                        aria-label="Edit Announcement"
                       >
-                        ✏️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
                       </button>
                       <button
                         type="button"
                         className="btn-icon-action delete"
                         onClick={() => setDeleteTarget(item)}
                         title="Delete Announcement"
+                        aria-label="Delete Announcement"
                       >
-                        🗑️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
                       </button>
                     </div>
                   </td>
@@ -6534,13 +7088,13 @@ function AnnouncementsManager() {
         )}
       </div>
 
-      {/* Add / Edit Modal */}
+      {/* Add / Edit Announcement Modal */}
       {isFormOpen && (
         <div className="modal-backdrop" onClick={() => setIsFormOpen(false)}>
-          <div className="modal-container" style={{ maxWidth: '620px' }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal-container" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {editingItem ? 'Edit Church Announcement' : 'Create Church Announcement'}
+                {editingItem ? 'Edit Church Announcement' : 'Post New Church Bulletin'}
               </h3>
               <button type="button" className="btn-modal-close" onClick={() => setIsFormOpen(false)}>×</button>
             </div>
@@ -6548,86 +7102,61 @@ function AnnouncementsManager() {
             <form onSubmit={handleSaveAnnouncement}>
               <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '70vh', overflowY: 'auto' }}>
                 <div className="form-group">
-                  <label className="form-label">Announcement Title *</label>
+                  <label className="form-label">Announcement Headline *</label>
                   <input
                     type="text"
                     required
                     className="form-input"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="e.g. Special 3-Day Prayer & Fasting for Revival"
+                    placeholder="e.g. 21 Days of Fasting and Prayer"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Subtitle / Message Details</label>
-                  <textarea
-                    rows={2}
+                  <label className="form-label">Subtitle / Key Highlight</label>
+                  <input
+                    type="text"
                     className="form-input"
                     value={formData.subtitle}
                     onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                    placeholder="Detailed explanation, scripture focus, or bulletin message..."
+                    placeholder="e.g. Seeking God's guidance, healing, and revival for our church family"
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group">
-                    <label className="form-label">Date</label>
+                    <label className="form-label">Date String</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.date_text}
                       onChange={(e) => setFormData({ ...formData, date_text: e.target.value })}
-                      placeholder="e.g. November 10-12, 2026"
+                      placeholder="e.g. Jan 1 - Jan 21"
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Time</label>
+                    <label className="form-label">Time or Venue Info</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.time_text}
                       onChange={(e) => setFormData({ ...formData, time_text: e.target.value })}
-                      placeholder="e.g. 7:00 PM Daily"
+                      placeholder="e.g. Daily 6:00 AM - 7:00 AM"
                     />
                   </div>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group">
-                    <label className="form-label">Location / Platform</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="e.g. Sanctuary & YouTube Live"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Tag Badge Text</label>
+                    <label className="form-label">Badge Label / Category</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.tag}
                       onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-                      placeholder="e.g. Urgent / Special / New"
+                      placeholder="e.g. Urgent, Fasting, Youth, Building"
                     />
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                  <div className="form-group">
-                    <label className="form-label">Badge Color Accent</label>
-                    <select
-                      className="form-input"
-                      value={formData.tag_class}
-                      onChange={(e) => setFormData({ ...formData, tag_class: e.target.value })}
-                    >
-                      <option value="gold">Gold Accent</option>
-                      <option value="blue">Blue Accent</option>
-                      <option value="emerald">Green Accent</option>
-                    </select>
                   </div>
                   <div className="form-group">
                     <label className="form-label">Display Order</label>
@@ -6635,16 +7164,16 @@ function AnnouncementsManager() {
                       type="number"
                       className="form-input"
                       value={formData.order_index}
-                      onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value) || 0 })}
+                      onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value, 10) || 0 })}
                     />
                   </div>
                 </div>
 
                 <CompMediaUpload
-                  label="Announcement Banner Image"
+                  label="Bulletin Banner Graphic (Optional)"
                   value={formData.image}
                   onChange={(url) => setFormData({ ...formData, image: url })}
-                  placeholder="Upload or enter image path (e.g. home/assets/announcement1.jpg)"
+                  placeholder="Upload or enter bulletin banner image"
                 />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
@@ -6655,30 +7184,30 @@ function AnnouncementsManager() {
                       className="form-input"
                       value={formData.action_text}
                       onChange={(e) => setFormData({ ...formData, action_text: e.target.value })}
-                      placeholder="e.g. Join Stream / Learn More"
+                      placeholder="e.g. Download Guide or Learn More"
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Action Target Link</label>
+                    <label className="form-label">Action Target Link / Anchor</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.action_link}
                       onChange={(e) => setFormData({ ...formData, action_link: e.target.value })}
-                      placeholder="e.g. /prayer-request or external link"
+                      placeholder="e.g. #prayer-requests or https://..."
                     />
                   </div>
                 </div>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', marginTop: '6px' }}>
                   <input
                     type="checkbox"
                     checked={Boolean(formData.is_published)}
                     onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-                    style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
+                    style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
                   />
-                  <span style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
-                    Publish to Website Announcement Bar & Homepage
+                  <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
+                    Publish to Public Announcement Banner
                   </span>
                 </label>
               </div>
@@ -6688,7 +7217,7 @@ function AnnouncementsManager() {
                   Cancel
                 </button>
                 <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Saving...' : editingItem ? 'Update Bulletin' : 'Post Announcement'}
+                  {isSubmitting ? 'Saving...' : editingItem ? 'Update Bulletin' : 'Publish Bulletin'}
                 </button>
               </div>
             </form>
@@ -6700,8 +7229,8 @@ function AnnouncementsManager() {
       {deleteTarget && (
         <CompConfirm
           title="Delete Announcement"
-          message={`Are you sure you want to remove the announcement "${deleteTarget.title}"?`}
-          confirmLabel="Delete Announcement"
+          message={`Are you sure you want to delete the bulletin "${deleteTarget.title}"?`}
+          confirmLabel="Delete Bulletin"
           isProcessing={isSubmitting}
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeleteTarget(null)}
@@ -6716,7 +7245,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: ContactManager.jsx === */
 
 
@@ -6725,6 +7253,7 @@ if (typeof window !== 'undefined') {
 /**
  * Contact & Location CMS Manager Component
  * Enables updating church address, pastoral phone numbers, email, maps, and social media handles.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function ContactManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -6801,21 +7330,23 @@ function ContactManager() {
       />
 
       {saveSuccess && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {saveSuccess}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{saveSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Physical Address Section */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Sanctuary Location & Inquiries
           </h3>
 
@@ -6827,102 +7358,95 @@ function ContactManager() {
                 className="form-input"
                 value={formData.address_line1 || ''}
                 onChange={(e) => setFormData({ ...formData, address_line1: e.target.value })}
-                placeholder="e.g. 124 Sanctuary Way"
+                placeholder="e.g. 124 Church Street, Faith Colony"
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Address Line 2 (Building / Suite)</label>
+              <label className="form-label">Address Line 2 (Optional)</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.address_line2 || ''}
                 onChange={(e) => setFormData({ ...formData, address_line2: e.target.value })}
-                placeholder="e.g. Suite 400"
+                placeholder="e.g. Near Community Center, Pillar 42"
               />
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
             <div className="form-group">
-              <label className="form-label">City, State & ZIP Code</label>
+              <label className="form-label">City, State & Postal Zip</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.city_state_zip || ''}
                 onChange={(e) => setFormData({ ...formData, city_state_zip: e.target.value })}
-                placeholder="e.g. Dallas, TX 75201"
+                placeholder="e.g. Hyderabad, Telangana 500034"
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Official Phone Number</label>
+              <label className="form-label">Pastoral Phone Helpline</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.phone || ''}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="e.g. +1 (555) 789-4560"
+                placeholder="e.g. +91 98765 43210"
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Official Email Address</label>
+              <label className="form-label">Official Church Email</label>
               <input
                 type="email"
                 className="form-input"
                 value={formData.email || ''}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="e.g. info@gracefellowship.org"
+                placeholder="e.g. contact@gracefellowship.org"
               />
             </div>
           </div>
 
           <div className="form-group">
-            <label className="form-label">Google Maps Directions / Embed URL</label>
+            <label className="form-label">Google Maps Embed / Navigation URL</label>
             <input
               type="text"
               className="form-input"
               value={formData.google_maps_url || ''}
               onChange={(e) => setFormData({ ...formData, google_maps_url: e.target.value })}
-              placeholder="e.g. https://maps.google.com/?q=Grace+Fellowship+Church"
+              placeholder="e.g. https://maps.google.com/?q=..."
             />
           </div>
-
-          <CompMediaUpload
-            label="Sanctuary Exterior Photo"
-            value={formData.church_exterior_image || ''}
-            onChange={(url) => setFormData({ ...formData, church_exterior_image: url })}
-            placeholder="Upload or enter image path (e.g. home/assets/church-exterior.jpg)"
-          />
         </div>
 
-        {/* Social Media & Pastoral Hotline */}
+        {/* Social & Digital Presence Section */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
-            Online & Social Media Channels
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+            Digital Channels & Social Media
           </h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
             <div className="form-group">
-              <label className="form-label">YouTube Live Channel URL</label>
+              <label className="form-label">YouTube Live Channel</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.youtube_url || ''}
                 onChange={(e) => setFormData({ ...formData, youtube_url: e.target.value })}
-                placeholder="e.g. https://www.youtube.com/@GraceFellowship"
+                placeholder="e.g. https://youtube.com/@gracefellowship"
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Facebook Page URL</label>
+              <label className="form-label">Facebook Congregation Page</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.facebook_url || ''}
                 onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
-                placeholder="e.g. https://www.facebook.com/GraceFellowship"
+                placeholder="e.g. https://facebook.com/gracefellowship"
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Instagram Handle / URL</label>
+              <label className="form-label">Instagram Profile</label>
               <input
                 type="text"
                 className="form-input"
@@ -6932,27 +7456,35 @@ function ContactManager() {
               />
             </div>
             <div className="form-group">
-              <label className="form-label">WhatsApp Care Hotline Number</label>
+              <label className="form-label">WhatsApp Prayer Line Number</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.whatsapp_number || ''}
                 onChange={(e) => setFormData({ ...formData, whatsapp_number: e.target.value })}
-                placeholder="e.g. +1 555-789-4560"
+                placeholder="e.g. +91 98765 43210"
               />
             </div>
           </div>
+
+          <CompMediaUpload
+            label="Sanctuary Exterior / Entrance Photography"
+            value={formData.church_exterior_image || ''}
+            onChange={(url) => setFormData({ ...formData, church_exterior_image: url })}
+            placeholder="Upload or enter church exterior image URL"
+          />
         </div>
 
-        {/* Submit */}
+        {/* Action Button */}
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <button
             type="submit"
             className="btn-primary"
             disabled={isSaving}
-            style={{ padding: '12px 28px', fontSize: '0.95rem' }}
+            style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            {isSaving ? 'Saving...' : '💾 Save Contact Information'}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+            <span>{isSaving ? 'Saving Changes...' : 'Save Contact Information'}</span>
           </button>
         </div>
       </form>
@@ -6965,7 +7497,6 @@ if (typeof window !== 'undefined') {
 }
 
 
-
 /* === Source: WebsiteSettingsManager.jsx === */
 
 
@@ -6974,6 +7505,7 @@ if (typeof window !== 'undefined') {
 /**
  * Website Settings CMS Manager Component
  * Enables customizing church branding, logo, footer text, copyright, and global SEO metadata.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 function WebsiteSettingsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -6983,7 +7515,7 @@ function WebsiteSettingsManager() {
     church_name: '',
     church_tagline: '',
     logo_url: '',
-    primary_color: '#0066cc',
+    primary_color: '#0f172a',
     footer_text: '',
     copyright_text: '',
     seo_title: '',
@@ -7048,29 +7580,32 @@ function WebsiteSettingsManager() {
       />
 
       {saveSuccess && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {saveSuccess}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{saveSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Branding */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Church Identity & Header Logo
           </h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
             <div className="form-group">
-              <label className="form-label">Church Name</label>
+              <label className="form-label">Church Organization Name *</label>
               <input
                 type="text"
+                required
                 className="form-input"
                 value={formData.church_name || ''}
                 onChange={(e) => setFormData({ ...formData, church_name: e.target.value })}
@@ -7078,39 +7613,39 @@ function WebsiteSettingsManager() {
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Motto / Tagline</label>
+              <label className="form-label">Church Tagline / Motto</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.church_tagline || ''}
                 onChange={(e) => setFormData({ ...formData, church_tagline: e.target.value })}
-                placeholder="e.g. A Christ-Centered Community of Faith & Love"
+                placeholder="e.g. Loving God, Loving People, Serving the World"
               />
             </div>
           </div>
 
           <CompMediaUpload
-            label="Church Crest / Logo Image"
+            label="Church Header Logo Image"
             value={formData.logo_url || ''}
             onChange={(url) => setFormData({ ...formData, logo_url: url })}
-            placeholder="Upload or enter logo path (e.g. home/assets/logo.png)"
+            placeholder="Upload or enter logo URL (e.g. home/assets/church_logo.png)"
           />
         </div>
 
-        {/* Footer & Copyright */}
+        {/* Footer & Legal */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
-            Footer Presentation & Legal Copyright
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+            Footer Presentation & Legal Notice
           </h3>
 
           <div className="form-group">
-            <label className="form-label">Footer Mission Summary Text</label>
+            <label className="form-label">Footer Summary Paragraph</label>
             <textarea
               rows={3}
               className="form-input"
               value={formData.footer_text || ''}
               onChange={(e) => setFormData({ ...formData, footer_text: e.target.value })}
-              placeholder="Welcoming message displayed in the global website footer across all pages..."
+              placeholder="Brief paragraph appearing above footer navigation links..."
             />
           </div>
 
@@ -7121,47 +7656,47 @@ function WebsiteSettingsManager() {
               className="form-input"
               value={formData.copyright_text || ''}
               onChange={(e) => setFormData({ ...formData, copyright_text: e.target.value })}
-              placeholder="e.g. © 2026 Grace Fellowship Church. All rights reserved."
+              placeholder="e.g. © 2026 Grace Fellowship Church. All Rights Reserved."
             />
           </div>
         </div>
 
-        {/* SEO Meta Tags */}
+        {/* SEO Meta Information */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Search Engine Optimization (SEO)
           </h3>
 
           <div className="form-group">
-            <label className="form-label">Default Browser Tab Title (SEO Title)</label>
+            <label className="form-label">Global Meta Page Title</label>
             <input
               type="text"
               className="form-input"
               value={formData.seo_title || ''}
               onChange={(e) => setFormData({ ...formData, seo_title: e.target.value })}
-              placeholder="e.g. Grace Fellowship Church - Welcoming, Worshipping & Serving"
+              placeholder="e.g. Grace Fellowship Church | Sunday Worship, Sermons & Community"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Meta Description (Search Snippet)</label>
+            <label className="form-label">Meta Description</label>
             <textarea
               rows={2}
               className="form-input"
               value={formData.seo_description || ''}
               onChange={(e) => setFormData({ ...formData, seo_description: e.target.value })}
-              placeholder="150-160 characters summarizing the church for Google and Bing search results..."
+              placeholder="Concise church description for Google search results (150-160 chars recommended)..."
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Keywords (Comma Separated)</label>
+            <label className="form-label">Meta Keywords (Comma separated)</label>
             <input
               type="text"
               className="form-input"
               value={formData.seo_keywords || ''}
               onChange={(e) => setFormData({ ...formData, seo_keywords: e.target.value })}
-              placeholder="e.g. Church, Jesus Christ, Sunday Service, Prayer, Bible Study"
+              placeholder="church, worship, sermons, Christian, fellowship, Hyderabad, faith"
             />
           </div>
         </div>
@@ -7172,9 +7707,10 @@ function WebsiteSettingsManager() {
             type="submit"
             className="btn-primary"
             disabled={isSaving}
-            style={{ padding: '12px 28px', fontSize: '0.95rem' }}
+            style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            {isSaving ? 'Saving...' : '💾 Save Website Settings'}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+            <span>{isSaving ? 'Saving Changes...' : 'Save Website Settings'}</span>
           </button>
         </div>
       </form>
@@ -7185,7 +7721,6 @@ function WebsiteSettingsManager() {
 if (typeof window !== 'undefined') {
   window.WebsiteSettingsManager = WebsiteSettingsManager;
 }
-
 
 
 /* === Source: AdminCMSApp.jsx === */
@@ -7337,16 +7872,15 @@ function AdminCMSApp() {
       case 'settings':
         return (
           <div key={refreshKey} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {/* Quick switcher to all CMS section managers */}
-            <div className="content-panel-card" style={{ padding: '16px 20px', display: 'flex', gap: '10px', overflowX: 'auto', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', alignSelf: 'center', marginRight: '6px' }}>CMS Modules:</span>
-              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('home')}>🏠 Home Page</button>
-              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('about')}>📖 About Us</button>
-              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('bible')}>📜 Bible Settings</button>
-              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('ministries')}>👥 Ministries</button>
-              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('gallery')}>🖼️ Gallery</button>
-              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('service-timings')}>⏰ Service Timings</button>
-              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('contact')}>📍 Contact Info</button>
+            <div className="panel-card" style={{ padding: '12px 18px', display: 'flex', gap: '8px', overflowX: 'auto', flexWrap: 'wrap', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', marginRight: '6px' }}>CMS Sections:</span>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('home')}>Home Page</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('about')}>About Us</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('bible')}>Bible Settings</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('ministries')}>Ministries</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('gallery')}>Gallery</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('service-timings')}>Service Timings</button>
+              <button type="button" className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => setCurrentModule('contact')}>Contact Info</button>
             </div>
             <CompWebsiteSettingsManager key={refreshKey} />
           </div>

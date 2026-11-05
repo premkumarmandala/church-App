@@ -8,6 +8,7 @@ import { ConfirmModal } from '../components/ConfirmModal.jsx';
 /**
  * Sermons CMS Manager Component
  * Enables uploading, editing, publishing/unpublishing, and deleting church sermons.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 export function SermonsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -56,6 +57,14 @@ export function SermonsManager() {
   useSafeEffect(() => {
     fetchSermons();
   }, []);
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -153,31 +162,38 @@ export function SermonsManager() {
         subtitle="Upload, edit, publish video & audio recordings, scripture passages, and speaker details."
         actionLabel="Add New Sermon"
         onAction={handleOpenAdd}
-        actionIcon="🎙️"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       {/* Filter and Search Bar */}
       <div className="panel-card" style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1', minWidth: '240px' }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by sermon title, preacher, or scripture passage..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by sermon title, preacher, or scripture passage..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%', paddingLeft: '36px' }}
+            />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
           <button type="submit" className="btn-secondary">Search</button>
           {searchTerm && (
             <button type="button" className="btn-secondary" onClick={() => { setSearchTerm(''); fetchSermons(''); }}>
@@ -186,7 +202,7 @@ export function SermonsManager() {
           )}
         </form>
         <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
-          Total Sermons: <strong>{sermons.length}</strong>
+          Total Sermons: <strong style={{ color: '#0f172a' }}>{sermons.length}</strong>
         </div>
       </div>
 
@@ -195,10 +211,12 @@ export function SermonsManager() {
         {isLoading ? (
           <div className="empty-state">Loading Sermons...</div>
         ) : sermons.length === 0 ? (
-          <div className="empty-state">
-            <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🎙️</div>
-            <p style={{ fontWeight: 600 }}>No sermons found</p>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Add New Sermon" to publish your first message.</p>
+          <div className="empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>
+            </div>
+            <p style={{ fontWeight: 700, color: '#0f172a' }}>No sermons found</p>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Add New Sermon&quot; to publish your first message.</p>
           </div>
         ) : (
           <table className="admin-table">
@@ -216,24 +234,34 @@ export function SermonsManager() {
               {sermons.map((sermon) => (
                 <tr key={sermon.id}>
                   <td>
-                    <div style={{ width: '64px', height: '42px', borderRadius: '6px', overflow: 'hidden', background: '#0f1e36', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '64px', height: '42px', borderRadius: '6px', overflow: 'hidden', background: '#f1f5f9', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {sermon.thumbnail ? (
-                        <img src={sermon.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={formatMediaUrl(sermon.thumbnail)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <span style={{ color: '#c59b27', fontSize: '1.1rem' }}>🎙️</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>
                       )}
                     </div>
                   </td>
                   <td>
-                    <div style={{ fontWeight: 700, color: '#0f1e36', fontSize: '0.92rem' }}>{sermon.title}</div>
+                    <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.92rem' }}>{sermon.title}</div>
                     {sermon.description && (
                       <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '2px', maxWidth: '340px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {sermon.description}
                       </div>
                     )}
-                    <div style={{ display: 'flex', gap: '8px', marginTop: '4px', fontSize: '0.72rem', color: '#0066cc' }}>
-                      {sermon.video_url && <span>▶ Video Link</span>}
-                      {sermon.audio_url && <span>🎧 Audio Link</span>}
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '4px', fontSize: '0.75rem', color: '#2563eb' }}>
+                      {sermon.video_url && (
+                        <a href={sermon.video_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#2563eb', textDecoration: 'none' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
+                          <span>Video</span>
+                        </a>
+                      )}
+                      {sermon.audio_url && (
+                        <a href={sermon.audio_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#2563eb', textDecoration: 'none' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>
+                          <span>Audio</span>
+                        </a>
+                      )}
                     </div>
                   </td>
                   <td>
@@ -243,7 +271,7 @@ export function SermonsManager() {
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontSize: '0.825rem', color: '#0f1e36', background: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.825rem', color: '#0f172a', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '3px 8px', borderRadius: '6px', fontWeight: 600 }}>
                       {sermon.passage || '—'}
                     </span>
                   </td>
@@ -263,16 +291,24 @@ export function SermonsManager() {
                         className="btn-icon-action view"
                         onClick={() => handleOpenEdit(sermon)}
                         title="Edit Sermon"
+                        aria-label="Edit Sermon"
                       >
-                        ✏️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
                       </button>
                       <button
                         type="button"
                         className="btn-icon-action delete"
                         onClick={() => setDeleteTarget(sermon)}
                         title="Delete Sermon"
+                        aria-label="Delete Sermon"
                       >
-                        🗑️
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" />
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
                       </button>
                     </div>
                   </td>
@@ -399,9 +435,9 @@ export function SermonsManager() {
                     type="checkbox"
                     checked={Boolean(formData.is_published)}
                     onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-                    style={{ width: '18px', height: '18px', accentColor: '#0066cc' }}
+                    style={{ width: '18px', height: '18px', accentColor: '#2563eb' }}
                   />
-                  <span style={{ fontWeight: 600, color: '#0f1e36', fontSize: '0.9rem' }}>
+                  <span style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>
                     Publish immediately to Church Website
                   </span>
                 </label>
@@ -438,4 +474,3 @@ export function SermonsManager() {
 if (typeof window !== 'undefined') {
   window.SermonsManager = SermonsManager;
 }
-

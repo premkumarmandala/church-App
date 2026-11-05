@@ -5,27 +5,28 @@
 
 :root {
   /* Canvas & Surfaces */
-  --admin-bg: #f4f6fa;
+  --admin-bg: #f8fafc;
   --admin-surface: #ffffff;
   --admin-surface-subtle: #f8fafc;
   --admin-surface-muted: #f1f5f9;
   --admin-border: #e2e8f0;
   --admin-border-subtle: #edf2f7;
 
-  /* Brand Palette */
-  --admin-navy-dark: #0b1a30;
-  --admin-navy-hover: #122544;
+  /* Brand Palette - Strict Navy & Accent Blue */
+  --admin-navy-dark: #0f172a;
+  --admin-navy-hover: #1e293b;
   --admin-navy-active: #091527;
-  --admin-blue-accent: #0052cc;
+  --admin-blue-accent: #2563eb;
+  --admin-blue-hover: #1d4ed8;
   --admin-blue-light: #eff6ff;
 
-  /* Sidebar Tokens (White corporate sidebar) */
-  --sidebar-width: 240px;
+  /* Sidebar Tokens (Corporate White with Navy Active Pills) */
+  --sidebar-width: 250px;
   --sidebar-bg: #ffffff;
-  --sidebar-border: #eef2f6;
+  --sidebar-border: #e2e8f0;
   --sidebar-text: #475569;
   --sidebar-text-active: #ffffff;
-  --sidebar-active-bg: #0b1a30;
+  --sidebar-active-bg: #0f172a;
   --sidebar-hover-bg: #f8fafc;
 
   /* Typography */
@@ -34,21 +35,22 @@
   --admin-text-muted: #64748b;
   --admin-text-light: #94a3b8;
 
-  /* Status Colors */
+  /* Subtle Status Colors */
   --status-pending-bg: #fef3c7;
-  --status-pending-text: #d97706;
+  --status-pending-text: #b45309;
   --status-pending-border: #fde68a;
 
-  --status-prayed-bg: #dcfce7;
-  --status-prayed-text: #16a34a;
-  --status-prayed-border: #bbf7d0;
+  --status-prayed-bg: #ecfdf5;
+  --status-prayed-text: #059669;
+  --status-prayed-border: #a7f3d0;
 
   --status-archived-bg: #f1f5f9;
   --status-archived-text: #475569;
   --status-archived-border: #e2e8f0;
 
-  --status-danger-bg: #fee2e2;
-  --status-danger-text: #ef4444;
+  --status-danger-bg: #fef2f2;
+  --status-danger-text: #dc2626;
+  --status-danger-border: #fee2e2;
 
   /* Category Badges */
   --cat-health-bg: #fdf2f8;
@@ -175,8 +177,18 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   overflow-y: auto;
+}
+
+.sidebar-group-heading {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  padding: 14px 14px 4px;
+  user-select: none;
 }
 
 .sidebar-nav-item {
@@ -411,41 +423,47 @@ body {
   user-select: none;
 }
 
+.kpi-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
 .kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  border-color: #cbd5e1;
 }
 
-.kpi-card.total {
-  background-color: #eff6ff;
-  border: 1px solid #dbeafe;
-}
-
-.kpi-card.pending {
-  background-color: #fffbeb;
-  border: 1px solid #fef3c7;
-}
-
-.kpi-card.prayed {
-  background-color: #f0fdf4;
-  border: 1px solid #dcfce7;
-}
-
-.kpi-card.archived {
-  background-color: #faf5ff;
-  border: 1px solid #f3e8ff;
+.kpi-card.active {
+  border-color: #2563eb;
+  background-color: #f8fafc;
 }
 
 .kpi-icon-box {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background-color: #ffffff;
+  background-color: #f1f5f9;
+  color: #0f172a;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
+}
+
+.kpi-card:hover .kpi-icon-box {
+  background-color: #0f172a;
+  color: #ffffff;
 }
 
 .kpi-meta-box {
@@ -634,35 +652,78 @@ body {
   width: 100%;
 }
 
-.data-table-modern {
+.data-table-modern,
+.admin-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
 
-.data-table-modern thead th {
-  background-color: #ffffff;
+.data-table-modern thead th,
+.admin-table thead th {
+  background-color: #f8fafc;
   padding: 14px 18px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: #0f172a;
-  border-bottom: 1px solid #edf2f7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
   white-space: nowrap;
 }
 
-.data-table-modern tbody tr {
+.data-table-modern tbody tr,
+.admin-table tbody tr {
   border-bottom: 1px solid #f1f5f9;
   transition: background-color 0.12s ease;
 }
 
-.data-table-modern tbody tr:hover {
-  background-color: #fbfcfe;
+.data-table-modern tbody tr:hover,
+.admin-table tbody tr:hover {
+  background-color: #f8fafc;
 }
 
-.data-table-modern td {
-  padding: 16px 18px;
-  font-size: 0.85rem;
+.data-table-modern td,
+.admin-table td {
+  padding: 14px 18px;
+  font-size: 0.86rem;
+  color: #1e293b;
   vertical-align: middle;
+}
+
+.btn-icon-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.btn-icon-action:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.btn-icon-action.view:hover,
+.btn-icon-action.edit:hover {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.btn-icon-action.danger:hover,
+.btn-icon-action.delete:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fee2e2;
 }
 
 /* Checkbox Style */

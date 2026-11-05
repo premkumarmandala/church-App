@@ -83,6 +83,20 @@ def get_service_worker() -> Response:
     return Response(status_code=404)
 
 
+# Mount /home/assets and /admin/home/assets to resolve both absolute and relative image paths
+home_assets_dir = settings.FRONTEND_DIR / "home" / "assets"
+if home_assets_dir.exists():
+    app.mount(
+        "/home/assets",
+        StaticFiles(directory=str(home_assets_dir)),
+        name="home-assets",
+    )
+    app.mount(
+        "/admin/home/assets",
+        StaticFiles(directory=str(home_assets_dir)),
+        name="admin-home-assets",
+    )
+
 # Mount /bible-data directory for offline caching and raw JSON access
 if settings.DATA_DIR.exists():
     app.mount(

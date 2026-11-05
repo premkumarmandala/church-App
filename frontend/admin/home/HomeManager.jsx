@@ -6,6 +6,7 @@ import { MediaUploadField } from '../components/MediaUploadField.jsx';
 /**
  * Homepage CMS Manager Component
  * Enables editing welcome text, hero image, headline, Scripture, and CTAs.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 export function HomeManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -80,19 +81,21 @@ export function HomeManager() {
       />
 
       {saveSuccess && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {saveSuccess}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{saveSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
           Hero Section Content
         </h3>
 
@@ -151,7 +154,7 @@ export function HomeManager() {
           placeholder="home/assets/hero_cross_sunset.jpg"
         />
 
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px', marginTop: '12px' }}>
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginTop: '12px' }}>
           Action Buttons (Call to Actions)
         </h3>
 
@@ -202,8 +205,9 @@ export function HomeManager() {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '14px' }}>
-          <button type="submit" className="btn-primary" disabled={isSaving} style={{ padding: '10px 24px', fontSize: '0.95rem' }}>
-            {isSaving ? 'Saving Changes...' : '💾 Save & Publish Home Changes'}
+          <button type="submit" className="btn-primary" disabled={isSaving} style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+            <span>{isSaving ? 'Saving Changes...' : 'Save & Publish Home Changes'}</span>
           </button>
         </div>
       </form>
@@ -214,4 +218,3 @@ export function HomeManager() {
 if (typeof window !== 'undefined') {
   window.HomeManager = HomeManager;
 }
-

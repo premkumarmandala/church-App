@@ -92,7 +92,7 @@ export function FilterToolbar({
             onClick={onToggleFilterMenu}
             title="Filter by category and sort"
             aria-label="Filter"
-            style={category && category !== 'All Categories' ? { borderColor: '#0b1a30', background: '#eff6ff', color: '#0052cc' } : {}}
+            style={category && category !== 'All Categories' ? { borderColor: '#0f172a', background: '#eff6ff', color: '#2563eb' } : {}}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
@@ -131,7 +131,7 @@ export function FilterToolbar({
                         padding: '6px 10px',
                         borderRadius: '6px',
                         border: 'none',
-                        background: category === cat ? '#0b1a30' : 'transparent',
+                        background: category === cat ? '#0f172a' : 'transparent',
                         color: category === cat ? '#ffffff' : '#334155',
                         textAlign: 'left',
                         fontSize: '0.8rem',
@@ -165,7 +165,7 @@ export function FilterToolbar({
                         fontSize: '0.75rem',
                         fontWeight: 600,
                         border: '1px solid #e2e8f0',
-                        background: sortOrder === 'newest' ? '#0b1a30' : '#ffffff',
+                        background: sortOrder === 'newest' ? '#0f172a' : '#ffffff',
                         color: sortOrder === 'newest' ? '#ffffff' : '#475569',
                         cursor: 'pointer',
                       }}
@@ -185,7 +185,7 @@ export function FilterToolbar({
                         fontSize: '0.75rem',
                         fontWeight: 600,
                         border: '1px solid #e2e8f0',
-                        background: sortOrder === 'oldest' ? '#0b1a30' : '#ffffff',
+                        background: sortOrder === 'oldest' ? '#0f172a' : '#ffffff',
                         color: sortOrder === 'oldest' ? '#ffffff' : '#475569',
                         cursor: 'pointer',
                       }}

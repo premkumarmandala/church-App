@@ -6,6 +6,7 @@ import { MediaUploadField } from '../components/MediaUploadField.jsx';
 /**
  * Website Settings CMS Manager Component
  * Enables customizing church branding, logo, footer text, copyright, and global SEO metadata.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 export function WebsiteSettingsManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -15,7 +16,7 @@ export function WebsiteSettingsManager() {
     church_name: '',
     church_tagline: '',
     logo_url: '',
-    primary_color: '#0066cc',
+    primary_color: '#0f172a',
     footer_text: '',
     copyright_text: '',
     seo_title: '',
@@ -80,29 +81,32 @@ export function WebsiteSettingsManager() {
       />
 
       {saveSuccess && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {saveSuccess}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{saveSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Branding */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Church Identity & Header Logo
           </h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
             <div className="form-group">
-              <label className="form-label">Church Name</label>
+              <label className="form-label">Church Organization Name *</label>
               <input
                 type="text"
+                required
                 className="form-input"
                 value={formData.church_name || ''}
                 onChange={(e) => setFormData({ ...formData, church_name: e.target.value })}
@@ -110,39 +114,39 @@ export function WebsiteSettingsManager() {
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Motto / Tagline</label>
+              <label className="form-label">Church Tagline / Motto</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.church_tagline || ''}
                 onChange={(e) => setFormData({ ...formData, church_tagline: e.target.value })}
-                placeholder="e.g. A Christ-Centered Community of Faith & Love"
+                placeholder="e.g. Loving God, Loving People, Serving the World"
               />
             </div>
           </div>
 
           <CompMediaUpload
-            label="Church Crest / Logo Image"
+            label="Church Header Logo Image"
             value={formData.logo_url || ''}
             onChange={(url) => setFormData({ ...formData, logo_url: url })}
-            placeholder="Upload or enter logo path (e.g. home/assets/logo.png)"
+            placeholder="Upload or enter logo URL (e.g. home/assets/church_logo.png)"
           />
         </div>
 
-        {/* Footer & Copyright */}
+        {/* Footer & Legal */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
-            Footer Presentation & Legal Copyright
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+            Footer Presentation & Legal Notice
           </h3>
 
           <div className="form-group">
-            <label className="form-label">Footer Mission Summary Text</label>
+            <label className="form-label">Footer Summary Paragraph</label>
             <textarea
               rows={3}
               className="form-input"
               value={formData.footer_text || ''}
               onChange={(e) => setFormData({ ...formData, footer_text: e.target.value })}
-              placeholder="Welcoming message displayed in the global website footer across all pages..."
+              placeholder="Brief paragraph appearing above footer navigation links..."
             />
           </div>
 
@@ -153,47 +157,47 @@ export function WebsiteSettingsManager() {
               className="form-input"
               value={formData.copyright_text || ''}
               onChange={(e) => setFormData({ ...formData, copyright_text: e.target.value })}
-              placeholder="e.g. © 2026 Grace Fellowship Church. All rights reserved."
+              placeholder="e.g. © 2026 Grace Fellowship Church. All Rights Reserved."
             />
           </div>
         </div>
 
-        {/* SEO Meta Tags */}
+        {/* SEO Meta Information */}
         <div className="panel-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f1e36', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
             Search Engine Optimization (SEO)
           </h3>
 
           <div className="form-group">
-            <label className="form-label">Default Browser Tab Title (SEO Title)</label>
+            <label className="form-label">Global Meta Page Title</label>
             <input
               type="text"
               className="form-input"
               value={formData.seo_title || ''}
               onChange={(e) => setFormData({ ...formData, seo_title: e.target.value })}
-              placeholder="e.g. Grace Fellowship Church - Welcoming, Worshipping & Serving"
+              placeholder="e.g. Grace Fellowship Church | Sunday Worship, Sermons & Community"
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Meta Description (Search Snippet)</label>
+            <label className="form-label">Meta Description</label>
             <textarea
               rows={2}
               className="form-input"
               value={formData.seo_description || ''}
               onChange={(e) => setFormData({ ...formData, seo_description: e.target.value })}
-              placeholder="150-160 characters summarizing the church for Google and Bing search results..."
+              placeholder="Concise church description for Google search results (150-160 chars recommended)..."
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Keywords (Comma Separated)</label>
+            <label className="form-label">Meta Keywords (Comma separated)</label>
             <input
               type="text"
               className="form-input"
               value={formData.seo_keywords || ''}
               onChange={(e) => setFormData({ ...formData, seo_keywords: e.target.value })}
-              placeholder="e.g. Church, Jesus Christ, Sunday Service, Prayer, Bible Study"
+              placeholder="church, worship, sermons, Christian, fellowship, Hyderabad, faith"
             />
           </div>
         </div>
@@ -204,9 +208,10 @@ export function WebsiteSettingsManager() {
             type="submit"
             className="btn-primary"
             disabled={isSaving}
-            style={{ padding: '12px 28px', fontSize: '0.95rem' }}
+            style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
           >
-            {isSaving ? 'Saving...' : '💾 Save Website Settings'}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+            <span>{isSaving ? 'Saving Changes...' : 'Save Website Settings'}</span>
           </button>
         </div>
       </form>
@@ -217,4 +222,3 @@ export function WebsiteSettingsManager() {
 if (typeof window !== 'undefined') {
   window.WebsiteSettingsManager = WebsiteSettingsManager;
 }
-

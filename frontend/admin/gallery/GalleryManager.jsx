@@ -7,6 +7,7 @@ import { ConfirmModal } from '../components/ConfirmModal.jsx';
 /**
  * Gallery CMS Manager Component
  * Upload, categorize, organize, and delete church photos and videos.
+ * Standardized to uniform Navy & White design system with SVG icons.
  */
 export function GalleryManager() {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
@@ -53,6 +54,14 @@ export function GalleryManager() {
   useSafeEffect(() => {
     fetchGallery(selectedCategory);
   }, [selectedCategory]);
+
+  const formatMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+      return url;
+    }
+    return url.startsWith('/') ? url : '/' + url;
+  };
 
   const handleOpenAdd = () => {
     setFormData({
@@ -112,18 +121,19 @@ export function GalleryManager() {
         subtitle="Upload and organize high-resolution photography, baptism captures, youth nights, and worship memories."
         actionLabel="Upload Media"
         onAction={handleOpenAdd}
-        actionIcon="📷"
       />
 
       {successMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#047857', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600 }}>
-          ✓ {successMsg}
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '12px 16px', borderRadius: '8px', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+          <span>{errorMsg}</span>
         </div>
       )}
 
@@ -147,18 +157,20 @@ export function GalleryManager() {
       {isLoading ? (
         <div className="empty-state">Loading Gallery...</div>
       ) : items.length === 0 ? (
-        <div className="panel-card empty-state">
-          <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🖼️</div>
-          <p style={{ fontWeight: 600 }}>No media found in this category</p>
-          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click "Upload Media" to add photos or video highlights.</p>
+        <div className="panel-card empty-state" style={{ padding: '48px 24px', textAlign: 'center' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px auto', color: '#64748b' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+          </div>
+          <p style={{ fontWeight: 700, color: '#0f172a' }}>No media found in this category</p>
+          <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>Click &quot;Upload Media&quot; to add photos or video highlights.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '18px' }}>
           {items.map((item) => (
             <div key={item.id} className="panel-card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ height: '180px', position: 'relative', background: '#0f1e36' }}>
+              <div style={{ height: '180px', position: 'relative', background: '#0f172a' }}>
                 <img
-                  src={item.thumbnail_url || item.media_url}
+                  src={formatMediaUrl(item.thumbnail_url || item.media_url)}
                   alt={item.title || 'Church Media'}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   onError={(e) => {
@@ -170,12 +182,12 @@ export function GalleryManager() {
                     position: 'absolute',
                     top: '10px',
                     left: '10px',
-                    background: 'rgba(15, 30, 54, 0.85)',
+                    background: 'rgba(15, 23, 42, 0.85)',
                     color: '#ffffff',
                     padding: '3px 8px',
                     borderRadius: '4px',
                     fontSize: '0.72rem',
-                    fontWeight: 700,
+                    fontWeight: 600,
                   }}
                 >
                   {item.category || 'General'}
@@ -185,21 +197,34 @@ export function GalleryManager() {
                     position: 'absolute',
                     top: '10px',
                     right: '10px',
-                    background: item.media_type === 'video' ? '#dc2626' : '#0066cc',
+                    background: item.media_type === 'video' ? '#0f172a' : '#2563eb',
                     color: '#ffffff',
                     padding: '3px 8px',
                     borderRadius: '4px',
                     fontSize: '0.72rem',
-                    fontWeight: 700,
+                    fontWeight: 600,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
                   }}
                 >
-                  {item.media_type === 'video' ? '▶ Video' : '📷 Photo'}
+                  {item.media_type === 'video' ? (
+                    <>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
+                      <span>Video</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>
+                      <span>Photo</span>
+                    </>
+                  )}
                 </span>
               </div>
 
               <div style={{ padding: '14px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f1e36' }}>{item.title || 'Untitled Media'}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f172a' }}>{item.title || 'Untitled Media'}</div>
                   {item.caption && (
                     <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '4px', lineHeight: 1.4 }}>
                       {item.caption}
@@ -213,8 +238,12 @@ export function GalleryManager() {
                     className="btn-icon-action delete"
                     onClick={() => setDeleteTarget(item)}
                     title="Delete Media Item"
+                    aria-label="Delete Media Item"
                   >
-                    🗑️
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -264,31 +293,38 @@ export function GalleryManager() {
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     >
-                      <option value="Worship">Worship</option>
-                      <option value="Fellowship">Fellowship</option>
-                      <option value="Youth">Youth</option>
-                      <option value="Outreach">Outreach</option>
-                      <option value="Celebration">Celebration</option>
-                      <option value="Baptism">Baptism</option>
+                      {categories.filter(c => c !== 'All').map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
 
                 <CompMediaUpload
-                  label="Select or Upload Image / Video File *"
+                  label="Media Image / Video Poster File"
                   value={formData.media_url}
-                  onChange={(url) => setFormData({ ...formData, media_url: url })}
-                  placeholder="Upload file or enter relative path (e.g. home/assets/gallery1.jpg)"
+                  onChange={(url) => setFormData({ ...formData, media_url: url, thumbnail_url: url })}
+                  placeholder="Upload media file or enter URL"
                 />
 
                 <div className="form-group">
                   <label className="form-label">Caption / Description</label>
                   <textarea
-                    rows={2}
+                    rows={3}
                     className="form-input"
                     value={formData.caption}
                     onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
-                    placeholder="Short description or scripture quotation associated with this photo..."
+                    placeholder="Describe the moment, scripture reference, or community fellowship..."
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Display Order</label>
+                  <input
+                    type="number"
+                    className="form-input"
+                    value={formData.order_index}
+                    onChange={(e) => setFormData({ ...formData, order_index: parseInt(e.target.value, 10) || 0 })}
                   />
                 </div>
               </div>
@@ -298,7 +334,7 @@ export function GalleryManager() {
                   Cancel
                 </button>
                 <button type="submit" className="btn-primary" disabled={isSubmitting}>
-                  {isSubmitting ? 'Uploading...' : 'Save Media Item'}
+                  {isSubmitting ? 'Saving...' : 'Add to Gallery'}
                 </button>
               </div>
             </form>
@@ -309,8 +345,8 @@ export function GalleryManager() {
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
         <CompConfirm
-          title="Delete Gallery Media"
-          message={`Are you sure you want to delete this media item "${deleteTarget.title || 'Untitled'}"?`}
+          title="Delete Gallery Item"
+          message={`Are you sure you want to remove "${deleteTarget.title || 'this media'}" from the church gallery?`}
           confirmLabel="Delete Media"
           isProcessing={isSubmitting}
           onConfirm={handleDeleteConfirm}
@@ -324,4 +360,3 @@ export function GalleryManager() {
 if (typeof window !== 'undefined') {
   window.GalleryManager = GalleryManager;
 }
-
