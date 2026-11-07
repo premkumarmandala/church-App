@@ -715,6 +715,63 @@
     const pastorTitle = data?.lead_pastor_title || "Senior Pastor";
     const pastorBio = data?.lead_pastor_bio || "Serving with humility and love, Pastor John Samuel has dedicated his life to teaching God's Word with clarity, passion, and pastoral care.";
     const pastorImage = formatMediaUrl(data?.lead_pastor_image, "/admin-data/sermons/thumbnails/sermon_pastor.jpg");
+    const defaultPillars = [{
+      title: "Christ-Centered",
+      desc: "Rooted in the gospel of Jesus Christ as our ultimate foundation.",
+      icon: /*#__PURE__*/React.createElement("svg", {
+        width: "22",
+        height: "22",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: "2.2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      }, /*#__PURE__*/React.createElement("path", {
+        d: "M12 2v20M7 8h10"
+      }))
+    }, {
+      title: "Biblical Authority",
+      desc: "Committed to the inspired, inerrant Word of God for doctrine and daily life.",
+      icon: /*#__PURE__*/React.createElement("svg", {
+        width: "22",
+        height: "22",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      }, /*#__PURE__*/React.createElement("path", {
+        d: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20"
+      }), /*#__PURE__*/React.createElement("path", {
+        d: "M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+      }))
+    }, {
+      title: "Loving Community",
+      desc: "A warm, caring multi-generational family walking in authentic Christian fellowship.",
+      icon: /*#__PURE__*/React.createElement("svg", {
+        width: "22",
+        height: "22",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      }, /*#__PURE__*/React.createElement("path", {
+        d: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+      }), /*#__PURE__*/React.createElement("circle", {
+        cx: "9",
+        cy: "7",
+        r: "4"
+      }), /*#__PURE__*/React.createElement("path", {
+        d: "M23 21v-2a4 4 0 0 0-3-3.87"
+      }), /*#__PURE__*/React.createElement("path", {
+        d: "M16 3.13a4 4 0 0 1 0 7.75"
+      }))
+    }];
+    const pillars = Array.isArray(data?.pillars) && data.pillars.length > 0 ? data.pillars : defaultPillars;
     let beliefs = ["Authority of Holy Scripture", "The Trinity (Father, Son, Holy Spirit)", "Salvation by Grace Through Faith", "Water Baptism and Communion", "The Power of Prayer & Intercession", "Christ-Centered Worship", "Loving Christian Fellowship", "The Great Commission"];
     if (data?.beliefs_json) {
       try {
