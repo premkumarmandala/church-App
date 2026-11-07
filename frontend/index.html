@@ -46,14 +46,16 @@
   <!-- Load Dynamic Church Public Home Website Bundle -->
   <script type="text/babel" src="./home/home.bundle.jsx"></script>
 
-  <!-- Mount Root Application -->
+  <!-- Mount Root Application Fallback -->
   <script type="text/babel">
     function mountHomeApp() {
+      if (window.__HOME_MOUNTED__) return;
       const rootElement = document.getElementById("root");
       if (!rootElement) return;
 
       const App = window.HomePage;
       if (App) {
+        window.__HOME_MOUNTED__ = true;
         const reactRoot = ReactDOM.createRoot(rootElement);
         reactRoot.render(<App />);
       } else {

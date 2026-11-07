@@ -44,11 +44,11 @@
   --color-action-light: var(--color-blue-50);
   --color-action-border: rgba(0, 102, 204, 0.22);
 
-  /* Neutrals & Surfaces (Warm Sacred Alabaster Canvas) */
-  --color-bg-page: #faf5ea;        /* Warm parchment canvas */
+  /* Neutrals & Surfaces (Clean Soft Ivory & White Canvas) */
+  --color-bg-page: #faf9f6;        /* Soft ivory canvas */
   --color-surface: #ffffff;        /* Pure white cards */
-  --color-surface-subtle: #f4eee2; /* Warm parchment subtle backdrop */
-  --color-surface-hover: #faf6ee;  /* Subtle hover */
+  --color-surface-subtle: #f8fafc; /* Subtle light neutral backdrop */
+  --color-surface-hover: #f1f5f9;  /* Subtle hover */
   --color-surface-elevated: #ffffff;
 
   /* Borders & Dividers */

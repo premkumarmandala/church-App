@@ -1733,3 +1733,29 @@ function HomePage() {
 
 
 window.HomePage = HomePage;
+
+// Automatically mount HomePage to #root if present
+(function() {
+  function autoMountHomeApp() {
+    if (window.__HOME_MOUNTED__) return;
+    const rootElement = document.getElementById("root");
+    if (!rootElement) return;
+
+    if (window.ReactDOM && typeof window.ReactDOM.createRoot === "function") {
+      window.__HOME_MOUNTED__ = true;
+      const reactRoot = ReactDOM.createRoot(rootElement);
+      reactRoot.render(React.createElement(HomePage));
+    } else if (window.ReactDOM && typeof window.ReactDOM.render === "function") {
+      window.__HOME_MOUNTED__ = true;
+      ReactDOM.render(React.createElement(HomePage), rootElement);
+    } else {
+      setTimeout(autoMountHomeApp, 50);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", autoMountHomeApp);
+  } else {
+    autoMountHomeApp();
+  }
+})();

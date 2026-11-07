@@ -118,7 +118,35 @@ for (const file of homeBundleFiles) {
     homeBundleContent += `\n/* === Source: ${path.basename(file)} === */\n${content}\n`;
   }
 }
-homeBundleContent += '\nwindow.HomePage = HomePage;\n';
+homeBundleContent += `
+window.HomePage = HomePage;
+
+// Automatically mount HomePage to #root if present
+(function() {
+  function autoMountHomeApp() {
+    if (window.__HOME_MOUNTED__) return;
+    const rootElement = document.getElementById("root");
+    if (!rootElement) return;
+
+    if (window.ReactDOM && typeof window.ReactDOM.createRoot === "function") {
+      window.__HOME_MOUNTED__ = true;
+      const reactRoot = ReactDOM.createRoot(rootElement);
+      reactRoot.render(React.createElement(HomePage));
+    } else if (window.ReactDOM && typeof window.ReactDOM.render === "function") {
+      window.__HOME_MOUNTED__ = true;
+      ReactDOM.render(React.createElement(HomePage), rootElement);
+    } else {
+      setTimeout(autoMountHomeApp, 50);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", autoMountHomeApp);
+  } else {
+    autoMountHomeApp();
+  }
+})();
+`;
 fs.writeFileSync(path.join(homeDir, 'home.bundle.jsx'), homeBundleContent, 'utf8');
 console.log('[Build] Successfully generated home.bundle.jsx.');
 
