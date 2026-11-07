@@ -1,4 +1,5 @@
 /* Church Website Master CMS Bundle */
+(function() {
 const { useState, useEffect, useCallback, useMemo, useRef } = React || window.React;
 
 
@@ -7977,3 +7978,6 @@ if (typeof window !== 'undefined') {
   window.AdminCMSApp = AdminCMSApp;
 }
 
+
+window.AdminCMSApp = AdminCMSApp;
+})();

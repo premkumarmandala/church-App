@@ -32,20 +32,22 @@
     </div>
   </div>
 
-  <!-- Load Pastoral Prayer Feature Bundle & Master CMS Bundle -->
-  <script type="text/babel" src="./prayer-requests/prayer-requests.bundle.jsx"></script>
-  <script type="text/babel" src="./cms.bundle.jsx"></script>
+  <!-- Load Pre-Compiled Pastoral Prayer Feature Bundle & Master CMS Bundle -->
+  <script src="./prayer-requests/prayer-requests.bundle.js"></script>
+  <script src="./cms.bundle.js"></script>
 
   <!-- Mount Root Application -->
-  <script type="text/babel">
+  <script>
     function mountAdminApp() {
       const rootElement = document.getElementById('admin-root');
       if (!rootElement) return;
 
       const App = window.AdminCMSApp || window.AdminPrayerRequests;
-      if (App) {
+      if (App && window.ReactDOM && typeof window.ReactDOM.createRoot === 'function') {
         const root = ReactDOM.createRoot(rootElement);
-        root.render(<App />);
+        root.render(React.createElement(App));
+      } else if (App && window.ReactDOM && typeof window.ReactDOM.render === 'function') {
+        ReactDOM.render(React.createElement(App), rootElement);
       } else {
         setTimeout(mountAdminApp, 50);
       }

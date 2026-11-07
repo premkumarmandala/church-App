@@ -1,4 +1,5 @@
 /* Pastoral Prayer Admin - Feature Bundle */
+(function() {
 const { useState, useEffect, useCallback, useMemo, useRef } = React || window.React;
 
 
@@ -2840,3 +2841,6 @@ if (typeof window !== 'undefined') {
   window.AdminPrayerRequests = AdminPrayerRequests;
 }
 
+
+window.AdminPrayerRequests = AdminPrayerRequests;
+})();

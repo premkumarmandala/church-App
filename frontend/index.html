@@ -27,15 +27,12 @@
   <!-- React 18 & ReactDOM 18 from CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-  <!-- Babel Standalone for in-browser JSX transformation -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
 
   <!-- React Root Container -->
   <div id="root">
-    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; color: #64748b; background: #ffffff;">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; color: #64748b; background: #faf9f6;">
       <div style="text-align: center;">
         <div style="font-size: 2.2rem; margin-bottom: 12px; color: #c59b27;">✝</div>
         <p style="font-size: 1.05rem; font-weight: 700; color: #0f1e36;">Loading Grace Fellowship Church...</p>
@@ -43,21 +40,24 @@
     </div>
   </div>
 
-  <!-- Load Dynamic Church Public Home Website Bundle -->
-  <script type="text/babel" src="./home/home.bundle.jsx"></script>
+  <!-- Load Pre-Compiled Dynamic Church Public Home Website Bundle -->
+  <script src="./home/home.bundle.js"></script>
 
   <!-- Mount Root Application Fallback -->
-  <script type="text/babel">
+  <script>
     function mountHomeApp() {
       if (window.__HOME_MOUNTED__) return;
       const rootElement = document.getElementById("root");
       if (!rootElement) return;
 
       const App = window.HomePage;
-      if (App) {
+      if (App && window.ReactDOM && typeof window.ReactDOM.createRoot === "function") {
         window.__HOME_MOUNTED__ = true;
         const reactRoot = ReactDOM.createRoot(rootElement);
-        reactRoot.render(<App />);
+        reactRoot.render(React.createElement(App));
+      } else if (App && window.ReactDOM && typeof window.ReactDOM.render === "function") {
+        window.__HOME_MOUNTED__ = true;
+        ReactDOM.render(React.createElement(App), rootElement);
       } else {
         setTimeout(mountHomeApp, 50);
       }
