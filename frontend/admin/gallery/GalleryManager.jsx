@@ -302,9 +302,10 @@ export function GalleryManager() {
 
                 <CompMediaUpload
                   label="Media Image / Video Poster File"
+                  folder="gallery"
                   value={formData.media_url}
                   onChange={(url) => setFormData({ ...formData, media_url: url, thumbnail_url: url })}
-                  placeholder="Upload media file or enter URL"
+                  placeholder="admin-data/gallery/photo.jpg"
                 />
 
                 <div className="form-group">

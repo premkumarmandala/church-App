@@ -96,16 +96,22 @@ function HomePage() {
         {/* 5. Service Timings Section */}
         <ServiceTimings data={cmsData?.service_timings} />
 
-        {/* 6. Latest Sermons Section */}
+        {/* 6. About Us Section */}
+        <About data={cmsData?.about} />
+
+        {/* 7. Latest Sermons Section */}
         <LatestSermons data={cmsData?.sermons} />
 
-        {/* 7. Upcoming Events Section */}
+        {/* 8. Upcoming Events Section */}
         <UpcomingEvents data={cmsData?.events} />
 
-        {/* 8. Our Ministries Section */}
+        {/* 9. Our Ministries Section */}
         <Ministries data={cmsData?.ministries} />
 
-        {/* 9. Visit Our Church Section */}
+        {/* 10. Church Gallery Section */}
+        <Gallery data={cmsData?.gallery} />
+
+        {/* 11. Visit Our Church Section */}
         <ChurchLocation data={cmsData?.contact} />
       </main>
 

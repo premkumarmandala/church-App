@@ -222,9 +222,10 @@ export function ContactManager() {
 
           <CompMediaUpload
             label="Sanctuary Exterior / Entrance Photography"
+            folder="home/banners"
             value={formData.church_exterior_image || ''}
             onChange={(url) => setFormData({ ...formData, church_exterior_image: url })}
-            placeholder="Upload or enter church exterior image URL"
+            placeholder="admin-data/home/banners/church_building.jpg"
           />
         </div>
 

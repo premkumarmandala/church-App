@@ -127,9 +127,10 @@ export function WebsiteSettingsManager() {
 
           <CompMediaUpload
             label="Church Header Logo Image"
+            folder="home/banners"
             value={formData.logo_url || ''}
             onChange={(url) => setFormData({ ...formData, logo_url: url })}
-            placeholder="Upload or enter logo URL (e.g. home/assets/church_logo.png)"
+            placeholder="admin-data/home/banners/logo.png"
           />
         </div>
 

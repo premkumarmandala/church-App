@@ -117,13 +117,32 @@ export const cmsApi = {
     return request('/api/admin/cms/overview');
   },
 
-  // Media Upload
-  async uploadMedia(file) {
+  // Media Upload & Registry
+  async uploadMedia(file, folder = 'home/banners', title = '') {
     const formData = new FormData();
     formData.append('file', file);
+    if (folder) {
+      formData.append('folder', folder);
+    }
+    if (title) {
+      formData.append('title', title);
+    }
     return request('/api/admin/cms/upload', {
       method: 'POST',
       body: formData,
+    });
+  },
+
+  async listMedia(contentType = '', status = '', limit = 50, offset = 0) {
+    let url = `/api/admin/cms/media?limit=${limit}&offset=${offset}`;
+    if (contentType) url += `&content_type=${encodeURIComponent(contentType)}`;
+    if (status) url += `&status=${encodeURIComponent(status)}`;
+    return request(url);
+  },
+
+  async deleteMedia(mediaId) {
+    return request(`/api/admin/cms/media/${mediaId}`, {
+      method: 'DELETE',
     });
   },
 

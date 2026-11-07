@@ -10,9 +10,10 @@ export function MediaUploadField({
   label,
   value,
   onChange,
-  placeholder = 'e.g. home/assets/photo.jpg or https://...',
+  placeholder = 'e.g. admin-data/home/banners/photo.jpg or https://...',
   accept = 'image/*',
   helpText,
+  folder = 'home/banners',
 }) {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
   const [isUploading, setIsUploading] = useSafeState(false);
@@ -23,6 +24,9 @@ export function MediaUploadField({
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
       return url;
     }
+    if (url.startsWith('/api/cms/media/')) return url;
+    if (url.startsWith('admin-data/')) return `/api/cms/media/${url}`;
+    if (url.startsWith('/admin-data/')) return `/api/cms/media${url}`;
     return url.startsWith('/') ? url : '/' + url;
   };
 
@@ -34,9 +38,9 @@ export function MediaUploadField({
     setUploadError('');
     try {
       const api = window.cmsApi || cmsApi;
-      const res = await api.uploadMedia(file);
-      if (res && res.url) {
-        onChange(res.url);
+      const res = await api.uploadMedia(file, folder);
+      if (res && (res.relative_path || res.url)) {
+        onChange(res.relative_path || res.url);
       }
     } catch (err) {
       setUploadError(err.message || 'File upload failed');

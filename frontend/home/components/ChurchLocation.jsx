@@ -7,10 +7,21 @@
 function ChurchLocation({ data }) {
   const [zoomLevel, setZoomLevel] = React.useState(14);
 
+  const formatMediaUrl = (url, fallback = "/admin-data/home/banners/church_building.jpg") => {
+    if (!url) return fallback;
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
+      return url;
+    }
+    if (url.startsWith("/api/cms/media/")) return url;
+    if (url.startsWith("admin-data/")) return `/api/cms/media/${url}`;
+    if (url.startsWith("/admin-data/")) return `/api/cms/media${url}`;
+    return url.startsWith("/") ? url : "/" + url;
+  };
+
   const handleZoomIn = () => setZoomLevel((z) => Math.min(z + 1, 18));
   const handleZoomOut = () => setZoomLevel((z) => Math.max(z - 1, 10));
 
-  const exteriorImage = data?.church_exterior_image || "home/assets/church_building.jpg";
+  const exteriorImage = formatMediaUrl(data?.church_exterior_image, "/admin-data/home/banners/church_building.jpg");
   const addressLine1 = data?.address_line1 || "123 Faith Avenue";
   const addressLine2 = data?.address_line2 ? `${data.address_line2}, ` : "";
   const cityStateZip = data?.city_state_zip || "Hyderabad, Telangana 500001";

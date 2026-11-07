@@ -120,13 +120,32 @@ const cmsApi = {
     return request('/api/admin/cms/overview');
   },
 
-  // Media Upload
-  async uploadMedia(file) {
+  // Media Upload & Registry
+  async uploadMedia(file, folder = 'home/banners', title = '') {
     const formData = new FormData();
     formData.append('file', file);
+    if (folder) {
+      formData.append('folder', folder);
+    }
+    if (title) {
+      formData.append('title', title);
+    }
     return request('/api/admin/cms/upload', {
       method: 'POST',
       body: formData,
+    });
+  },
+
+  async listMedia(contentType = '', status = '', limit = 50, offset = 0) {
+    let url = `/api/admin/cms/media?limit=${limit}&offset=${offset}`;
+    if (contentType) url += `&content_type=${encodeURIComponent(contentType)}`;
+    if (status) url += `&status=${encodeURIComponent(status)}`;
+    return request(url);
+  },
+
+  async deleteMedia(mediaId) {
+    return request(`/api/admin/cms/media/${mediaId}`, {
+      method: 'DELETE',
     });
   },
 
@@ -521,9 +540,10 @@ function MediaUploadField({
   label,
   value,
   onChange,
-  placeholder = 'e.g. home/assets/photo.jpg or https://...',
+  placeholder = 'e.g. admin-data/home/banners/photo.jpg or https://...',
   accept = 'image/*',
   helpText,
+  folder = 'home/banners',
 }) {
   const useSafeState = typeof useState !== 'undefined' ? useState : (window.React ? window.React.useState : null);
   const [isUploading, setIsUploading] = useSafeState(false);
@@ -534,6 +554,9 @@ function MediaUploadField({
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
       return url;
     }
+    if (url.startsWith('/api/cms/media/')) return url;
+    if (url.startsWith('admin-data/')) return `/api/cms/media/${url}`;
+    if (url.startsWith('/admin-data/')) return `/api/cms/media${url}`;
     return url.startsWith('/') ? url : '/' + url;
   };
 
@@ -545,9 +568,9 @@ function MediaUploadField({
     setUploadError('');
     try {
       const api = window.cmsApi || cmsApi;
-      const res = await api.uploadMedia(file);
-      if (res && res.url) {
-        onChange(res.url);
+      const res = await api.uploadMedia(file, folder);
+      if (res && (res.relative_path || res.url)) {
+        onChange(res.relative_path || res.url);
       }
     } catch (err) {
       setUploadError(err.message || 'File upload failed');
@@ -4050,9 +4073,10 @@ function HomeManager() {
 
         <CompMediaUpload
           label="Hero Background Banner Image"
+          folder="home/banners"
           value={formData.hero_bg_image}
           onChange={(url) => setFormData({ ...formData, hero_bg_image: url })}
-          placeholder="home/assets/hero_cross_sunset.jpg"
+          placeholder="admin-data/home/banners/hero_cross_sunset.jpg"
         />
 
         <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginTop: '12px' }}>
@@ -4392,15 +4416,17 @@ function AboutManager() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
             <CompMediaUpload
               label="Pastor Portrait Photo"
+              folder="sermons/thumbnails"
               value={formData.lead_pastor_image || ''}
               onChange={(url) => setFormData({ ...formData, lead_pastor_image: url })}
-              placeholder="Upload or enter image path (e.g. home/assets/pastor.jpg)"
+              placeholder="admin-data/sermons/thumbnails/pastor.jpg"
             />
             <CompMediaUpload
               label="Church Campus / Sanctuary Exterior"
+              folder="home/banners"
               value={formData.campus_image || ''}
               onChange={(url) => setFormData({ ...formData, campus_image: url })}
-              placeholder="Upload or enter image path (e.g. home/assets/campus.jpg)"
+              placeholder="admin-data/home/banners/church_building.jpg"
             />
           </div>
         </div>
@@ -5023,9 +5049,10 @@ function SermonsManager() {
 
                 <CompMediaUpload
                   label="Sermon Thumbnail Image"
+                  folder="sermons/thumbnails"
                   value={formData.thumbnail}
                   onChange={(url) => setFormData({ ...formData, thumbnail: url })}
-                  placeholder="Upload or enter thumbnail URL (e.g. home/assets/sermon1.jpg)"
+                  placeholder="admin-data/sermons/thumbnails/sermon.jpg"
                 />
 
                 <div className="form-group">
@@ -5512,9 +5539,10 @@ function EventsManager() {
 
                 <CompMediaUpload
                   label="Event Poster / Hero Banner"
+                  folder="events"
                   value={formData.image}
                   onChange={(url) => setFormData({ ...formData, image: url })}
-                  placeholder="Upload or enter poster image URL"
+                  placeholder="admin-data/events/poster.jpg"
                 />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
@@ -5956,9 +5984,10 @@ function MinistriesManager() {
 
                 <CompMediaUpload
                   label="Ministry Group Photo"
+                  folder="ministries"
                   value={formData.photo}
                   onChange={(url) => setFormData({ ...formData, photo: url })}
-                  placeholder="Upload or enter ministry photo URL"
+                  placeholder="admin-data/ministries/photo.jpg"
                 />
 
                 <div className="form-group">
@@ -6333,9 +6362,10 @@ function GalleryManager() {
 
                 <CompMediaUpload
                   label="Media Image / Video Poster File"
+                  folder="gallery"
                   value={formData.media_url}
                   onChange={(url) => setFormData({ ...formData, media_url: url, thumbnail_url: url })}
-                  placeholder="Upload media file or enter URL"
+                  placeholder="admin-data/gallery/photo.jpg"
                 />
 
                 <div className="form-group">
@@ -7171,9 +7201,10 @@ function AnnouncementsManager() {
 
                 <CompMediaUpload
                   label="Bulletin Banner Graphic (Optional)"
+                  folder="home/announcements"
                   value={formData.image}
                   onChange={(url) => setFormData({ ...formData, image: url })}
-                  placeholder="Upload or enter bulletin banner image"
+                  placeholder="admin-data/home/announcements/banner.jpg"
                 />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
@@ -7469,9 +7500,10 @@ function ContactManager() {
 
           <CompMediaUpload
             label="Sanctuary Exterior / Entrance Photography"
+            folder="home/banners"
             value={formData.church_exterior_image || ''}
             onChange={(url) => setFormData({ ...formData, church_exterior_image: url })}
-            placeholder="Upload or enter church exterior image URL"
+            placeholder="admin-data/home/banners/church_building.jpg"
           />
         </div>
 
@@ -7626,9 +7658,10 @@ function WebsiteSettingsManager() {
 
           <CompMediaUpload
             label="Church Header Logo Image"
+            folder="home/banners"
             value={formData.logo_url || ''}
             onChange={(url) => setFormData({ ...formData, logo_url: url })}
-            placeholder="Upload or enter logo URL (e.g. home/assets/church_logo.png)"
+            placeholder="admin-data/home/banners/logo.png"
           />
         </div>
 

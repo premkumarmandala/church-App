@@ -1,8 +1,11 @@
 """Business logic, default data seeding, and file uploads for Church Website CMS."""
+import logging
+import mimetypes
 import os
 import re
 import shutil
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 from fastapi import HTTPException, UploadFile, status
@@ -14,6 +17,7 @@ from cms.models import (
     AdminUser,
     Announcement,
     BibleDisplaySettings,
+    CMSMedia,
     ContactInfo,
     Event,
     GalleryItem,
@@ -25,9 +29,53 @@ from cms.models import (
 )
 from cms.repository import cms_repository
 
+logger = logging.getLogger("church.cms.services")
 
-CMS_UPLOAD_DIR = settings.BACKEND_DIR / "storage" / "cms_uploads"
-CMS_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+# Allowed upload extensions and their classifications
+ALLOWED_EXTENSIONS = {
+    # Images
+    ".jpg": "image",
+    ".jpeg": "image",
+    ".png": "image",
+    ".webp": "image",
+    ".svg": "image",
+    ".gif": "image",
+    # Audio
+    ".mp3": "audio",
+    ".wav": "audio",
+    ".m4a": "audio",
+    ".aac": "audio",
+    ".ogg": "audio",
+    # Video
+    ".mp4": "video",
+    ".webm": "video",
+    ".mov": "video",
+    ".avi": "video",
+    ".mkv": "video",
+    # Documents
+    ".pdf": "document",
+    ".docx": "document",
+    ".doc": "document",
+    ".txt": "document",
+}
+
+# Mapping of accepted feature alias names to central admin-data folder paths
+FEATURE_FOLDERS = {
+    "home/banners": "home/banners",
+    "home/announcements": "home/announcements",
+    "banners": "home/banners",
+    "announcements": "home/announcements",
+    "sermons/videos": "sermons/videos",
+    "sermons/thumbnails": "sermons/thumbnails",
+    "sermons": "sermons/thumbnails",
+    "events": "events",
+    "ministries": "ministries",
+    "gallery": "gallery",
+    "documents": "documents",
+    "home": "home/banners",
+    "about": "home/banners",
+    "general": "home/banners",
+}
 
 
 class CMSService:
@@ -423,30 +471,184 @@ class CMSService:
             "gallery": [g.to_dict() for g in cms_repository.list_gallery(db, only_published=True)],
         }
 
-    async def save_uploaded_media(self, file: UploadFile) -> dict[str, Any]:
-        """Save uploaded media file and return accessible URL path."""
+    async def save_uploaded_media(
+        self,
+        file: UploadFile,
+        db: Session,
+        folder: Optional[str] = "home/banners",
+        title: Optional[str] = "",
+        description: Optional[str] = "",
+    ) -> dict[str, Any]:
+        """Save uploaded media file into backend/admin-data/{folder} and register in PostgreSQL."""
         if not file.filename:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No filename provided.")
 
-        clean_name = re.sub(r"[^a-zA-Z0-9._-]", "_", Path(file.filename).name)
-        ext = Path(clean_name).suffix.lower()
-        unique_name = f"{uuid.uuid4().hex[:8]}_{clean_name}"
+        raw_name = Path(file.filename).name
+        ext = Path(raw_name).suffix.lower()
 
-        # Target storage location
-        target_dir = settings.FRONTEND_DIR / "home" / "assets" / "uploads"
+        # Validate file extension
+        if ext not in ALLOWED_EXTENSIONS:
+            allowed_list = ", ".join(sorted(ALLOWED_EXTENSIONS.keys()))
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Disallowed file type '{ext}'. Allowed types: {allowed_list}",
+            )
+
+        file_type = ALLOWED_EXTENSIONS[ext]
+
+        # Resolve target folder inside admin-data
+        folder_key = (folder or "home/banners").strip().lower().replace("\\", "/")
+        if folder_key.startswith("admin-data/"):
+            folder_key = folder_key[len("admin-data/"):]
+
+        # Disallow uploading to private prayer-requests through general CMS endpoint
+        if folder_key.startswith("prayer-requests") or "prayer-requests" in folder_key:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Direct upload to private prayer-requests folder is not permitted.",
+            )
+
+        resolved_folder = FEATURE_FOLDERS.get(folder_key, "home/banners")
+        target_dir = settings.ADMIN_DATA_DIR / resolved_folder
         target_dir.mkdir(parents=True, exist_ok=True)
+
+        # Path traversal guard
+        try:
+            if not target_dir.resolve().is_relative_to(settings.ADMIN_DATA_DIR.resolve()):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid target folder path.")
+        except (ValueError, AttributeError):
+            if not str(target_dir.resolve()).startswith(str(settings.ADMIN_DATA_DIR.resolve())):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid target folder path.")
+
+        # Generate unique safe file name
+        clean_stem = re.sub(r"[^a-zA-Z0-9_-]", "_", Path(raw_name).stem)[:40] or "media"
+        unique_name = f"{clean_stem}_{uuid.uuid4().hex[:8]}{ext}"
         target_path = target_dir / unique_name
 
-        with open(target_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+        # Stream write with size limit validation
+        written_size = 0
+        try:
+            with open(target_path, "wb") as buffer:
+                while chunk := await file.read(1024 * 64):
+                    written_size += len(chunk)
+                    if written_size > settings.MAX_MEDIA_SIZE_BYTES:
+                        buffer.close()
+                        target_path.unlink(missing_ok=True)
+                        raise HTTPException(
+                            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                            detail=f"File exceeds maximum allowed size of {settings.MAX_MEDIA_SIZE_BYTES // (1024 * 1024)} MB.",
+                        )
+                    buffer.write(chunk)
+        except HTTPException:
+            target_path.unlink(missing_ok=True)
+            raise
+        except Exception as write_err:
+            target_path.unlink(missing_ok=True)
+            logger.error("Failed to write uploaded file to disk: %s", str(write_err))
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to save file on server: {str(write_err)}",
+            )
 
-        relative_url = f"home/assets/uploads/{unique_name}"
+        relative_path = f"admin-data/{resolved_folder}/{unique_name}"
+        public_url = f"/api/cms/media/{relative_path}"
+
+        # Detect MIME type
+        mime = file.content_type
+        if not mime or mime == "application/octet-stream":
+            guessed, _ = mimetypes.guess_type(str(target_path))
+            mime = guessed or "application/octet-stream"
+
+        # Register metadata in PostgreSQL cms_media table
+        try:
+            media_item = cms_repository.create_media(
+                db,
+                {
+                    "title": (title or clean_stem).strip(),
+                    "description": (description or "").strip(),
+                    "content_type": resolved_folder,
+                    "file_name": file.filename,
+                    "file_path": relative_path,
+                    "file_type": file_type,
+                    "file_size": written_size,
+                    "mime_type": mime,
+                    "status": "active",
+                    "display_order": 0,
+                    "published_at": datetime.now(timezone.utc),
+                },
+            )
+            media_id = media_item.id
+        except Exception as db_err:
+            target_path.unlink(missing_ok=True)
+            logger.error("Database registration failed for uploaded file; file cleaned up: %s", str(db_err))
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Database record creation failed. Upload rolled back safely.",
+            )
+
         return {
+            "id": media_id,
             "filename": unique_name,
             "original_filename": file.filename,
-            "url": relative_url,
-            "size": target_path.stat().st_size,
+            "url": public_url,
+            "relative_path": relative_path,
+            "size": written_size,
+            "mime_type": mime,
+            "folder": resolved_folder,
+            "file_type": file_type,
         }
+
+    def safely_delete_media_file(
+        self,
+        db: Session,
+        file_path: str,
+        exclude_table: Optional[str] = None,
+        exclude_id: Optional[int] = None,
+    ) -> bool:
+        """Safely remove a media file from disk and media registry only if no other entity references it."""
+        if not file_path:
+            return False
+
+        # If still referenced elsewhere, preserve the file
+        if cms_repository.is_media_referenced(db, file_path, exclude_table=exclude_table, exclude_id=exclude_id):
+            logger.info("File %s is referenced by another entity; preserving physical file.", file_path)
+            return False
+
+        # Normalize relative path
+        clean = file_path.strip().lstrip("/\\")
+        if clean.startswith("api/cms/media/"):
+            clean = clean[len("api/cms/media/"):]
+        if clean.startswith("admin-data/"):
+            clean = clean[len("admin-data/"):]
+
+        # Delete physical file from admin-data
+        disk_path = (settings.ADMIN_DATA_DIR / clean).resolve()
+        try:
+            if disk_path.is_relative_to(settings.ADMIN_DATA_DIR.resolve()) and disk_path.exists() and disk_path.is_file():
+                disk_path.unlink(missing_ok=True)
+                logger.info("Deleted physical media file: %s", disk_path)
+        except Exception as e:
+            logger.warning("Error deleting media file %s: %s", disk_path, str(e))
+
+        # Delete cms_media record if exists
+        media_rec = cms_repository.get_media_by_path(db, file_path)
+        if media_rec:
+            db.delete(media_rec)
+            db.commit()
+
+        return True
+
+    def replace_media_file(
+        self,
+        db: Session,
+        old_path: Optional[str],
+        new_path: Optional[str],
+        exclude_table: Optional[str] = None,
+        exclude_id: Optional[int] = None,
+    ) -> None:
+        """Safely clean up replaced media file if not shared."""
+        if old_path and new_path and old_path != new_path:
+            self.safely_delete_media_file(db, old_path, exclude_table=exclude_table, exclude_id=exclude_id)
 
 
 cms_service = CMSService()

@@ -1,6 +1,6 @@
 /* ==========================================================================
    Hero Component - Grace Fellowship Church
-   Hero banner with sunset cross background, Scripture verse, and CTA buttons
+   Hero banner with clean deep navy gradient, Scripture verse, and CTA buttons
    Dynamically integrated with Church CMS API.
    ========================================================================== */
 
@@ -15,7 +15,6 @@ function Hero({ data }) {
     }
   };
 
-  const bgImage = data?.hero_bg_image || "home/assets/hero_cross_sunset.jpg";
   const welcomeText = data?.welcome_text || "Welcome to";
   const heroTitle = data?.hero_title || "Grace Fellowship Church";
   const heroSubtitle = data?.hero_subtitle || "A family of believers growing together in Christ's love.";
@@ -29,9 +28,6 @@ function Hero({ data }) {
     <section
       id="home"
       className="hero-section"
-      style={{
-        backgroundImage: `url('${bgImage}')`
-      }}
     >
       <div className="hero-overlay" />
       <div className="home-container" style={{ width: "100%" }}>

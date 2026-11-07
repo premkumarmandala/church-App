@@ -1,9 +1,12 @@
 """API Route definitions for Church Website CMS."""
 from typing import Any, Optional
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status, Response
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+import mimetypes
 
 from app.auth.security import get_current_admin
+from app.config import settings
 from app.db.connection import get_db
 from cms.repository import cms_repository
 from cms.schemas import (
@@ -74,6 +77,76 @@ def get_public_gallery(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
     return [g.to_dict() for g in cms_repository.list_gallery(db, only_published=True)]
 
 
+@router.get(
+    "/api/cms/media/{file_path:path}",
+    summary="Securely serve public media assets",
+    description="Maps public requests to backend/admin-data while strictly guarding private directories and preventing path traversal.",
+)
+def get_public_media(file_path: str) -> Response:
+    """Serve public media files from backend/admin-data with strict security and caching."""
+    clean_subpath = file_path.strip("/\\")
+
+    # Strip redundant leading 'admin-data/' if included
+    if clean_subpath.startswith("admin-data/"):
+        clean_subpath = clean_subpath[len("admin-data/"):]
+    elif clean_subpath.startswith("admin-data\\"):
+        clean_subpath = clean_subpath[len("admin-data\\"):]
+
+    # STRICT SECURITY: Deny access to private prayer request attachments
+    norm_parts = [p.lower() for p in clean_subpath.replace("\\", "/").split("/")]
+    if "prayer-requests" in norm_parts or clean_subpath.startswith("prayer-requests"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access to private prayer attachments is restricted. Use authorized pastoral endpoints.",
+        )
+
+    # Resolve against ADMIN_DATA_DIR
+    target_file = (settings.ADMIN_DATA_DIR / clean_subpath).resolve()
+    admin_data_root = settings.ADMIN_DATA_DIR.resolve()
+
+    # Path traversal validation
+    try:
+        if not target_file.is_relative_to(admin_data_root):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied.")
+    except (ValueError, AttributeError):
+        if not str(target_file).startswith(str(admin_data_root)):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied.")
+
+    # Check existence on disk (with fallback to frontend/home/assets for seamless backwards compatibility)
+    if not target_file.exists() or not target_file.is_file():
+        alt_legacy = (settings.FRONTEND_DIR / "home" / "assets" / clean_subpath).resolve()
+        if alt_legacy.exists() and alt_legacy.is_file():
+            target_file = alt_legacy
+        else:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Media file not found.")
+
+    # Determine accurate MIME type
+    mime, _ = mimetypes.guess_type(str(target_file))
+    if not mime:
+        ext = target_file.suffix.lower()
+        mime_map = {
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".png": "image/png",
+            ".webp": "image/webp",
+            ".svg": "image/svg+xml",
+            ".mp4": "video/mp4",
+            ".webm": "video/webm",
+            ".mp3": "audio/mpeg",
+            ".pdf": "application/pdf",
+        }
+        mime = mime_map.get(ext, "application/octet-stream")
+
+    return FileResponse(
+        path=str(target_file),
+        media_type=mime,
+        headers={
+            "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
 # ============================================================================
 # Admin CMS Management Endpoints (Protected by JWT)
 # ============================================================================
@@ -94,22 +167,80 @@ def get_cms_overview(
 @router.post(
     "/api/admin/cms/upload",
     summary="Upload media file for CMS modules",
-    description="Saves uploaded media (images, posters, thumbnails) and returns public URL.",
+    description="Saves uploaded media into backend/admin-data/{folder} and returns public URL.",
 )
 async def upload_cms_media(
     file: UploadFile = File(...),
+    folder: Optional[str] = Form("home/banners"),
+    title: Optional[str] = Form(""),
+    description: Optional[str] = Form(""),
     admin: dict = Depends(get_current_admin),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
-    result = await cms_service.save_uploaded_media(file)
+    result = await cms_service.save_uploaded_media(
+        file,
+        db,
+        folder=folder,
+        title=title,
+        description=description,
+    )
     cms_repository.add_audit_log(
         db,
         admin_username=admin["username"],
         module="Media",
         action="Upload",
-        details=f"Uploaded file: {result['filename']}",
+        details=f"Uploaded file: {result['filename']} to {result.get('folder', 'home/banners')}",
     )
     return result
+
+
+@router.get(
+    "/api/admin/cms/media",
+    summary="List uploaded media registry items",
+    description="Returns metadata of uploaded media files stored in backend/admin-data/.",
+)
+def list_admin_media(
+    content_type: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+    limit: int = Query(50),
+    offset: int = Query(0),
+    admin: dict = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    items, total = cms_repository.list_media(db, content_type=content_type, status=status, limit=limit, offset=offset)
+    return {"items": [item.to_dict() for item in items], "total": total}
+
+
+@router.delete(
+    "/api/admin/cms/media/{media_id}",
+    summary="Delete a media asset from registry and disk",
+    description="Safely removes a media asset and file if not referenced by website content.",
+)
+def delete_admin_media(
+    media_id: int,
+    admin: dict = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    media = cms_repository.get_media(db, media_id)
+    if not media:
+        raise HTTPException(status_code=404, detail="Media not found.")
+
+    if cms_repository.is_media_referenced(db, media.file_path):
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete media file because it is currently referenced by active church content.",
+        )
+
+    cms_service.safely_delete_media_file(db, media.file_path)
+    cms_repository.delete_media(db, media_id)
+    cms_repository.add_audit_log(
+        db,
+        admin_username=admin["username"],
+        module="Media",
+        action="Delete",
+        details=f"Deleted media ID {media_id}: {media.file_name}",
+    )
+    return {"status": "deleted", "id": media_id}
 
 
 # ----------------------------------------------------------------------------
@@ -228,9 +359,24 @@ def update_admin_sermon(
     admin: dict = Depends(get_current_admin),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
+    existing = cms_repository.get_sermon(db, sermon_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="Sermon not found.")
+    old_thumb = existing.thumbnail
+    old_video = existing.video_url
+    old_audio = existing.audio_url
+
     item = cms_repository.update_sermon(db, sermon_id, payload.model_dump(exclude_unset=True))
     if not item:
         raise HTTPException(status_code=404, detail="Sermon not found.")
+
+    if item.thumbnail != old_thumb:
+        cms_service.replace_media_file(db, old_thumb, item.thumbnail, exclude_table="cms_sermons", exclude_id=sermon_id)
+    if item.video_url != old_video:
+        cms_service.replace_media_file(db, old_video, item.video_url, exclude_table="cms_sermons", exclude_id=sermon_id)
+    if item.audio_url != old_audio:
+        cms_service.replace_media_file(db, old_audio, item.audio_url, exclude_table="cms_sermons", exclude_id=sermon_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Sermons", "Update", f"Updated sermon: {item.title}")
     return item.to_dict()
 
@@ -242,10 +388,19 @@ def delete_admin_sermon(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     item = cms_repository.get_sermon(db, sermon_id)
-    title = item.title if item else str(sermon_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Sermon not found.")
+    title = item.title
+    media_paths = [item.thumbnail, item.video_url, item.audio_url]
+
     success = cms_repository.delete_sermon(db, sermon_id)
     if not success:
         raise HTTPException(status_code=404, detail="Sermon not found.")
+
+    for m_path in media_paths:
+        if m_path:
+            cms_service.safely_delete_media_file(db, m_path, exclude_table="cms_sermons", exclude_id=sermon_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Sermons", "Delete", f"Deleted sermon: {title}")
     return {"status": "deleted", "id": sermon_id}
 
@@ -294,9 +449,18 @@ def update_admin_event(
     admin: dict = Depends(get_current_admin),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
+    existing = cms_repository.get_event(db, event_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="Event not found.")
+    old_image = existing.image
+
     item = cms_repository.update_event(db, event_id, payload.model_dump(exclude_unset=True))
     if not item:
         raise HTTPException(status_code=404, detail="Event not found.")
+
+    if item.image != old_image:
+        cms_service.replace_media_file(db, old_image, item.image, exclude_table="cms_events", exclude_id=event_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Events", "Update", f"Updated event: {item.title}")
     return item.to_dict()
 
@@ -308,10 +472,18 @@ def delete_admin_event(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     item = cms_repository.get_event(db, event_id)
-    title = item.title if item else str(event_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Event not found.")
+    title = item.title
+    img_path = item.image
+
     success = cms_repository.delete_event(db, event_id)
     if not success:
         raise HTTPException(status_code=404, detail="Event not found.")
+
+    if img_path:
+        cms_service.safely_delete_media_file(db, img_path, exclude_table="cms_events", exclude_id=event_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Events", "Delete", f"Deleted event: {title}")
     return {"status": "deleted", "id": event_id}
 
@@ -360,9 +532,18 @@ def update_admin_ministry(
     admin: dict = Depends(get_current_admin),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
+    existing = cms_repository.get_ministry(db, ministry_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="Ministry not found.")
+    old_photo = existing.photo
+
     item = cms_repository.update_ministry(db, ministry_id, payload.model_dump(exclude_unset=True))
     if not item:
         raise HTTPException(status_code=404, detail="Ministry not found.")
+
+    if item.photo != old_photo:
+        cms_service.replace_media_file(db, old_photo, item.photo, exclude_table="cms_ministries", exclude_id=ministry_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Ministries", "Update", f"Updated ministry: {item.name}")
     return item.to_dict()
 
@@ -374,10 +555,18 @@ def delete_admin_ministry(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     item = cms_repository.get_ministry(db, ministry_id)
-    name = item.name if item else str(ministry_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Ministry not found.")
+    name = item.name
+    photo_path = item.photo
+
     success = cms_repository.delete_ministry(db, ministry_id)
     if not success:
         raise HTTPException(status_code=404, detail="Ministry not found.")
+
+    if photo_path:
+        cms_service.safely_delete_media_file(db, photo_path, exclude_table="cms_ministries", exclude_id=ministry_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Ministries", "Delete", f"Deleted ministry: {name}")
     return {"status": "deleted", "id": ministry_id}
 
@@ -414,10 +603,21 @@ def delete_admin_gallery_item(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     item = cms_repository.get_gallery_item(db, item_id)
-    title = item.title if item else str(item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Gallery item not found.")
+    title = item.title
+    media_url = item.media_url
+    thumb_url = item.thumbnail_url
+
     success = cms_repository.delete_gallery_item(db, item_id)
     if not success:
         raise HTTPException(status_code=404, detail="Gallery item not found.")
+
+    if media_url:
+        cms_service.safely_delete_media_file(db, media_url, exclude_table="cms_gallery", exclude_id=item_id)
+    if thumb_url:
+        cms_service.safely_delete_media_file(db, thumb_url, exclude_table="cms_gallery", exclude_id=item_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Gallery", "Delete", f"Deleted gallery media: {title}")
     return {"status": "deleted", "id": item_id}
 
@@ -507,9 +707,18 @@ def update_admin_announcement(
     admin: dict = Depends(get_current_admin),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
+    existing = cms_repository.get_announcement(db, announcement_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="Announcement not found.")
+    old_image = existing.image
+
     item = cms_repository.update_announcement(db, announcement_id, payload.model_dump(exclude_unset=True))
     if not item:
         raise HTTPException(status_code=404, detail="Announcement not found.")
+
+    if item.image != old_image:
+        cms_service.replace_media_file(db, old_image, item.image, exclude_table="cms_announcements", exclude_id=announcement_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Announcements", "Update", f"Updated announcement: {item.title}")
     return item.to_dict()
 
@@ -521,10 +730,18 @@ def delete_admin_announcement(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     item = cms_repository.get_announcement(db, announcement_id)
-    title = item.title if item else str(announcement_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Announcement not found.")
+    title = item.title
+    img_path = item.image
+
     success = cms_repository.delete_announcement(db, announcement_id)
     if not success:
         raise HTTPException(status_code=404, detail="Announcement not found.")
+
+    if img_path:
+        cms_service.safely_delete_media_file(db, img_path, exclude_table="cms_announcements", exclude_id=announcement_id)
+
     cms_repository.add_audit_log(db, admin["username"], "Announcements", "Delete", f"Deleted announcement: {title}")
     return {"status": "deleted", "id": announcement_id}
 

@@ -8,6 +8,7 @@ from cms.models import (
     Announcement,
     AuditLog,
     BibleDisplaySettings,
+    CMSMedia,
     ContactInfo,
     Event,
     GalleryItem,
@@ -435,6 +436,122 @@ class CMSRepository:
             "service_timings": timings_count,
             "recent_activities": [log.to_dict() for log in recent_logs],
         }
+
+    # ------------------------------------------------------------------------
+    # Media Registry Operations
+    # ------------------------------------------------------------------------
+    def create_media(self, db: Session, media_dict: dict[str, Any]) -> CMSMedia:
+        item = CMSMedia(**media_dict)
+        db.add(item)
+        db.commit()
+        db.refresh(item)
+        return item
+
+    def get_media(self, db: Session, media_id: int) -> Optional[CMSMedia]:
+        return db.query(CMSMedia).filter(CMSMedia.id == media_id).first()
+
+    def get_media_by_path(self, db: Session, file_path: str) -> Optional[CMSMedia]:
+        clean_path = file_path.strip().lstrip("/")
+        return db.query(CMSMedia).filter(CMSMedia.file_path == clean_path).first()
+
+    def list_media(
+        self,
+        db: Session,
+        content_type: Optional[str] = None,
+        status: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> tuple[list[CMSMedia], int]:
+        query = db.query(CMSMedia)
+        if content_type:
+            query = query.filter(CMSMedia.content_type == content_type)
+        if status:
+            query = query.filter(CMSMedia.status == status)
+        total = query.count()
+        items = query.order_by(CMSMedia.id.desc()).offset(offset).limit(limit).all()
+        return items, total
+
+    def delete_media(self, db: Session, media_id: int) -> bool:
+        item = self.get_media(db, media_id)
+        if not item:
+            return False
+        db.delete(item)
+        db.commit()
+        return True
+
+    def is_media_referenced(
+        self,
+        db: Session,
+        file_path: str,
+        exclude_table: Optional[str] = None,
+        exclude_id: Optional[int] = None,
+    ) -> bool:
+        """Check if a media file path is referenced by any CMS entities."""
+        if not file_path:
+            return False
+
+        clean = file_path.strip().lstrip("/")
+        variants = {clean, f"/{clean}", clean.replace("admin-data/", ""), file_path}
+
+        # 1. Home Section
+        home = db.query(HomeSection).filter(HomeSection.id == 1).first()
+        if home and home.hero_bg_image in variants:
+            if not (exclude_table == "cms_home_sections" and exclude_id == 1):
+                return True
+
+        # 2. About Section
+        about = db.query(AboutSection).filter(AboutSection.id == 1).first()
+        if about and (about.lead_pastor_image in variants or about.campus_image in variants):
+            if not (exclude_table == "cms_about_section" and exclude_id == 1):
+                return True
+
+        # 3. Contact Info
+        contact = db.query(ContactInfo).filter(ContactInfo.id == 1).first()
+        if contact and contact.church_exterior_image in variants:
+            if not (exclude_table == "cms_contact_info" and exclude_id == 1):
+                return True
+
+        # 4. Announcements
+        ann_q = db.query(Announcement)
+        if exclude_table == "cms_announcements" and exclude_id:
+            ann_q = ann_q.filter(Announcement.id != exclude_id)
+        for ann in ann_q.all():
+            if ann.image in variants:
+                return True
+
+        # 5. Sermons
+        serm_q = db.query(Sermon)
+        if exclude_table == "cms_sermons" and exclude_id:
+            serm_q = serm_q.filter(Sermon.id != exclude_id)
+        for serm in serm_q.all():
+            if serm.thumbnail in variants or serm.video_url in variants or serm.audio_url in variants:
+                return True
+
+        # 6. Events
+        ev_q = db.query(Event)
+        if exclude_table == "cms_events" and exclude_id:
+            ev_q = ev_q.filter(Event.id != exclude_id)
+        for ev in ev_q.all():
+            if ev.image in variants:
+                return True
+
+        # 7. Ministries
+        min_q = db.query(Ministry)
+        if exclude_table == "cms_ministries" and exclude_id:
+            min_q = min_q.filter(Ministry.id != exclude_id)
+        for m in min_q.all():
+            if m.photo in variants:
+                return True
+
+        # 8. Gallery
+        gal_q = db.query(GalleryItem)
+        if exclude_table == "cms_gallery" and exclude_id:
+            gal_q = gal_q.filter(GalleryItem.id != exclude_id)
+        for g in gal_q.all():
+            if g.media_url in variants or g.thumbnail_url in variants:
+                return True
+
+        return False
 
 
 cms_repository = CMSRepository()

@@ -149,9 +149,10 @@ export function HomeManager() {
 
         <CompMediaUpload
           label="Hero Background Banner Image"
+          folder="home/banners"
           value={formData.hero_bg_image}
           onChange={(url) => setFormData({ ...formData, hero_bg_image: url })}
-          placeholder="home/assets/hero_cross_sunset.jpg"
+          placeholder="admin-data/home/banners/hero_cross_sunset.jpg"
         />
 
         <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px', marginTop: '12px' }}>

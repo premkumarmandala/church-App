@@ -7,44 +7,16 @@
 function LatestSermons({ data }) {
   const [activeSermon, setActiveSermon] = React.useState(null);
 
-  const fallbackSermons = [
-    {
-      id: 1,
-      title: "Walking in Faith",
-      speaker: "Ps. John Samuel",
-      date: "• Aug 11, 2024",
-      duration: "45:20",
-      thumbnail: "home/assets/sermon_pastor.jpg",
-      passage: "Hebrews 11:1–6"
-    },
-    {
-      id: 2,
-      title: "The Power of Prayer",
-      speaker: "Ps. John Samuel",
-      date: "• Aug 4, 2024",
-      duration: "38:15",
-      thumbnail: "home/assets/hero_cross_sunset.jpg",
-      passage: "James 5:16"
-    },
-    {
-      id: 3,
-      title: "A Heart of Gratitude",
-      speaker: "Ps. John Samuel",
-      date: "• Jul 28, 2024",
-      duration: "42:10",
-      thumbnail: "home/assets/prayer_hands.jpg",
-      passage: "1 Thessalonians 5:16–18"
-    },
-    {
-      id: 4,
-      title: "Growing in God's Word",
-      speaker: "Ps. John Samuel",
-      date: "• Jul 21, 2024",
-      duration: "50:05",
-      thumbnail: "home/assets/open_bible_banner.jpg",
-      passage: "2 Timothy 3:16–17"
+  const formatMediaUrl = (url, fallback = "/admin-data/sermons/thumbnails/sermon_pastor.jpg") => {
+    if (!url) return fallback;
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
+      return url;
     }
-  ];
+    if (url.startsWith("/api/cms/media/")) return url;
+    if (url.startsWith("admin-data/")) return `/api/cms/media/${url}`;
+    if (url.startsWith("/admin-data/")) return `/api/cms/media${url}`;
+    return url.startsWith("/") ? url : "/" + url;
+  };
 
   const sermons = (Array.isArray(data) && data.length > 0)
     ? data.map((s) => ({
@@ -53,17 +25,19 @@ function LatestSermons({ data }) {
         speaker: s.speaker || "Ps. John Samuel",
         date: s.date_text ? `• ${s.date_text}` : "",
         duration: s.duration || "45:00",
-        thumbnail: s.thumbnail || "home/assets/sermon_pastor.jpg",
+        thumbnail: formatMediaUrl(s.thumbnail, "/admin-data/sermons/thumbnails/sermon_pastor.jpg"),
         passage: s.passage || "",
         video_url: s.video_url,
         audio_url: s.audio_url,
         description: s.description,
       }))
-    : fallbackSermons;
+    : [];
 
   const handlePlaySermon = (sermon) => {
     setActiveSermon(sermon);
   };
+
+  if (!sermons || sermons.length === 0) return null;
 
   return (
     <section id="sermons" className="home-container home-section">

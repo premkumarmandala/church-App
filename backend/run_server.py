@@ -22,6 +22,7 @@ if __name__ == "__main__":
     print(f"================================================================")
     print(f" Starting {settings.TITLE} v{settings.VERSION}")
     print(f" Server URL:        http://localhost:{port}/")
+    print(f"Admin URL:          http://localhost:{port}/admin/")
     print(f" Swagger Docs:      http://localhost:{port}/docs")
     print(f" ReDoc:             http://localhost:{port}/redoc")
     print(f" Bible Reader App:  http://localhost:{port}/bible/")

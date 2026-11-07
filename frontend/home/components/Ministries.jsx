@@ -5,47 +5,27 @@
    ========================================================================== */
 
 function Ministries({ data }) {
-  const fallbackMinistries = [
-    {
-      id: 1,
-      name: "Children's Ministry",
-      photo: "home/assets/children_ministry.jpg"
-    },
-    {
-      id: 2,
-      name: "Youth Ministry",
-      photo: "home/assets/youth_conference.jpg"
-    },
-    {
-      id: 3,
-      name: "Women's Ministry",
-      photo: "home/assets/womens_fellowship.jpg"
-    },
-    {
-      id: 4,
-      name: "Men's Ministry",
-      photo: "home/assets/fellowship_service.jpg"
-    },
-    {
-      id: 5,
-      name: "Prayer Ministry",
-      photo: "home/assets/prayer_hands.jpg"
-    },
-    {
-      id: 6,
-      name: "Outreach Ministry",
-      photo: "home/assets/worship_service.jpg"
+  const formatMediaUrl = (url, fallback = "/admin-data/ministries/children_ministry.jpg") => {
+    if (!url) return fallback;
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
+      return url;
     }
-  ];
+    if (url.startsWith("/api/cms/media/")) return url;
+    if (url.startsWith("admin-data/")) return `/api/cms/media/${url}`;
+    if (url.startsWith("/admin-data/")) return `/api/cms/media${url}`;
+    return url.startsWith("/") ? url : "/" + url;
+  };
 
   const ministryList = (Array.isArray(data) && data.length > 0)
     ? data.map((m) => ({
         id: m.id,
         name: m.name,
-        photo: m.photo || "home/assets/children_ministry.jpg",
+        photo: formatMediaUrl(m.photo, "/admin-data/ministries/children_ministry.jpg"),
         description: m.short_description || m.full_description,
       }))
-    : fallbackMinistries;
+    : [];
+
+  if (!ministryList || ministryList.length === 0) return null;
 
   return (
     <section id="ministries" className="home-container home-section">

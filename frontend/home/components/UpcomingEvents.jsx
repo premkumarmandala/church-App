@@ -5,35 +5,16 @@
    ========================================================================== */
 
 function UpcomingEvents({ data }) {
-  const fallbackEvents = [
-    {
-      id: 1,
-      title: "Church Picnic",
-      date: "Sep 14, 2024",
-      location: "Riverside Park",
-      image: "home/assets/church_picnic.jpg",
-      actionText: "Register Now",
-      registration_link: "#contact"
-    },
-    {
-      id: 2,
-      title: "BIBLE CAMP",
-      date: "Oct 5 – 7, 2024",
-      location: "Camp Grace",
-      image: "home/assets/bible_camp.jpg",
-      actionText: "Register Now",
-      registration_link: "#contact"
-    },
-    {
-      id: 3,
-      title: "Christmas Celebration",
-      date: "Dec 25, 2024",
-      location: "Church Main Hall",
-      image: "home/assets/christmas_celebration.jpg",
-      actionText: "Learn More",
-      registration_link: "#contact"
+  const formatMediaUrl = (url, fallback = "/admin-data/events/church_picnic.jpg") => {
+    if (!url) return fallback;
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
+      return url;
     }
-  ];
+    if (url.startsWith("/api/cms/media/")) return url;
+    if (url.startsWith("admin-data/")) return `/api/cms/media/${url}`;
+    if (url.startsWith("/admin-data/")) return `/api/cms/media${url}`;
+    return url.startsWith("/") ? url : "/" + url;
+  };
 
   const events = (Array.isArray(data) && data.length > 0)
     ? data.map((e) => ({
@@ -41,11 +22,13 @@ function UpcomingEvents({ data }) {
         title: e.title,
         date: e.date_text,
         location: e.location,
-        image: e.image || "home/assets/church_picnic.jpg",
+        image: formatMediaUrl(e.image, "/admin-data/events/church_picnic.jpg"),
         actionText: e.action_text || "Register Now",
         registration_link: e.registration_link || "#contact",
       }))
-    : fallbackEvents;
+    : [];
+
+  if (!events || events.length === 0) return null;
 
   return (
     <section id="events" className="home-container home-section">

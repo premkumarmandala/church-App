@@ -51,7 +51,7 @@ class HomeSection(Base):
     hero_title = Column(String(200), default="Grace Fellowship Church", nullable=False)
     hero_subtitle = Column(Text, default="A family of believers growing together in Christ's love.", nullable=False)
     hero_verse = Column(Text, default="“For where two or three gather in my name, there am I with them.” — Matthew 18:20", nullable=False)
-    hero_bg_image = Column(String(500), default="home/assets/hero_cross_sunset.jpg", nullable=False)
+    hero_bg_image = Column(String(500), default="", nullable=False)
     cta_primary_text = Column(String(100), default="Join Us This Sunday", nullable=False)
     cta_primary_link = Column(String(200), default="#service-timings", nullable=False)
     cta_secondary_text = Column(String(100), default="Watch Sermons", nullable=False)
@@ -423,5 +423,50 @@ class AdminUser(Base):
             "avatar_initials": self.avatar_initials,
             "last_login": self.last_login,
         }
+
+
+class CMSMedia(Base):
+    """Central media metadata registry for all admin-uploaded assets."""
+    __tablename__ = "cms_media"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(255), default="", nullable=False)
+    description = Column(Text, default="", nullable=False)
+    content_type = Column(String(80), default="general", nullable=False, index=True)
+    file_name = Column(String(255), nullable=False)
+    file_path = Column(String(500), nullable=False, unique=True, index=True)
+    file_type = Column(String(50), default="image", nullable=False)  # image, video, audio, document
+    file_size = Column(Integer, default=0, nullable=False)
+    mime_type = Column(String(100), default="application/octet-stream", nullable=False)
+    status = Column(String(30), default="active", nullable=False, index=True)
+    display_order = Column(Integer, default=0, nullable=False)
+    published_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False, index=True)
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def to_dict(self) -> dict:
+        url_path = self.file_path.replace("\\", "/")
+        if not url_path.startswith("/"):
+            url_path = "/" + url_path
+        media_url = f"/api/cms/media{url_path}"
+
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "content_type": self.content_type,
+            "file_name": self.file_name,
+            "file_path": self.file_path,
+            "url": media_url,
+            "file_type": self.file_type,
+            "file_size": self.file_size,
+            "mime_type": self.mime_type,
+            "status": self.status,
+            "display_order": self.display_order,
+            "published_at": self.published_at.isoformat() if self.published_at else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
 
 

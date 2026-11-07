@@ -398,9 +398,10 @@ export function AnnouncementsManager() {
 
                 <CompMediaUpload
                   label="Bulletin Banner Graphic (Optional)"
+                  folder="home/announcements"
                   value={formData.image}
                   onChange={(url) => setFormData({ ...formData, image: url })}
-                  placeholder="Upload or enter bulletin banner image"
+                  placeholder="admin-data/home/announcements/banner.jpg"
                 />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>

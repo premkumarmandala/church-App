@@ -392,9 +392,10 @@ export function SermonsManager() {
 
                 <CompMediaUpload
                   label="Sermon Thumbnail Image"
+                  folder="sermons/thumbnails"
                   value={formData.thumbnail}
                   onChange={(url) => setFormData({ ...formData, thumbnail: url })}
-                  placeholder="Upload or enter thumbnail URL (e.g. home/assets/sermon1.jpg)"
+                  placeholder="admin-data/sermons/thumbnails/sermon.jpg"
                 />
 
                 <div className="form-group">

@@ -269,15 +269,17 @@ export function AboutManager() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
             <CompMediaUpload
               label="Pastor Portrait Photo"
+              folder="sermons/thumbnails"
               value={formData.lead_pastor_image || ''}
               onChange={(url) => setFormData({ ...formData, lead_pastor_image: url })}
-              placeholder="Upload or enter image path (e.g. home/assets/pastor.jpg)"
+              placeholder="admin-data/sermons/thumbnails/pastor.jpg"
             />
             <CompMediaUpload
               label="Church Campus / Sanctuary Exterior"
+              folder="home/banners"
               value={formData.campus_image || ''}
               onChange={(url) => setFormData({ ...formData, campus_image: url })}
-              placeholder="Upload or enter image path (e.g. home/assets/campus.jpg)"
+              placeholder="admin-data/home/banners/church_building.jpg"
             />
           </div>
         </div>

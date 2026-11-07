@@ -87,6 +87,41 @@ for (const file of cmsBundleFiles) {
 fs.writeFileSync(path.join(adminDir, 'cms.bundle.jsx'), cmsBundleContent, 'utf8');
 console.log('[Build] Successfully generated cms.bundle.jsx.');
 
+console.log('[Build] Packaging Church Public Home Website Bundle...');
+const homeDir = path.join(srcFrontend, 'home');
+const homeComponentDir = path.join(homeDir, 'components');
+const homeBundleFiles = [
+  path.join(homeComponentDir, 'Navbar.jsx'),
+  path.join(homeComponentDir, 'Hero.jsx'),
+  path.join(homeComponentDir, 'Announcements.jsx'),
+  path.join(homeComponentDir, 'VerseOfTheDay.jsx'),
+  path.join(homeComponentDir, 'ServiceTimings.jsx'),
+  path.join(homeComponentDir, 'About.jsx'),
+  path.join(homeComponentDir, 'LatestSermons.jsx'),
+  path.join(homeComponentDir, 'UpcomingEvents.jsx'),
+  path.join(homeComponentDir, 'Ministries.jsx'),
+  path.join(homeComponentDir, 'Gallery.jsx'),
+  path.join(homeComponentDir, 'ChurchLocation.jsx'),
+  path.join(homeComponentDir, 'DonateModal.jsx'),
+  path.join(homeComponentDir, 'Footer.jsx'),
+  path.join(homeDir, 'HomePage.jsx'),
+];
+
+let homeBundleContent = '/* Church Public Home Website Master Bundle */\n';
+homeBundleContent += 'const { useState, useEffect, useCallback, useMemo, useRef } = React || window.React;\n\n';
+
+for (const file of homeBundleFiles) {
+  if (fs.existsSync(file)) {
+    let content = fs.readFileSync(file, 'utf8');
+    content = content.replace(/^\s*import\s+[^;]+;\s*$/gm, '');
+    content = content.replace(/^\s*export\s+(?:default\s+)?/gm, '');
+    homeBundleContent += `\n/* === Source: ${path.basename(file)} === */\n${content}\n`;
+  }
+}
+homeBundleContent += '\nwindow.HomePage = HomePage;\n';
+fs.writeFileSync(path.join(homeDir, 'home.bundle.jsx'), homeBundleContent, 'utf8');
+console.log('[Build] Successfully generated home.bundle.jsx.');
+
 console.log('[Build] Cleaning existing dist directory...');
 if (fs.existsSync(distDir)) {
   fs.rmSync(distDir, { recursive: true, force: true });

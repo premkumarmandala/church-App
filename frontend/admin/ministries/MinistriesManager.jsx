@@ -343,9 +343,10 @@ export function MinistriesManager() {
 
                 <CompMediaUpload
                   label="Ministry Group Photo"
+                  folder="ministries"
                   value={formData.photo}
                   onChange={(url) => setFormData({ ...formData, photo: url })}
-                  placeholder="Upload or enter ministry photo URL"
+                  placeholder="admin-data/ministries/photo.jpg"
                 />
 
                 <div className="form-group">

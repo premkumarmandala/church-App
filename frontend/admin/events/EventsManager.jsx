@@ -403,9 +403,10 @@ export function EventsManager() {
 
                 <CompMediaUpload
                   label="Event Poster / Hero Banner"
+                  folder="events"
                   value={formData.image}
                   onChange={(url) => setFormData({ ...formData, image: url })}
-                  placeholder="Upload or enter poster image URL"
+                  placeholder="admin-data/events/poster.jpg"
                 />
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>

@@ -7,44 +7,16 @@
 function Announcements({ data }) {
   const [startIndex, setStartIndex] = React.useState(0);
 
-  const fallbackData = [
-    {
-      id: 1,
-      title: "YOUTH CONFERENCE 2024",
-      subtitle: "Rise Up & Shine Forth - Ignite Your Faith",
-      date: "Aug 15 – 17, 2024",
-      time: "10:00 AM Daily",
-      location: "Sanctuary & Youth Hall",
-      image: "home/assets/youth_conference.jpg",
-      actionText: "Register Now",
-      tag: "Youth Ministry",
-      tagClass: "badge-youth"
-    },
-    {
-      id: 2,
-      title: "WOMEN'S FELLOWSHIP",
-      subtitle: "A Time of Prayer, Worship & Sisterhood",
-      date: "Sat, Aug 24, 2024",
-      time: "10:00 AM – 11:30 AM",
-      location: "Church Main Hall",
-      image: "home/assets/womens_fellowship.jpg",
-      actionText: "Register Now",
-      tag: "Fellowship",
-      tagClass: "badge-fellowship"
-    },
-    {
-      id: 3,
-      title: "Special Prayer Meeting",
-      subtitle: "Intercessory Prayer for Families & Nation",
-      date: "Aug 30, 2024",
-      time: "6:30 PM – 8:00 PM",
-      location: "Church Sanctuary",
-      image: "home/assets/open_bible_banner.jpg",
-      actionText: "Join In-Person",
-      tag: "Prayer & Care",
-      tagClass: "badge-outreach"
+  const formatMediaUrl = (url, fallback = "/admin-data/home/announcements/youth_conference.jpg") => {
+    if (!url) return fallback;
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
+      return url;
     }
-  ];
+    if (url.startsWith("/api/cms/media/")) return url;
+    if (url.startsWith("admin-data/")) return `/api/cms/media/${url}`;
+    if (url.startsWith("/admin-data/")) return `/api/cms/media${url}`;
+    return url.startsWith("/") ? url : "/" + url;
+  };
 
   const announcementsData = (Array.isArray(data) && data.length > 0)
     ? data.map((item) => ({
@@ -54,13 +26,13 @@ function Announcements({ data }) {
         date: item.date_text,
         time: item.time_text,
         location: item.location,
-        image: item.image || "home/assets/open_bible_banner.jpg",
+        image: formatMediaUrl(item.image, "/admin-data/home/announcements/youth_conference.jpg"),
         actionText: item.action_text || "Learn More",
         actionLink: item.action_link || "#contact",
         tag: item.tag || "Announcement",
         tagClass: item.tag_class === "blue" ? "badge-youth" : item.tag_class === "emerald" ? "badge-outreach" : "badge-fellowship",
       }))
-    : fallbackData;
+    : [];
 
   const handlePrev = () => {
     setStartIndex((prev) => (prev === 0 ? announcementsData.length - 1 : prev - 1));
@@ -70,7 +42,7 @@ function Announcements({ data }) {
     setStartIndex((prev) => (prev === announcementsData.length - 1 ? 0 : prev + 1));
   };
 
-  if (announcementsData.length === 0) return null;
+  if (!announcementsData || announcementsData.length === 0) return null;
 
   return (
     <section id="announcements" className="home-container" style={{ marginTop: "24px" }}>

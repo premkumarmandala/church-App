@@ -265,7 +265,12 @@ class PrayerService:
 
         file_path = settings.BACKEND_DIR / attachment.storage_path
         if not file_path.exists():
-            return None
+            # Fallback check under settings.STORAGE_DIR
+            alt_path = settings.STORAGE_DIR / request_id / attachment.stored_filename
+            if alt_path.exists():
+                file_path = alt_path
+            else:
+                return None
 
         return attachment, file_path
 

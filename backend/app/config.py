@@ -38,7 +38,8 @@ class Settings(BaseModel):
         else (BACKEND_DIR / "frontend" if (BACKEND_DIR / "frontend").exists() else PROJECT_ROOT / "frontend")
     )
     DOCS_DIR: Path = PROJECT_ROOT / "docs"
-    STORAGE_DIR: Path = BACKEND_DIR / "storage" / "prayer_attachments"
+    ADMIN_DATA_DIR: Path = BACKEND_DIR / "admin-data"
+    STORAGE_DIR: Path = BACKEND_DIR / "admin-data" / "prayer-requests"
 
     # API metadata
     TITLE: str = "Grace Church Bible & Prayer API"
@@ -78,6 +79,7 @@ class Settings(BaseModel):
 
     # File Upload & Media Attachment Limits
     MAX_ATTACHMENT_SIZE_BYTES: int = int(os.getenv("MAX_ATTACHMENT_SIZE_BYTES", str(100 * 1024 * 1024)))  # 100 MB
+    MAX_MEDIA_SIZE_BYTES: int = int(os.getenv("MAX_MEDIA_SIZE_BYTES", str(50 * 1024 * 1024)))  # 50 MB
 
     def get_database_url(self) -> str:
         """Resolve and normalize database URL for SQLAlchemy 2.0 with Psycopg 3."""
