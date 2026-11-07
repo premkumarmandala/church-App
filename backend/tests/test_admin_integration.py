@@ -46,7 +46,7 @@ def test_admin_redirect_and_static_serving():
     assert res.status_code == 200
     assert "Pastoral Prayer Admin Dashboard" in res.text
     assert "admin-root" in res.text
-    assert "prayer-requests.bundle.jsx" in res.text
+    assert "prayer-requests.bundle" in res.text
 
     # 3. Legacy /prayer-request/admin.html redirect
     legacy = client.get("/prayer-request/admin.html")

@@ -55,7 +55,11 @@ function Navbar({ activeSection = "home", onNavigate, data }) {
             {data?.logo_url ? (
               <img src={data.logo_url} alt="" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
             ) : (
-              <span className="nav-cross-icon">✝</span>
+              <span className="nav-cross-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 2h4v6h6v4h-6v10h-4V12H4V8h6V2z" />
+                </svg>
+              </span>
             )}
           </div>
           <div className="nav-brand-text">

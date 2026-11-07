@@ -43,12 +43,18 @@ function LatestSermons({ data }) {
     <section id="sermons" className="home-container home-section">
       <div className="section-header-row">
         <div className="section-title-wrap">
-          <span className="section-title-icon" style={{ color: "#0066cc" }}>▶</span>
+          <span className="section-title-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </span>
           <h2 className="section-title-text">Latest Sermons</h2>
         </div>
         <a href="#sermons" className="section-view-all">
           <span>View All</span>
-          <span>&gt;</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
       </div>
 
@@ -95,8 +101,12 @@ function LatestSermons({ data }) {
                 <span className="speaker-date">{sermon.date}</span>
               </p>
               {sermon.passage && (
-                <p className="sermon-passage-line" style={{ fontSize: "0.78rem", color: "#64748b", marginTop: "4px" }}>
-                  📖 {sermon.passage}
+                <p className="sermon-passage-line" style={{ fontSize: "0.8rem", color: "var(--color-text-muted)", marginTop: "6px", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                  <span>{sermon.passage}</span>
                 </p>
               )}
             </div>

@@ -61,7 +61,11 @@ function Navbar({ activeSection = "home", onNavigate, data }) {
             {data?.logo_url ? (
               <img src={data.logo_url} alt="" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
             ) : (
-              <span className="nav-cross-icon">✝</span>
+              <span className="nav-cross-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 2h4v6h6v4h-6v10h-4V12H4V8h6V2z" />
+                </svg>
+              </span>
             )}
           </div>
           <div className="nav-brand-text">
@@ -192,7 +196,9 @@ function Hero({ data }) {
               className="btn-hero-secondary"
               onClick={(e) => handleScrollTo(ctaSecondaryLink, e)}
             >
-              <span>▶</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
               <span>{ctaSecondaryText}</span>
             </a>
           </div>
@@ -263,7 +269,9 @@ function Announcements({ data }) {
           </div>
           <a href="#events" className="section-view-all">
             <span>View All</span>
-            <span>&gt;</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
         </div>
 
@@ -275,7 +283,9 @@ function Announcements({ data }) {
             onClick={handlePrev}
             aria-label="Previous announcement"
           >
-            &#8249;
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
           </button>
 
           <div className="announcements-grid">
@@ -324,7 +334,9 @@ function Announcements({ data }) {
             onClick={handleNext}
             aria-label="Next announcement"
           >
-            &#8250;
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </button>
         </div>
       </div>
@@ -398,7 +410,12 @@ function VerseOfTheDay() {
         {/* Center Content */}
         <div className="votd-content">
           <div className="votd-header">
-            <span className="votd-header-icon">📖</span>
+            <span className="votd-header-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </span>
             <span className="votd-header-title">Verse of the Day</span>
           </div>
           <p className="votd-text">
@@ -414,7 +431,10 @@ function VerseOfTheDay() {
           title="Study this verse in the Online Bible reader"
         >
           <span>Read in Bible</span>
-          <span>➔</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
         </a>
       </div>
     </section>
@@ -425,97 +445,110 @@ function VerseOfTheDay() {
 /* === Source: ServiceTimings.jsx === */
 /* ==========================================================================
    ServiceTimings Component - Grace Fellowship Church
-   Worship schedules, languages, and service timings in pastel cards
+   Worship schedules, languages, and service timings in clean unified cards
    Dynamically integrated with Church CMS API.
    ========================================================================== */
 
 function ServiceTimings({ data }) {
+  const renderTimingIcon = (name) => {
+    if (name === "people" || name === "users") {
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      );
+    }
+    if (name === "prayer" || name === "pray") {
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+        </svg>
+      );
+    }
+    if (name === "bible" || name === "book") {
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+      );
+    }
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M12 2v20M7 8h10"></path>
+      </svg>
+    );
+  };
+
   const fallbackSchedules = [
     {
       id: 1,
-      cardClass: "card-blue",
-      iconClass: "timing-icon-blue",
-      icon: "⛪",
+      iconName: "church",
       title: "Sunday Worship",
       hours: "10:00 AM – 12:00 PM",
       subtitle: "English & Telugu"
     },
     {
       id: 2,
-      cardClass: "card-peach",
-      iconClass: "timing-icon-peach",
-      icon: "👥",
+      iconName: "people",
       title: "Sunday School",
       hours: "10:00 AM – 11:00 AM",
       subtitle: "Children & Youth"
     },
     {
       id: 3,
-      cardClass: "card-purple",
-      iconClass: "timing-icon-purple",
-      icon: "🙏",
+      iconName: "prayer",
       title: "Wednesday Prayer",
       hours: "7:00 PM – 8:00 PM",
       subtitle: "Online & In-Person"
     },
     {
       id: 4,
-      cardClass: "card-green",
-      iconClass: "timing-icon-green",
-      icon: "📖",
+      iconName: "bible",
       title: "Friday Bible Study",
       hours: "7:00 PM – 8:00 PM",
       subtitle: "English & Telugu"
     }
   ];
 
-  const getStyleClasses = (cls, idx) => {
-    if (cls === "highlight") return { card: "card-peach", icon: "timing-icon-peach" };
-    if (cls === "gold") return { card: "card-purple", icon: "timing-icon-purple" };
-    if (cls === "card-blue" || cls === "standard") return { card: "card-blue", icon: "timing-icon-blue" };
-    if (cls === "card-green") return { card: "card-green", icon: "timing-icon-green" };
-    const palette = [
-      { card: "card-blue", icon: "timing-icon-blue" },
-      { card: "card-peach", icon: "timing-icon-peach" },
-      { card: "card-purple", icon: "timing-icon-purple" },
-      { card: "card-green", icon: "timing-icon-green" },
-    ];
-    return palette[idx % palette.length];
-  };
-
   const serviceSchedules = (Array.isArray(data) && data.length > 0)
-    ? data.map((schedule, idx) => {
-        const styles = getStyleClasses(schedule.card_class, idx);
-        return {
-          id: schedule.id,
-          cardClass: styles.card,
-          iconClass: styles.icon,
-          icon: schedule.icon_name === "people" ? "👥" : schedule.icon_name === "prayer" ? "🙏" : schedule.icon_name === "bible" ? "📖" : "⛪",
-          title: schedule.title,
-          hours: schedule.hours,
-          subtitle: schedule.subtitle,
-        };
-      })
+    ? data.map((schedule) => ({
+        id: schedule.id,
+        iconName: schedule.icon_name || "church",
+        title: schedule.title,
+        hours: schedule.hours,
+        subtitle: schedule.subtitle,
+      }))
     : fallbackSchedules;
 
   return (
     <section id="service-timings" className="home-container home-section">
       <div className="section-header-row">
         <div className="section-title-wrap">
-          <span className="section-title-icon" style={{ color: "#0066cc" }}>🕒</span>
+          <span className="section-title-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </span>
           <h2 className="section-title-text">Service Timings</h2>
         </div>
         <a href="#contact" className="section-view-all">
           <span>View Details</span>
-          <span>&gt;</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
       </div>
 
       <div className="timings-grid">
         {serviceSchedules.map((schedule) => (
-          <div key={schedule.id} className={`timing-card ${schedule.cardClass}`}>
-            <div className={`timing-icon-badge ${schedule.iconClass}`}>
-              {schedule.icon}
+          <div key={schedule.id} className="timing-card">
+            <div className="timing-icon-badge">
+              {renderTimingIcon(schedule.iconName)}
             </div>
             <div className="timing-info">
               <h3 className="timing-title">{schedule.title}</h3>
@@ -580,8 +613,9 @@ function About({ data }) {
   }
 
   return (
-    <section id="about" className="home-container home-section">
-      <div className="section-header-row">
+    <section id="about" className="home-section-wrap bg-page">
+      <div className="home-container home-section">
+        <div className="section-header-row">
         <div className="section-title-wrap">
           <span className="section-title-icon" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -664,8 +698,9 @@ function About({ data }) {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }
 
 
@@ -716,12 +751,18 @@ function LatestSermons({ data }) {
     <section id="sermons" className="home-container home-section">
       <div className="section-header-row">
         <div className="section-title-wrap">
-          <span className="section-title-icon" style={{ color: "#0066cc" }}>▶</span>
+          <span className="section-title-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </span>
           <h2 className="section-title-text">Latest Sermons</h2>
         </div>
         <a href="#sermons" className="section-view-all">
           <span>View All</span>
-          <span>&gt;</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
       </div>
 
@@ -768,8 +809,12 @@ function LatestSermons({ data }) {
                 <span className="speaker-date">{sermon.date}</span>
               </p>
               {sermon.passage && (
-                <p className="sermon-passage-line" style={{ fontSize: "0.78rem", color: "#64748b", marginTop: "4px" }}>
-                  📖 {sermon.passage}
+                <p className="sermon-passage-line" style={{ fontSize: "0.8rem", color: "var(--color-text-muted)", marginTop: "6px", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                  <span>{sermon.passage}</span>
                 </p>
               )}
             </div>
@@ -874,12 +919,21 @@ function UpcomingEvents({ data }) {
     <section id="events" className="home-container home-section">
       <div className="section-header-row">
         <div className="section-title-wrap">
-          <span className="section-title-icon" style={{ color: "#0066cc" }}>📅</span>
+          <span className="section-title-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </span>
           <h2 className="section-title-text">Upcoming Events</h2>
         </div>
         <a href="#events" className="section-view-all">
           <span>View All</span>
-          <span>&gt;</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
       </div>
 
@@ -899,9 +953,23 @@ function UpcomingEvents({ data }) {
             </div>
             <div className="event-card-details">
               <h3 className="event-heading">{event.title}</h3>
-              <p className="event-meta-line">
-                <span className="event-date">📅 {event.date}</span>
-                <span className="event-venue">📍 {event.location}</span>
+              <p className="event-meta-line" style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <span className="event-date" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span>{event.date}</span>
+                </span>
+                <span className="event-venue" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span>{event.location}</span>
+                </span>
               </p>
               {event.registration_link && event.registration_link.startsWith("http") ? (
                 <a
@@ -939,6 +1007,8 @@ function UpcomingEvents({ data }) {
    ========================================================================== */
 
 function Ministries({ data }) {
+  const [selectedMinistry, setSelectedMinistry] = React.useState(null);
+
   const formatMediaUrl = (url, fallback = "/admin-data/ministries/children_ministry.jpg") => {
     if (!url) return fallback;
     if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
@@ -950,27 +1020,45 @@ function Ministries({ data }) {
     return url.startsWith("/") ? url : "/" + url;
   };
 
+  const fallbackMinistries = [
+    { id: 1, name: "Children's Ministry", photo: "/admin-data/ministries/children_ministry.jpg", description: "Sunday School, biblical foundations, crafts, and songs for children." },
+    { id: 2, name: "Youth Ministry", photo: "/admin-data/home/announcements/youth_conference.jpg", description: "Empowering teens and young adults to stand bold for Christ." },
+    { id: 3, name: "Women's Ministry", photo: "/admin-data/home/announcements/womens_fellowship.jpg", description: "Encouraging sisters in faith, discipleship, and prayer fellowship." },
+    { id: 4, name: "Men's Ministry", photo: "/admin-data/ministries/fellowship_service.jpg", description: "Building strong godly fathers, husbands, and leaders in Christ." },
+    { id: 5, name: "Prayer Ministry", photo: "/admin-data/sermons/thumbnails/prayer_hands.jpg", description: "Faithful intercession for our church, community, and global needs." },
+    { id: 6, name: "Outreach & Missions", photo: "/admin-data/home/announcements/open_bible_banner.jpg", description: "Sharing the love of Christ through local and regional benevolence." },
+  ];
+
   const ministryList = (Array.isArray(data) && data.length > 0)
     ? data.map((m) => ({
         id: m.id,
         name: m.name,
         photo: formatMediaUrl(m.photo, "/admin-data/ministries/children_ministry.jpg"),
-        description: m.short_description || m.full_description,
+        description: m.short_description || m.full_description || m.description,
+        meeting_time: m.meeting_time,
+        leader_name: m.leader_name,
       }))
-    : [];
-
-  if (!ministryList || ministryList.length === 0) return null;
+    : fallbackMinistries;
 
   return (
     <section id="ministries" className="home-container home-section">
       <div className="section-header-row">
         <div className="section-title-wrap">
-          <span className="section-title-icon" style={{ color: "#0066cc" }}>👥</span>
+          <span className="section-title-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </span>
           <h2 className="section-title-text">Our Ministries</h2>
         </div>
         <a href="#ministries" className="section-view-all">
           <span>View All</span>
-          <span>&gt;</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
       </div>
 
@@ -979,15 +1067,13 @@ function Ministries({ data }) {
           <div
             key={m.id}
             className="ministry-unit-card"
-            onClick={() => {
-              alert(m.description || `Learn more about ${m.name} by contacting our pastoral team or joining our fellowship groups.`);
-            }}
+            onClick={() => setSelectedMinistry(m)}
             tabIndex={0}
             role="button"
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                alert(m.description || `Learn more about ${m.name}`);
+                setSelectedMinistry(m);
               }
             }}
             aria-label={`View ${m.name} details`}
@@ -1007,6 +1093,60 @@ function Ministries({ data }) {
           </div>
         ))}
       </div>
+
+      {/* Ministry Detail Modal */}
+      {selectedMinistry && (
+        <div className="modal-backdrop-church" onClick={() => setSelectedMinistry(null)} role="dialog" aria-modal="true">
+          <div className="donate-modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "520px" }}>
+            <div className="donate-modal-header">
+              <div>
+                <h3 className="donate-header-title">{selectedMinistry.name}</h3>
+                <p className="donate-header-sub">{selectedMinistry.leader_name ? `Led by ${selectedMinistry.leader_name}` : "Church Fellowship Ministry"}</p>
+              </div>
+              <button
+                type="button"
+                className="btn-modal-close-icon"
+                onClick={() => setSelectedMinistry(null)}
+                aria-label="Close modal"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div className="donate-modal-body">
+              {selectedMinistry.photo && (
+                <img
+                  src={selectedMinistry.photo}
+                  alt={selectedMinistry.name}
+                  style={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "8px", marginBottom: "16px" }}
+                />
+              )}
+              <p style={{ fontSize: "0.95rem", color: "var(--color-text-secondary)", lineHeight: 1.6, marginBottom: "16px" }}>
+                {selectedMinistry.description || "A dedicated ministry for discipleship, spiritual growth, and community fellowship."}
+              </p>
+              {selectedMinistry.meeting_time && (
+                <div style={{ padding: "10px 14px", background: "var(--color-surface-subtle)", borderRadius: "8px", fontSize: "0.85rem", color: "var(--color-primary-800)", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span><strong>Schedule:</strong> {selectedMinistry.meeting_time}</span>
+                </div>
+              )}
+              <a
+                href="#contact"
+                className="btn-hero-primary"
+                style={{ width: "100%", textAlign: "center", textDecoration: "none", display: "block" }}
+                onClick={() => setSelectedMinistry(null)}
+              >
+                Connect with Ministry Leaders
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -1046,8 +1186,9 @@ function Gallery({ data }) {
   if (!rawItems || rawItems.length === 0) return null;
 
   return (
-    <section id="gallery" className="home-container home-section">
-      <div className="section-header-row">
+    <section id="gallery" className="home-section-wrap bg-page">
+      <div className="home-container home-section">
+        <div className="section-header-row">
         <div className="section-title-wrap">
           <span className="section-title-icon" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1147,8 +1288,9 @@ function Gallery({ data }) {
           </div>
         </div>
       )}
-    </section>
-  );
+    </div>
+  </section>
+);
 }
 
 
@@ -1194,7 +1336,12 @@ function ChurchLocation({ data }) {
     <section id="contact" className="home-container home-section">
       <div className="section-header-row">
         <div className="section-title-wrap">
-          <span className="section-title-icon" style={{ color: "#0066cc" }}>📍</span>
+          <span className="section-title-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </span>
           <h2 className="section-title-text">Visit Our Church</h2>
         </div>
       </div>
@@ -1216,7 +1363,12 @@ function ChurchLocation({ data }) {
         {/* Column 2: Contact Information & Socials */}
         <div className="church-contact-info">
           <div className="contact-info-row">
-            <span className="contact-info-icon">📍</span>
+            <span className="contact-info-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </span>
             <div>
               <strong>{addressLine1},</strong><br />
               {addressLine2}{cityStateZip}
@@ -1224,12 +1376,21 @@ function ChurchLocation({ data }) {
           </div>
 
           <div className="contact-info-row">
-            <span className="contact-info-icon">📞</span>
+            <span className="contact-info-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+            </span>
             <div>{phone}</div>
           </div>
 
           <div className="contact-info-row">
-            <span className="contact-info-icon">✉️</span>
+            <span className="contact-info-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </span>
             <div>{email}</div>
           </div>
 
@@ -1243,7 +1404,9 @@ function ChurchLocation({ data }) {
               title="Facebook"
               aria-label="Facebook"
             >
-              f
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
             </a>
             <a
               href={youtubeUrl}
@@ -1253,7 +1416,10 @@ function ChurchLocation({ data }) {
               title="YouTube"
               aria-label="YouTube"
             >
-              ▶
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#ffffff"></polygon>
+              </svg>
             </a>
             <a
               href={instagramUrl}
@@ -1263,7 +1429,11 @@ function ChurchLocation({ data }) {
               title="Instagram"
               aria-label="Instagram"
             >
-              📸
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
             </a>
             <a
               href={whatsappUrl}
@@ -1273,7 +1443,9 @@ function ChurchLocation({ data }) {
               title="WhatsApp"
               aria-label="WhatsApp"
             >
-              💬
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
             </a>
           </div>
         </div>
@@ -1532,7 +1704,11 @@ function Footer({ data }) {
           {/* Col 1: Church Brand */}
           <div className="footer-brand-col">
             <div className="footer-brand">
-              <span className="footer-cross">✝</span>
+              <span className="footer-cross" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 2h4v6h6v4h-6v10h-4V12H4V8h6V2z" />
+                </svg>
+              </span>
               <div>
                 <div className="footer-church-name">{churchName}</div>
                 <div className="footer-tagline">{tagline}</div>
@@ -1540,10 +1716,29 @@ function Footer({ data }) {
             </div>
             <p className="footer-brand-desc">{footerDesc}</p>
             <div className="footer-social-links">
-              <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="Facebook" aria-label="Facebook">f</a>
-              <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="YouTube" aria-label="YouTube">▶</a>
-              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="Instagram" aria-label="Instagram">📸</a>
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="WhatsApp" aria-label="WhatsApp">💬</a>
+              <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="Facebook" aria-label="Facebook">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </a>
+              <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="YouTube" aria-label="YouTube">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                  <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#0f1e36"></polygon>
+                </svg>
+              </a>
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="Instagram" aria-label="Instagram">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="footer-social-icon" title="WhatsApp" aria-label="WhatsApp">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+              </a>
             </div>
           </div>
 
@@ -1552,21 +1747,35 @@ function Footer({ data }) {
             <h4 className="footer-section-title">Visit Our Church</h4>
             <div className="footer-visit-info">
               <div className="visit-info-item">
-                <span className="visit-icon">📍</span>
+                <span className="visit-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </span>
                 <div>
                   <strong>Address:</strong>
                   <p>{address}</p>
                 </div>
               </div>
               <div className="visit-info-item">
-                <span className="visit-icon">📞</span>
+                <span className="visit-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                </span>
                 <div>
                   <strong>Phone:</strong>
                   <p>{phone}</p>
                 </div>
               </div>
               <div className="visit-info-item">
-                <span className="visit-icon">✉️</span>
+                <span className="visit-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </span>
                 <div>
                   <strong>Email:</strong>
                   <p>{email}</p>
@@ -1599,7 +1808,13 @@ function Footer({ data }) {
           <div className="footer-legal-links">
             <a href="admin/index.html" style={{ color: "#c59b27", fontWeight: 700 }}>Admin Portal (CMS)</a>
             <span style={{ color: "#475569" }}>•</span>
-            <a href="#home">Back to Top ↑</a>
+            <a href="#home" style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
+              Back to Top
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </a>
           </div>
         </div>
       </div>

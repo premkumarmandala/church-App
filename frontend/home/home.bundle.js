@@ -98,8 +98,16 @@
         objectFit: "contain"
       }
     }) : /*#__PURE__*/React.createElement("span", {
-      className: "nav-cross-icon"
-    }, "\u271D")), /*#__PURE__*/React.createElement("div", {
+      className: "nav-cross-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "20",
+      height: "20",
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M10 2h4v6h6v4h-6v10h-4V12H4V8h6V2z"
+    })))), /*#__PURE__*/React.createElement("div", {
       className: "nav-brand-text"
     }, /*#__PURE__*/React.createElement("span", {
       className: "nav-church-name"
@@ -227,7 +235,15 @@
       href: ctaSecondaryLink,
       className: "btn-hero-secondary",
       onClick: e => handleScrollTo(ctaSecondaryLink, e)
-    }, /*#__PURE__*/React.createElement("span", null, "\u25B6"), /*#__PURE__*/React.createElement("span", null, ctaSecondaryText))))));
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "15",
+      height: "15",
+      viewBox: "0 0 24 24",
+      fill: "currentColor",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polygon", {
+      points: "5 3 19 12 5 21 5 3"
+    })), /*#__PURE__*/React.createElement("span", null, ctaSecondaryText))))));
   }
 
   /* === Source: Announcements.jsx === */
@@ -304,14 +320,38 @@
     }, "Announcements")), /*#__PURE__*/React.createElement("a", {
       href: "#events",
       className: "section-view-all"
-    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("span", null, ">"))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polyline", {
+      points: "9 18 15 12 9 6"
+    })))), /*#__PURE__*/React.createElement("div", {
       className: "announcements-carousel-wrapper"
     }, /*#__PURE__*/React.createElement("button", {
       type: "button",
       className: "carousel-arrow-btn",
       onClick: handlePrev,
       "aria-label": "Previous announcement"
-    }, "\u2039"), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "18",
+      height: "18",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polyline", {
+      points: "15 18 9 12 15 6"
+    }))), /*#__PURE__*/React.createElement("div", {
       className: "announcements-grid"
     }, announcementsData.map(item => /*#__PURE__*/React.createElement("div", {
       key: item.id,
@@ -350,7 +390,19 @@
       className: "carousel-arrow-btn",
       onClick: handleNext,
       "aria-label": "Next announcement"
-    }, "\u203A"))));
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "18",
+      height: "18",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polyline", {
+      points: "9 18 15 12 9 6"
+    }))))));
   }
 
   /* === Source: VerseOfTheDay.jsx === */
@@ -419,8 +471,22 @@
     }, /*#__PURE__*/React.createElement("div", {
       className: "votd-header"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "votd-header-icon"
-    }, "\uD83D\uDCD6"), /*#__PURE__*/React.createElement("span", {
+      className: "votd-header-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "20",
+      height: "20",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+    }))), /*#__PURE__*/React.createElement("span", {
       className: "votd-header-title"
     }, "Verse of the Day")), /*#__PURE__*/React.createElement("p", {
       className: "votd-text"
@@ -430,96 +496,138 @@
       href: "bible/index.html",
       className: "btn-votd-read",
       title: "Study this verse in the Online Bible reader"
-    }, /*#__PURE__*/React.createElement("span", null, "Read in Bible"), /*#__PURE__*/React.createElement("span", null, "\u2794"))));
+    }, /*#__PURE__*/React.createElement("span", null, "Read in Bible"), /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("line", {
+      x1: "5",
+      y1: "12",
+      x2: "19",
+      y2: "12"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "12 5 19 12 12 19"
+    })))));
   }
 
   /* === Source: ServiceTimings.jsx === */
   /* ==========================================================================
      ServiceTimings Component - Grace Fellowship Church
-     Worship schedules, languages, and service timings in pastel cards
+     Worship schedules, languages, and service timings in clean unified cards
      Dynamically integrated with Church CMS API.
      ========================================================================== */
 
   function ServiceTimings({
     data
   }) {
+    const renderTimingIcon = name => {
+      if (name === "people" || name === "users") {
+        return /*#__PURE__*/React.createElement("svg", {
+          width: "20",
+          height: "20",
+          viewBox: "0 0 24 24",
+          fill: "none",
+          stroke: "currentColor",
+          strokeWidth: "2",
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          "aria-hidden": "true"
+        }, /*#__PURE__*/React.createElement("path", {
+          d: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+        }), /*#__PURE__*/React.createElement("circle", {
+          cx: "9",
+          cy: "7",
+          r: "4"
+        }), /*#__PURE__*/React.createElement("path", {
+          d: "M23 21v-2a4 4 0 0 0-3-3.87"
+        }), /*#__PURE__*/React.createElement("path", {
+          d: "M16 3.13a4 4 0 0 1 0 7.75"
+        }));
+      }
+      if (name === "prayer" || name === "pray") {
+        return /*#__PURE__*/React.createElement("svg", {
+          width: "20",
+          height: "20",
+          viewBox: "0 0 24 24",
+          fill: "none",
+          stroke: "currentColor",
+          strokeWidth: "2",
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          "aria-hidden": "true"
+        }, /*#__PURE__*/React.createElement("path", {
+          d: "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+        }));
+      }
+      if (name === "bible" || name === "book") {
+        return /*#__PURE__*/React.createElement("svg", {
+          width: "20",
+          height: "20",
+          viewBox: "0 0 24 24",
+          fill: "none",
+          stroke: "currentColor",
+          strokeWidth: "2",
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          "aria-hidden": "true"
+        }, /*#__PURE__*/React.createElement("path", {
+          d: "M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+        }), /*#__PURE__*/React.createElement("path", {
+          d: "M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+        }));
+      }
+      return /*#__PURE__*/React.createElement("svg", {
+        width: "20",
+        height: "20",
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        "aria-hidden": "true"
+      }, /*#__PURE__*/React.createElement("path", {
+        d: "M12 2v20M7 8h10"
+      }));
+    };
     const fallbackSchedules = [{
       id: 1,
-      cardClass: "card-blue",
-      iconClass: "timing-icon-blue",
-      icon: "⛪",
+      iconName: "church",
       title: "Sunday Worship",
       hours: "10:00 AM – 12:00 PM",
       subtitle: "English & Telugu"
     }, {
       id: 2,
-      cardClass: "card-peach",
-      iconClass: "timing-icon-peach",
-      icon: "👥",
+      iconName: "people",
       title: "Sunday School",
       hours: "10:00 AM – 11:00 AM",
       subtitle: "Children & Youth"
     }, {
       id: 3,
-      cardClass: "card-purple",
-      iconClass: "timing-icon-purple",
-      icon: "🙏",
+      iconName: "prayer",
       title: "Wednesday Prayer",
       hours: "7:00 PM – 8:00 PM",
       subtitle: "Online & In-Person"
     }, {
       id: 4,
-      cardClass: "card-green",
-      iconClass: "timing-icon-green",
-      icon: "📖",
+      iconName: "bible",
       title: "Friday Bible Study",
       hours: "7:00 PM – 8:00 PM",
       subtitle: "English & Telugu"
     }];
-    const getStyleClasses = (cls, idx) => {
-      if (cls === "highlight") return {
-        card: "card-peach",
-        icon: "timing-icon-peach"
-      };
-      if (cls === "gold") return {
-        card: "card-purple",
-        icon: "timing-icon-purple"
-      };
-      if (cls === "card-blue" || cls === "standard") return {
-        card: "card-blue",
-        icon: "timing-icon-blue"
-      };
-      if (cls === "card-green") return {
-        card: "card-green",
-        icon: "timing-icon-green"
-      };
-      const palette = [{
-        card: "card-blue",
-        icon: "timing-icon-blue"
-      }, {
-        card: "card-peach",
-        icon: "timing-icon-peach"
-      }, {
-        card: "card-purple",
-        icon: "timing-icon-purple"
-      }, {
-        card: "card-green",
-        icon: "timing-icon-green"
-      }];
-      return palette[idx % palette.length];
-    };
-    const serviceSchedules = Array.isArray(data) && data.length > 0 ? data.map((schedule, idx) => {
-      const styles = getStyleClasses(schedule.card_class, idx);
-      return {
-        id: schedule.id,
-        cardClass: styles.card,
-        iconClass: styles.icon,
-        icon: schedule.icon_name === "people" ? "👥" : schedule.icon_name === "prayer" ? "🙏" : schedule.icon_name === "bible" ? "📖" : "⛪",
-        title: schedule.title,
-        hours: schedule.hours,
-        subtitle: schedule.subtitle
-      };
-    }) : fallbackSchedules;
+    const serviceSchedules = Array.isArray(data) && data.length > 0 ? data.map(schedule => ({
+      id: schedule.id,
+      iconName: schedule.icon_name || "church",
+      title: schedule.title,
+      hours: schedule.hours,
+      subtitle: schedule.subtitle
+    })) : fallbackSchedules;
     return /*#__PURE__*/React.createElement("section", {
       id: "service-timings",
       className: "home-container home-section"
@@ -529,22 +637,47 @@
       className: "section-title-wrap"
     }, /*#__PURE__*/React.createElement("span", {
       className: "section-title-icon",
-      style: {
-        color: "#0066cc"
-      }
-    }, "\uD83D\uDD52"), /*#__PURE__*/React.createElement("h2", {
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "12",
+      r: "10"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "12 6 12 12 16 14"
+    }))), /*#__PURE__*/React.createElement("h2", {
       className: "section-title-text"
     }, "Service Timings")), /*#__PURE__*/React.createElement("a", {
       href: "#contact",
       className: "section-view-all"
-    }, /*#__PURE__*/React.createElement("span", null, "View Details"), /*#__PURE__*/React.createElement("span", null, ">"))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "View Details"), /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polyline", {
+      points: "9 18 15 12 9 6"
+    })))), /*#__PURE__*/React.createElement("div", {
       className: "timings-grid"
     }, serviceSchedules.map(schedule => /*#__PURE__*/React.createElement("div", {
       key: schedule.id,
-      className: `timing-card ${schedule.cardClass}`
+      className: "timing-card"
     }, /*#__PURE__*/React.createElement("div", {
-      className: `timing-icon-badge ${schedule.iconClass}`
-    }, schedule.icon), /*#__PURE__*/React.createElement("div", {
+      className: "timing-icon-badge"
+    }, renderTimingIcon(schedule.iconName)), /*#__PURE__*/React.createElement("div", {
       className: "timing-info"
     }, /*#__PURE__*/React.createElement("h3", {
       className: "timing-title"
@@ -595,6 +728,8 @@
     }
     return /*#__PURE__*/React.createElement("section", {
       id: "about",
+      className: "home-section-wrap bg-page"
+    }, /*#__PURE__*/React.createElement("div", {
       className: "home-container home-section"
     }, /*#__PURE__*/React.createElement("div", {
       className: "section-header-row"
@@ -709,7 +844,7 @@
         color: "#475569",
         lineHeight: "1.5"
       }
-    }, "\u201COur prayer is that everyone who enters our doors encounters the living Christ, experiences genuine fellowship, and discovers their God-given purpose.\u201D"))))));
+    }, "\u201COur prayer is that everyone who enters our doors encounters the living Christ, experiences genuine fellowship, and discovers their God-given purpose.\u201D")))))));
   }
 
   /* === Source: LatestSermons.jsx === */
@@ -758,15 +893,36 @@
       className: "section-title-wrap"
     }, /*#__PURE__*/React.createElement("span", {
       className: "section-title-icon",
-      style: {
-        color: "#0066cc"
-      }
-    }, "\u25B6"), /*#__PURE__*/React.createElement("h2", {
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("polygon", {
+      points: "5 3 19 12 5 21 5 3"
+    }))), /*#__PURE__*/React.createElement("h2", {
       className: "section-title-text"
     }, "Latest Sermons")), /*#__PURE__*/React.createElement("a", {
       href: "#sermons",
       className: "section-view-all"
-    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("span", null, ">"))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polyline", {
+      points: "9 18 15 12 9 6"
+    })))), /*#__PURE__*/React.createElement("div", {
       className: "sermons-grid"
     }, sermons.map(sermon => /*#__PURE__*/React.createElement("article", {
       key: sermon.id,
@@ -816,11 +972,28 @@
     }, sermon.date)), sermon.passage && /*#__PURE__*/React.createElement("p", {
       className: "sermon-passage-line",
       style: {
-        fontSize: "0.78rem",
-        color: "#64748b",
-        marginTop: "4px"
+        fontSize: "0.8rem",
+        color: "var(--color-text-muted)",
+        marginTop: "6px",
+        display: "flex",
+        alignItems: "center",
+        gap: "6px"
       }
-    }, "\uD83D\uDCD6 ", sermon.passage))))), activeSermon && /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+    })), /*#__PURE__*/React.createElement("span", null, sermon.passage)))))), activeSermon && /*#__PURE__*/React.createElement("div", {
       className: "sermon-modal-overlay",
       onClick: () => setActiveSermon(null),
       role: "dialog",
@@ -941,15 +1114,56 @@
       className: "section-title-wrap"
     }, /*#__PURE__*/React.createElement("span", {
       className: "section-title-icon",
-      style: {
-        color: "#0066cc"
-      }
-    }, "\uD83D\uDCC5"), /*#__PURE__*/React.createElement("h2", {
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "4",
+      width: "18",
+      height: "18",
+      rx: "2",
+      ry: "2"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "16",
+      y1: "2",
+      x2: "16",
+      y2: "6"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "8",
+      y1: "2",
+      x2: "8",
+      y2: "6"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "3",
+      y1: "10",
+      x2: "21",
+      y2: "10"
+    }))), /*#__PURE__*/React.createElement("h2", {
       className: "section-title-text"
     }, "Upcoming Events")), /*#__PURE__*/React.createElement("a", {
       href: "#events",
       className: "section-view-all"
-    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("span", null, ">"))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polyline", {
+      points: "9 18 15 12 9 6"
+    })))), /*#__PURE__*/React.createElement("div", {
       className: "events-grid"
     }, events.map(event => /*#__PURE__*/React.createElement("div", {
       key: event.id,
@@ -969,12 +1183,75 @@
     }, /*#__PURE__*/React.createElement("h3", {
       className: "event-heading"
     }, event.title), /*#__PURE__*/React.createElement("p", {
-      className: "event-meta-line"
+      className: "event-meta-line",
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "4px"
+      }
     }, /*#__PURE__*/React.createElement("span", {
-      className: "event-date"
-    }, "\uD83D\uDCC5 ", event.date), /*#__PURE__*/React.createElement("span", {
-      className: "event-venue"
-    }, "\uD83D\uDCCD ", event.location)), event.registration_link && event.registration_link.startsWith("http") ? /*#__PURE__*/React.createElement("a", {
+      className: "event-date",
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px"
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "4",
+      width: "18",
+      height: "18",
+      rx: "2",
+      ry: "2"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "16",
+      y1: "2",
+      x2: "16",
+      y2: "6"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "8",
+      y1: "2",
+      x2: "8",
+      y2: "6"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "3",
+      y1: "10",
+      x2: "21",
+      y2: "10"
+    })), /*#__PURE__*/React.createElement("span", null, event.date)), /*#__PURE__*/React.createElement("span", {
+      className: "event-venue",
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px"
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "10",
+      r: "3"
+    })), /*#__PURE__*/React.createElement("span", null, event.location))), event.registration_link && event.registration_link.startsWith("http") ? /*#__PURE__*/React.createElement("a", {
       href: event.registration_link,
       target: "_blank",
       rel: "noopener noreferrer",
@@ -1003,6 +1280,7 @@
   function Ministries({
     data
   }) {
+    const [selectedMinistry, setSelectedMinistry] = React.useState(null);
     const formatMediaUrl = (url, fallback = "/admin-data/ministries/children_ministry.jpg") => {
       if (!url) return fallback;
       if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
@@ -1013,13 +1291,45 @@
       if (url.startsWith("/admin-data/")) return `/api/cms/media${url}`;
       return url.startsWith("/") ? url : "/" + url;
     };
+    const fallbackMinistries = [{
+      id: 1,
+      name: "Children's Ministry",
+      photo: "/admin-data/ministries/children_ministry.jpg",
+      description: "Sunday School, biblical foundations, crafts, and songs for children."
+    }, {
+      id: 2,
+      name: "Youth Ministry",
+      photo: "/admin-data/home/announcements/youth_conference.jpg",
+      description: "Empowering teens and young adults to stand bold for Christ."
+    }, {
+      id: 3,
+      name: "Women's Ministry",
+      photo: "/admin-data/home/announcements/womens_fellowship.jpg",
+      description: "Encouraging sisters in faith, discipleship, and prayer fellowship."
+    }, {
+      id: 4,
+      name: "Men's Ministry",
+      photo: "/admin-data/ministries/fellowship_service.jpg",
+      description: "Building strong godly fathers, husbands, and leaders in Christ."
+    }, {
+      id: 5,
+      name: "Prayer Ministry",
+      photo: "/admin-data/sermons/thumbnails/prayer_hands.jpg",
+      description: "Faithful intercession for our church, community, and global needs."
+    }, {
+      id: 6,
+      name: "Outreach & Missions",
+      photo: "/admin-data/home/announcements/open_bible_banner.jpg",
+      description: "Sharing the love of Christ through local and regional benevolence."
+    }];
     const ministryList = Array.isArray(data) && data.length > 0 ? data.map(m => ({
       id: m.id,
       name: m.name,
       photo: formatMediaUrl(m.photo, "/admin-data/ministries/children_ministry.jpg"),
-      description: m.short_description || m.full_description
-    })) : [];
-    if (!ministryList || ministryList.length === 0) return null;
+      description: m.short_description || m.full_description || m.description,
+      meeting_time: m.meeting_time,
+      leader_name: m.leader_name
+    })) : fallbackMinistries;
     return /*#__PURE__*/React.createElement("section", {
       id: "ministries",
       className: "home-container home-section"
@@ -1029,28 +1339,55 @@
       className: "section-title-wrap"
     }, /*#__PURE__*/React.createElement("span", {
       className: "section-title-icon",
-      style: {
-        color: "#0066cc"
-      }
-    }, "\uD83D\uDC65"), /*#__PURE__*/React.createElement("h2", {
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "9",
+      cy: "7",
+      r: "4"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M23 21v-2a4 4 0 0 0-3-3.87"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16 3.13a4 4 0 0 1 0 7.75"
+    }))), /*#__PURE__*/React.createElement("h2", {
       className: "section-title-text"
     }, "Our Ministries")), /*#__PURE__*/React.createElement("a", {
       href: "#ministries",
       className: "section-view-all"
-    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("span", null, ">"))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, "View All"), /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("polyline", {
+      points: "9 18 15 12 9 6"
+    })))), /*#__PURE__*/React.createElement("div", {
       className: "ministries-row"
     }, ministryList.map(m => /*#__PURE__*/React.createElement("div", {
       key: m.id,
       className: "ministry-unit-card",
-      onClick: () => {
-        alert(m.description || `Learn more about ${m.name} by contacting our pastoral team or joining our fellowship groups.`);
-      },
+      onClick: () => setSelectedMinistry(m),
       tabIndex: 0,
       role: "button",
       onKeyDown: e => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          alert(m.description || `Learn more about ${m.name}`);
+          setSelectedMinistry(m);
         }
       },
       "aria-label": `View ${m.name} details`
@@ -1066,7 +1403,104 @@
       }
     })), /*#__PURE__*/React.createElement("h3", {
       className: "ministry-card-label"
-    }, m.name)))));
+    }, m.name)))), selectedMinistry && /*#__PURE__*/React.createElement("div", {
+      className: "modal-backdrop-church",
+      onClick: () => setSelectedMinistry(null),
+      role: "dialog",
+      "aria-modal": "true"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "donate-modal-card",
+      onClick: e => e.stopPropagation(),
+      style: {
+        maxWidth: "520px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "donate-modal-header"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h3", {
+      className: "donate-header-title"
+    }, selectedMinistry.name), /*#__PURE__*/React.createElement("p", {
+      className: "donate-header-sub"
+    }, selectedMinistry.leader_name ? `Led by ${selectedMinistry.leader_name}` : "Church Fellowship Ministry")), /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      className: "btn-modal-close-icon",
+      onClick: () => setSelectedMinistry(null),
+      "aria-label": "Close modal"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("line", {
+      x1: "18",
+      y1: "6",
+      x2: "6",
+      y2: "18"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "6",
+      y1: "6",
+      x2: "18",
+      y2: "18"
+    })))), /*#__PURE__*/React.createElement("div", {
+      className: "donate-modal-body"
+    }, selectedMinistry.photo && /*#__PURE__*/React.createElement("img", {
+      src: selectedMinistry.photo,
+      alt: selectedMinistry.name,
+      style: {
+        width: "100%",
+        height: "200px",
+        objectFit: "cover",
+        borderRadius: "8px",
+        marginBottom: "16px"
+      }
+    }), /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontSize: "0.95rem",
+        color: "var(--color-text-secondary)",
+        lineHeight: 1.6,
+        marginBottom: "16px"
+      }
+    }, selectedMinistry.description || "A dedicated ministry for discipleship, spiritual growth, and community fellowship."), selectedMinistry.meeting_time && /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: "10px 14px",
+        background: "var(--color-surface-subtle)",
+        borderRadius: "8px",
+        fontSize: "0.85rem",
+        color: "var(--color-primary-800)",
+        marginBottom: "20px",
+        display: "flex",
+        alignItems: "center",
+        gap: "8px"
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "12",
+      r: "10"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "12 6 12 12 16 14"
+    })), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Schedule:"), " ", selectedMinistry.meeting_time)), /*#__PURE__*/React.createElement("a", {
+      href: "#contact",
+      className: "btn-hero-primary",
+      style: {
+        width: "100%",
+        textAlign: "center",
+        textDecoration: "none",
+        display: "block"
+      },
+      onClick: () => setSelectedMinistry(null)
+    }, "Connect with Ministry Leaders")))));
   }
 
   /* === Source: Gallery.jsx === */
@@ -1100,6 +1534,8 @@
     if (!rawItems || rawItems.length === 0) return null;
     return /*#__PURE__*/React.createElement("section", {
       id: "gallery",
+      className: "home-section-wrap bg-page"
+    }, /*#__PURE__*/React.createElement("div", {
       className: "home-container home-section"
     }, /*#__PURE__*/React.createElement("div", {
       className: "section-header-row"
@@ -1227,7 +1663,7 @@
       y1: "6",
       x2: "18",
       y2: "18"
-    })))))));
+    }))))))));
   }
 
   /* === Source: ChurchLocation.jsx === */
@@ -1272,10 +1708,23 @@
       className: "section-title-wrap"
     }, /*#__PURE__*/React.createElement("span", {
       className: "section-title-icon",
-      style: {
-        color: "#0066cc"
-      }
-    }, "\uD83D\uDCCD"), /*#__PURE__*/React.createElement("h2", {
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "10",
+      r: "3"
+    }))), /*#__PURE__*/React.createElement("h2", {
       className: "section-title-text"
     }, "Visit Our Church"))), /*#__PURE__*/React.createElement("div", {
       className: "visit-church-grid"
@@ -1294,16 +1743,58 @@
     }, /*#__PURE__*/React.createElement("div", {
       className: "contact-info-row"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "contact-info-icon"
-    }, "\uD83D\uDCCD"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, addressLine1, ","), /*#__PURE__*/React.createElement("br", null), addressLine2, cityStateZip)), /*#__PURE__*/React.createElement("div", {
+      className: "contact-info-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "18",
+      height: "18",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "10",
+      r: "3"
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, addressLine1, ","), /*#__PURE__*/React.createElement("br", null), addressLine2, cityStateZip)), /*#__PURE__*/React.createElement("div", {
       className: "contact-info-row"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "contact-info-icon"
-    }, "\uD83D\uDCDE"), /*#__PURE__*/React.createElement("div", null, phone)), /*#__PURE__*/React.createElement("div", {
+      className: "contact-info-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "18",
+      height: "18",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+    }))), /*#__PURE__*/React.createElement("div", null, phone)), /*#__PURE__*/React.createElement("div", {
       className: "contact-info-row"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "contact-info-icon"
-    }, "\u2709\uFE0F"), /*#__PURE__*/React.createElement("div", null, email)), /*#__PURE__*/React.createElement("div", {
+      className: "contact-info-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "18",
+      height: "18",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "22,6 12,13 2,6"
+    }))), /*#__PURE__*/React.createElement("div", null, email)), /*#__PURE__*/React.createElement("div", {
       className: "church-social-icons"
     }, /*#__PURE__*/React.createElement("a", {
       href: facebookUrl,
@@ -1312,28 +1803,79 @@
       className: "social-circle-btn fb",
       title: "Facebook",
       "aria-label": "Facebook"
-    }, "f"), /*#__PURE__*/React.createElement("a", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+    }))), /*#__PURE__*/React.createElement("a", {
       href: youtubeUrl,
       target: "_blank",
       rel: "noopener noreferrer",
       className: "social-circle-btn yt",
       title: "YouTube",
       "aria-label": "YouTube"
-    }, "\u25B6"), /*#__PURE__*/React.createElement("a", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"
+    }), /*#__PURE__*/React.createElement("polygon", {
+      points: "9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02",
+      fill: "#ffffff"
+    }))), /*#__PURE__*/React.createElement("a", {
       href: instagramUrl,
       target: "_blank",
       rel: "noopener noreferrer",
       className: "social-circle-btn ig",
       title: "Instagram",
       "aria-label": "Instagram"
-    }, "\uD83D\uDCF8"), /*#__PURE__*/React.createElement("a", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "2",
+      y: "2",
+      width: "20",
+      height: "20",
+      rx: "5",
+      ry: "5"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "17.5",
+      y1: "6.5",
+      x2: "17.51",
+      y2: "6.5"
+    }))), /*#__PURE__*/React.createElement("a", {
       href: whatsappUrl,
       target: "_blank",
       rel: "noopener noreferrer",
       className: "social-circle-btn wa",
       title: "WhatsApp",
       "aria-label": "WhatsApp"
-    }, "\uD83D\uDCAC"))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+    }))))), /*#__PURE__*/React.createElement("div", {
       className: "church-map-card"
     }, /*#__PURE__*/React.createElement("div", {
       className: "map-view-container"
@@ -1646,8 +2188,16 @@
     }, /*#__PURE__*/React.createElement("div", {
       className: "footer-brand"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "footer-cross"
-    }, "\u271D"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "footer-cross",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "22",
+      height: "22",
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M10 2h4v6h6v4h-6v10h-4V12H4V8h6V2z"
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
       className: "footer-church-name"
     }, churchName), /*#__PURE__*/React.createElement("div", {
       className: "footer-tagline"
@@ -1662,28 +2212,79 @@
       className: "footer-social-icon",
       title: "Facebook",
       "aria-label": "Facebook"
-    }, "f"), /*#__PURE__*/React.createElement("a", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "15",
+      height: "15",
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+    }))), /*#__PURE__*/React.createElement("a", {
       href: youtubeUrl,
       target: "_blank",
       rel: "noopener noreferrer",
       className: "footer-social-icon",
       title: "YouTube",
       "aria-label": "YouTube"
-    }, "\u25B6"), /*#__PURE__*/React.createElement("a", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "15",
+      height: "15",
+      viewBox: "0 0 24 24",
+      fill: "currentColor"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"
+    }), /*#__PURE__*/React.createElement("polygon", {
+      points: "9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02",
+      fill: "#0f1e36"
+    }))), /*#__PURE__*/React.createElement("a", {
       href: instagramUrl,
       target: "_blank",
       rel: "noopener noreferrer",
       className: "footer-social-icon",
       title: "Instagram",
       "aria-label": "Instagram"
-    }, "\uD83D\uDCF8"), /*#__PURE__*/React.createElement("a", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "15",
+      height: "15",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "2",
+      y: "2",
+      width: "20",
+      height: "20",
+      rx: "5",
+      ry: "5"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "17.5",
+      y1: "6.5",
+      x2: "17.51",
+      y2: "6.5"
+    }))), /*#__PURE__*/React.createElement("a", {
       href: whatsappUrl,
       target: "_blank",
       rel: "noopener noreferrer",
       className: "footer-social-icon",
       title: "WhatsApp",
       "aria-label": "WhatsApp"
-    }, "\uD83D\uDCAC"))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "15",
+      height: "15",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+    }))))), /*#__PURE__*/React.createElement("div", {
       className: "footer-visit-col"
     }, /*#__PURE__*/React.createElement("h4", {
       className: "footer-section-title"
@@ -1692,16 +2293,58 @@
     }, /*#__PURE__*/React.createElement("div", {
       className: "visit-info-item"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "visit-icon"
-    }, "\uD83D\uDCCD"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "Address:"), /*#__PURE__*/React.createElement("p", null, address))), /*#__PURE__*/React.createElement("div", {
+      className: "visit-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "12",
+      cy: "10",
+      r: "3"
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "Address:"), /*#__PURE__*/React.createElement("p", null, address))), /*#__PURE__*/React.createElement("div", {
       className: "visit-info-item"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "visit-icon"
-    }, "\uD83D\uDCDE"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "Phone:"), /*#__PURE__*/React.createElement("p", null, phone))), /*#__PURE__*/React.createElement("div", {
+      className: "visit-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "Phone:"), /*#__PURE__*/React.createElement("p", null, phone))), /*#__PURE__*/React.createElement("div", {
       className: "visit-info-item"
     }, /*#__PURE__*/React.createElement("span", {
-      className: "visit-icon"
-    }, "\u2709\uFE0F"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), /*#__PURE__*/React.createElement("p", null, email))))), /*#__PURE__*/React.createElement("div", {
+      className: "visit-icon",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "22,6 12,13 2,6"
+    }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "Email:"), /*#__PURE__*/React.createElement("p", null, email))))), /*#__PURE__*/React.createElement("div", {
       className: "footer-links-col"
     }, /*#__PURE__*/React.createElement("h4", {
       className: "footer-section-title"
@@ -1729,8 +2372,30 @@
         color: "#475569"
       }
     }, "\u2022"), /*#__PURE__*/React.createElement("a", {
-      href: "#home"
-    }, "Back to Top \u2191")))));
+      href: "#home",
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.25rem"
+      }
+    }, "Back to Top", /*#__PURE__*/React.createElement("svg", {
+      width: "14",
+      height: "14",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("line", {
+      x1: "12",
+      y1: "19",
+      x2: "12",
+      y2: "5"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "5 12 12 5 19 12"
+    })))))));
   }
 
   /* === Source: HomePage.jsx === */

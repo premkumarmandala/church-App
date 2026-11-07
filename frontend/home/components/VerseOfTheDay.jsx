@@ -62,7 +62,12 @@ function VerseOfTheDay() {
         {/* Center Content */}
         <div className="votd-content">
           <div className="votd-header">
-            <span className="votd-header-icon">📖</span>
+            <span className="votd-header-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </span>
             <span className="votd-header-title">Verse of the Day</span>
           </div>
           <p className="votd-text">
@@ -78,7 +83,10 @@ function VerseOfTheDay() {
           title="Study this verse in the Online Bible reader"
         >
           <span>Read in Bible</span>
-          <span>➔</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
         </a>
       </div>
     </section>

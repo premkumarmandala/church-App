@@ -47,8 +47,9 @@ function About({ data }) {
   }
 
   return (
-    <section id="about" className="home-container home-section">
-      <div className="section-header-row">
+    <section id="about" className="home-section-wrap bg-page">
+      <div className="home-container home-section">
+        <div className="section-header-row">
         <div className="section-title-wrap">
           <span className="section-title-icon" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -131,7 +132,8 @@ function About({ data }) {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }
 
